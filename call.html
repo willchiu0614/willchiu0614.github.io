@@ -2,185 +2,39 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>身體症狀標記</title>
+  <title>身體症狀標記 - 主頁</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f0f0f0;
-    }
-
-    .row {
-      margin-bottom: 15px;
-    }
-
-    .select-btn {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      background-color: white;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .select-btn.selected {
-      background-color: red;
-      color: white;
-      border-color: darkred;
-    }
-
-    .img-btn {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      margin: 5px;
-      cursor: pointer;
-      background-color: white;
-    }
-
-    .img-btn.selected {
-      background-color: red;
-      border-color: darkred;
-    }
-    .confirm-btn{
-      width: 60px;
-      height: 60px;
-      font-size: 60px;
-    }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
+    iframe {
+      width: 100%;
+      height: 750px;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <!-- 第一排：圖片按鈕 -->
+  <!-- Tab 選單列 -->
   <div class="row">
-    <img src="./src/person.png"
-         alt="頭" class="img-btn" data-group="body" data-label="頭"  data-sound="audio/head.wav"
-         onclick="playSound(this)">
-    <img src="./src/neck.png"
-         alt="脖子" class="img-btn" data-group="body" data-label="脖子"  data-sound="audio/neck.wav"
-         onclick="playSound(this)">
-    <img src="./src/upper-body.png"
-         alt="胸" class="img-btn" data-group="body" data-label="胸"  data-sound="audio/body.wav"
-         onclick="playSound(this)">
-    <img src="./src/back-body.png"
-         alt="背" class="img-btn" data-group="body" data-label="背" data-sound="audio/backside.wav"
-         onclick="playSound(this)">
-    <img src="./src/muscle.png"
-         alt="手臂" class="img-btn" data-group="body" data-label="手臂" data-sound="audio/arm.wav"
-         onclick="playSound(this)">
-    <img src="./src/thighs.png"
-         alt="大腿" class="img-btn" data-group="body" data-label="大腿" data-sound="audio/thigh.wav"
-         onclick="playSound(this)">
-    <img src="./src/leg.png"
-         alt="小腿" class="img-btn" data-group="body" data-label="小腿" data-sound="audio/leg.wav"
-         onclick="playSound(this)">
-    <img src="./src/foot.png"
-         alt="腳" class="img-btn" data-group="body" data-label="腳" data-sound="audio/foot.wav"
-         onclick="playSound(this)">
+    <button class="tab-btn active" onclick="showTab(0)">1</button>
+    <button class="tab-btn" onclick="showTab(1)">2</button>
+    <button class="tab-btn" onclick="showTab(2)">3</button>
   </div>
 
-  <div class="row">
-    <img src="./src/arrow.png"
-         alt="左半身" class="img-btn" data-group="side" data-label="左半身" data-sound="audio/left.wav"
-         onclick="playSound(this)">
-    <img src="./src/right-arrow.png"
-         alt="右半身" class="img-btn" data-group="side" data-label="右半身"  data-sound="audio/right.wav"
-         onclick="playSound(this)">
-  </div>
+  <!-- Tab 內容載入處 -->
+  <iframe id="tab-frame" src="page1.html"></iframe>
 
-  <div class="row">
-    <img src="./src/itching.png" 
-         alt="癢" class="img-btn" data-group="symptom" data-label="癢" data-sound="audio/itching.wav"
-         onclick="playSound(this)">
-    <img src="./src/back.png" 
-         alt="痠痛" class="img-btn" data-group="symptom" data-label="痠痛" data-sound="audio/back.wav"
-         onclick="playSound(this)">
-  </div>
-
-  <!-- 第二排 -->
-  
-
-  <!-- 第三排 -->
-  
-
-  <!-- 第四排 -->
-  <div class="row">
-    <button onclick="playSelectedSounds()"><div class="confirm-btn">o</div></button>
-    <button onclick="clearSelections()"><div class="confirm-btn">x</div></button>
-  </div>
-
-  <div id="result"></div>
-
+  <!-- 切換分頁用 Script -->
   <script>
-    let selectedQueue = [];
-  
-    function playSound(elem) {
-      elem.classList.toggle('selected');
-      const sound = elem.dataset.sound;
-      const group = elem.dataset.group;
-  
-      const item = { sound, group };
-  
-      if (elem.classList.contains('selected')) {
-        selectedQueue.push(item);
-      } else {
-        selectedQueue = selectedQueue.filter(i => i.sound !== sound);
-      }
-  
-      // 單獨播放點選音效
-      const audio = new Audio(sound);
-      audio.play();
-    }
-  
-    function playSelectedSounds() {
-      if (selectedQueue.length === 0) {
-        alert("請先選擇要播放的按鈕！");
-        return;
-      }
-  
-      // 分類
-      const side = selectedQueue.find(i => i.group === "side");
-      const body = selectedQueue.filter(i => i.group === "body");
-      const symptom = selectedQueue.find(i => i.group === "symptom");
-  
-      // 播放隊列順序：左/右 → 部位們（中間插 and）→ 症狀
-      let sequence = ["audio/my.wav"];
-  
-      if (side) sequence.push(side.sound);
-  
-      body.forEach((item, idx) => {
-        sequence.push(item.sound);
-        if (idx < body.length - 1) {
-          sequence.push("audio/and.wav"); // 插入 and 音檔
-        }
+    function showTab(index) {
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      const pages = ["page1.html", "page2.html", "page3.html"];
+
+      tabButtons.forEach((btn, i) => {
+        btn.classList.toggle("active", i === index);
       });
-  
-      if (symptom) sequence.push(symptom.sound);
-  
-      // 依序播放
-      let index = 0;
-      function playNext() {
-        if (index >= sequence.length) return;
-        const audio = new Audio(sequence[index]);
-        index++;
-        audio.onended = playNext;
-        audio.play();
-      }
-  
-      playNext();
-    }
-  
-    function clearSelections() {
-      document.querySelectorAll('.img-btn').forEach(btn => btn.classList.remove('selected'));
-      selectedQueue = [];
+
+      document.getElementById("tab-frame").src = pages[index];
     }
   </script>
-  
 </body>
 </html>
