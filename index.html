@@ -412,6 +412,30 @@
         margin-top: 0.7rem;
       }
 
+      .btn-mini-nav {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.1rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        background: #21262d;
+        color: #c9d1d9;
+        border: 1px solid #30363d;
+        transition: background 0.15s;
+        height: 22px;
+        white-space: nowrap;
+      }
+      .btn-mini-nav:hover {
+        background: #30363d;
+      }
+      .stop-nav-box {
+        display: flex;
+        align-items: center;
+        min-width: 42px;
+      }
+
       /*  TRANSPORT CONNECTOR  */
       .tl-transport {
         position: relative;
@@ -814,7 +838,7 @@
       }
       function extractHours(desc) {
         if (!desc) return null;
-        const m = desc.match(/⏰\s*(.+)$/);
+        const m = desc.match(/\s*(.+)$/);
         return m ? m[1].trim() : null;
       }
 
@@ -839,7 +863,7 @@
               ja: "Fukuoka Airport",
               lat: 33.5857,
               lng: 130.4516,
-              desc: "入境審查・提取行李。機場内可購買 SUGOCA 交通 IC 卡（可儲值用於地鐵/JR）。",
+              desc: "",
               place: "福岡空港 国際線ターミナル",
               tr: {
                 m: "地鐵空港線",
@@ -857,7 +881,7 @@
               ja: "Oriental Hotel Fukuoka Hakata Station",
               lat: 33.5902,
               lng: 130.4225,
-              desc: "辦理入住 or 寄放行李（筑紫口步行 1 分）。入住 15:00 / 退房 11:00",
+              desc: "",
               gmap: null,
               place: "Oriental Hotel Fukuoka Hakata Station",
               tr: {
@@ -871,13 +895,13 @@
             {
               time: "11:30",
               icon: "",
-              dur: "15 分",
-              name: "Full Full 明太子麵包",
-              ja: "Full Full (明太子フランス)",
+              dur: "1 小時",
+              name: "明太子麵包 & 至一郎布丁",
+              ja: "Full Full & Jiichiro",
               lat: 33.5892,
               lng: 130.4198,
-              desc: "現烤明太子法國麵包，外酥內軟，帶著邊走邊吃。⏰ 10:00–19:00 (週二休)",
-              gmap: "https://maps.app.goo.gl/L2SiMwH1MxnEFmLc8",
+              desc: "",
+              gmap: "https://maps.app.goo.gl/mKFdRYmiXng89vqv7",
               place: "Full Full 博多駅",
               tr: {
                 m: "地鐵空港線",
@@ -895,7 +919,7 @@
               ja: "アンパンマンこどもミュージアム in FUKUOKA",
               lat: 33.5948,
               lng: 130.4115,
-              desc: "親子必訪！展覽區、劇場、大量周邊。⏰ 10:00–17:00（最終入場 16:00）¥2,000–2,200",
+              desc: "",
               gmap: null,
               place: "アンパンマンこどもミュージアム in FUKUOKA",
               tr: {
@@ -914,7 +938,7 @@
               ja: "Canal City Hakata",
               lat: 33.5893,
               lng: 130.411,
-              desc: "水舞噴泉秀（每小時整點）、餐廳、影城。⏰ 購物 10:00–21:00・餐廳 11:00–23:00",
+              desc: "",
               gmap: null,
               place: "キャナルシティ博多",
               tr: {
@@ -933,7 +957,7 @@
               ja: "天神地下街 (Tenjin Underground Mall)",
               lat: 33.5903,
               lng: 130.3987,
-              desc: "福岡最大地下購物商街，快速逛一圈後走去晚餐。⏰ 10:00–20:00",
+              desc: "",
               gmap: null,
               place: "天神地下街 福岡",
               tr: {
@@ -948,12 +972,12 @@
               time: "18:15",
               icon: "",
               dur: "1.5 小時",
-              name: "黒毛和牛 博多和牛まぶし 武蔵 天神店",
+              name: "和牛丼飯 武蔵 天神店",
               ja: "博多和牛まぶし 武蔵 天神店",
               lat: 33.5905,
               lng: 130.3993,
-              desc: "博多和牛まぶし 三吃法：そのまま → だし → お茶漬け。⏰ 11:00–15:00 / 17:30–22:00",
-              gmap: "https://maps.app.goo.gl/DPvwEG2pt2PCNM6B8",
+              desc: "",
+              gmap: "https://maps.app.goo.gl/VLjrdkMV4ohBbhpy6",
               place: "博多和牛まぶし 武蔵 天神店",
               tr: {
                 m: "地鐵空港線",
@@ -971,7 +995,7 @@
               ja: "Oriental Hotel Fukuoka Hakata Station",
               lat: 33.5902,
               lng: 130.4225,
-              desc: "今日行程結束，返回酒店休息。",
+              desc: "",
               place: "Oriental Hotel Fukuoka Hakata Station",
               tr: null,
             },
@@ -1003,7 +1027,7 @@
               ja: "壱岐神社 一の鳥居",
               lat: 33.5891,
               lng: 130.3159,
-              desc: "矗立於生之松原海岸邊的海上鳥居，退潮時可步行穿過，漲潮時則有水上鳥居的夢幻感。⏰ 24 小時開放",
+              desc: "",
               gmap: "https://maps.app.goo.gl/FNJNxrLZKv7wgUfSA",
               place: "壱岐神社 一の鳥居",
               tr: {
@@ -1022,7 +1046,7 @@
               ja: "桜井二見浦・天使の翼",
               lat: 33.534,
               lng: 130.219,
-              desc: "海中注連繩夫婦岩，儀式感滿滿的神聖之地。天使翅膀壁畫是人氣打卡點，夕陽時更浪漫。⏰ 境內自由參觀・天使之翼咖啡廳 10:00–18:00",
+              desc: "",
               gmap: "https://maps.app.goo.gl/rUf1gHt8n7yXb8Af7",
               place: "櫻井二見ヶ浦 夫婦岩",
               tr: {
@@ -1034,33 +1058,65 @@
               },
             },
             {
-              time: "13:00",
+              time: "12:15",
               icon: "",
-              dur: "1 小時",
+              dur: "45 分",
               name: "櫛田神社",
               ja: "櫛田神社 (Kushida Shrine)",
               lat: 33.593,
-              lng: 130.4105,
-              desc: "博多的總鎮守，擁有宏偉的名物「山笠」展示。也是博多祇園山笠祭的舞台。⏰ 本殿參拜 04:00–22:00（授與所 09:00–17:00）",
-              gmap: "https://maps.app.goo.gl/yYv8u6d8WpZJ8A7t8",
-              place: "櫛田神社 福岡",
+              lng: 130.4106,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/vjXfK4shcsmGf9Vv5",
+              place: "櫛田神社",
               tr: {
-                m: "開車/巴士",
-                d: "櫛田神社 → 博多駅 · 約 5 分",
+                m: "步行",
+                d: "櫛田神社 → 博多站 · 約 10 分",
                 from: "櫛田神社",
                 to: "博多駅",
+                mode: "walking",
+              },
+            },
+            {
+              time: "13:00",
+              icon: "",
+              dur: "1 小時",
+              name: "TANYA博多午餐",
+              ja: "TANYA博多 博多一番街店",
+              lat: 33.5895,
+              lng: 130.421,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/SH2d7JmHzkPNayVYA",
+              place: "TANYA博多 博多一番街店",
+              tr: {
+                m: "開車/巴士",
+                d: "博多站 → 大名 · 約 10 分",
+                from: "博多駅",
+                to: "大名 黒豚とんかつ",
                 mode: "driving",
               },
             },
             {
-              time: "14:30",
+              time: "17:00",
+              icon: "",
+              dur: "2 小時",
+              name: "大名黑豚吉列豬扒",
+              ja: "大名 黒豚とんかつ",
+              lat: 33.588,
+              lng: 130.395,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/B5CfzhcJ5R9ZjVYY8",
+              place: "大名黑豚吉列豬扒",
+              tr: null,
+            },
+            {
+              time: "20:00",
               icon: "",
               dur: null,
               name: "返回博多站",
               ja: "博多駅",
               lat: 33.5898,
               lng: 130.4207,
-              desc: "今日行程結束，下午可自由安排或休息。",
+              desc: "",
               gmap: null,
               place: "博多駅",
               tr: null,
@@ -1086,25 +1142,6 @@
           note: "西鐵電車一日遊",
           stops: [
             {
-              time: "07:45",
-              icon: "",
-              dur: "1 小時",
-              name: "早餐必吃",
-              ja: "博多 早餐名店",
-              lat: 33.5898,
-              lng: 130.422,
-              desc: "出發前的必吃博多早餐。請依 Google Maps 連結確認店名與位置，09:00 前抵達博多站搭車。",
-              gmap: "https://maps.app.goo.gl/ToHVnK3tb7eVoYMT6",
-              place: "博多 早餐",
-              tr: {
-                m: "步行",
-                d: "早餐店 → 博多駅 · 約 5 分",
-                from: "博多駅周辺",
-                to: "博多駅",
-                mode: "walking",
-              },
-            },
-            {
               time: "09:00",
               icon: "",
               dur: "步行出發",
@@ -1112,7 +1149,7 @@
               ja: "博多駅",
               lat: 33.5898,
               lng: 130.4207,
-              desc: "從酒店步行至博多駅搭地鐵，前往西鐵天神站轉乘西鐵電車。",
+              desc: "",
               place: "博多駅",
               tr: {
                 m: "地鐵空港線",
@@ -1130,7 +1167,7 @@
               ja: "西鉄福岡(天神)駅",
               lat: 33.5894,
               lng: 130.4002,
-              desc: "搭乘西鐵天神大牟田線往 二日市，在二日市換乘太宰府線直到太宰府駅。",
+              desc: "",
               place: "西鉄福岡(天神)駅",
               tr: {
                 m: "西鐵電車",
@@ -1148,7 +1185,7 @@
               ja: "太宰府天満宮",
               lat: 33.5122,
               lng: 130.5321,
-              desc: "日本三大天滿宮，學問之神。必吃梅ヶ枝餅邊走邊吃。⏰ 6:00–19:00 (4–5月)",
+              desc: "",
               gmap: null,
               place: "太宰府天滿宮",
               tr: {
@@ -1167,7 +1204,7 @@
               ja: "光明禪寺",
               lat: 33.5105,
               lng: 130.532,
-              desc: "著名「苔之庭」，目前因修繕長期暫停開放，僅能外圍參觀。⏰ --",
+              desc: "",
               gmap: null,
               place: "光明禪寺 太宰府",
               tr: {
@@ -1186,7 +1223,7 @@
               ja: "天神 ショッピング（自由時間）",
               lat: 33.5905,
               lng: 130.3985,
-              desc: "天神地區百貨巡禮（Parco、岩田屋、大丸、天神地下街）。⏰ 10:00–20:00",
+              desc: "",
               gmap: null,
               place: "天神地下街",
               tr: {
@@ -1205,46 +1242,27 @@
               ja: "博多駅",
               lat: 33.5898,
               lng: 130.4207,
-              desc: "抵達博多，先前往 JR 博多シティ取甜點，接著步行至晚餐店。",
+              desc: "",
               place: "博多駅 KITTE",
               tr: {
                 m: "步行",
-                d: "博多駅 → Jiichiro JR Hakata City · 約 3 分",
+                d: "博多駅 → 肉屋肉一 · 約 5 分",
                 from: "博多駅",
-                to: "Jiichiro JR博多シティ",
-                mode: "walking",
-              },
-            },
-            {
-              time: "20:30",
-              icon: "",
-              dur: "20 分",
-              name: "Jiichiro JR Hakata City 布丁",
-              ja: "Jiichiro JR博多シティ店",
-              lat: 33.5903,
-              lng: 130.4214,
-              desc: "JR 博多內人氣布丁店。推薦布丁奶油大福。⏰ 08:00–21:00",
-              gmap: null,
-              place: "Jiichiro JR Hakata City",
-              tr: {
-                m: "步行",
-                d: "JR博多シティ → Menya ISHII · 約 5 分",
-                from: "JR博多シティ",
-                to: "麺屋 ISHII 福岡",
+                to: "肉屋肉一 博多店",
                 mode: "walking",
               },
             },
             {
               time: "21:00",
               icon: "",
-              dur: "1 小時",
-              name: "Menya ISHII 晚餐",
-              ja: "麺屋 ISHII",
-              lat: 33.5895,
-              lng: 130.4195,
-              desc: "博多拉麵名店。⚠️ 此店目前可能已歇業，請現場確認。⏰ --",
-              gmap: null,
-              place: "麺屋 ISHII 福岡",
+              dur: "1.5 小時",
+              name: "肉屋肉一 博多店",
+              ja: "肉屋肉一 (Nikuya Nikuichi)",
+              lat: 33.588,
+              lng: 130.425,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/p2PFosQRG7Hy3rEP8",
+              place: "肉屋肉一 博多店",
               tr: null,
             },
           ],
@@ -1268,6 +1286,25 @@
           note: "IT721 · 17:10 福岡 → 18:40 桃園",
           stops: [
             {
+              time: "07:30",
+              icon: "",
+              dur: "1 小時",
+              name: "鮭魚早餐",
+              ja: "博多 鮭早餐",
+              lat: 33.5898,
+              lng: 130.422,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/vbaMxPpNTMHaGfRcA",
+              place: "博多 早餐",
+              tr: {
+                m: "步行",
+                d: "早餐店 → 博多駅 · 約 5 分",
+                from: "博多駅周辺",
+                to: "博多駅",
+                mode: "walking",
+              },
+            },
+            {
               time: "08:30",
               icon: "",
               dur: "行李寄存",
@@ -1275,7 +1312,7 @@
               ja: "博多駅 コインロッカー",
               lat: 33.5898,
               lng: 130.4207,
-              desc: "退房後先將大件行李寄存於車站大型置物櫃。南藏院有較多階梯，建議輕便前往。⏰ --",
+              desc: "",
               place: "博多駅 コインロッカー KITTE",
               tr: {
                 m: "JR 篠栗線",
@@ -1293,7 +1330,7 @@
               ja: "城戸南蔵院前駅 (JR 篠栗線)",
               lat: 33.6266,
               lng: 130.545,
-              desc: "從博多 9 號月台出發，搭 JR 篠栗線 (須賀線) 門到門只需 25 分鐘，出站後步行 5 分鐘即達。",
+              desc: "",
               place: "城戸南蔵院前駅",
               tr: {
                 m: "步行",
@@ -1311,7 +1348,7 @@
               ja: "南蔵院 (Nanzoin Temple)",
               lat: 33.6293,
               lng: 130.5483,
-              desc: "世界最大青銅臥佛（41公尺），環境清幽。注意：服裝需莊重（不可太短），且禁止商業攝影。⏰ 09:00–17:00 (16:30最後入場)",
+              desc: "",
               gmap: null,
               place: "南蔵院 篠栗",
               tr: {
@@ -1326,13 +1363,13 @@
               time: "11:30",
               icon: "",
               dur: "1 小時",
-              name: "TANYA博多 博多一番街店 午餐",
-              ja: "TANYA博多 博多一番街店",
+              name: "Menya ISHII 午餐",
+              ja: "Menya ISHII",
               lat: 33.5895,
               lng: 130.421,
-              desc: "博多駅一番街（B1）超人氣烤牛舌專賣店，取行李後步行直達。推薦：牛舌定食。⏰ 07:00–22:00",
-              gmap: null,
-              place: "TANYA博多 博多一番街店",
+              desc: "",
+              gmap: "https://maps.app.goo.gl/8XY56u6eBpb9xdcQA",
+              place: "Menya ISHII",
               tr: {
                 m: "步行",
                 d: "博多一番街 → KITTE 博多 · 約 2 分",
@@ -1344,12 +1381,13 @@
             {
               time: "12:30",
               icon: "",
-              dur: "1.5 小時",
-              name: "博多駅・伴手禮採買",
-              ja: "博多駅 KITTE / 阪急百貨",
+              dur: "1 小時",
+              name: "博多駅・採買 (可麗露/布丁)",
+              ja: "博多駅 KITTE / 伴手禮",
               lat: 33.5898,
               lng: 130.4207,
-              desc: "最後衝刺！推薦：博多通りもん、明太子、ひよ子（小雞餅）、巧克力商店。⏰ 10:00–20:00",
+              desc: "",
+              gmap: "https://maps.app.goo.gl/wh8TcPiEwaksMuRAA",
               place: "KITTE 博多",
               tr: {
                 m: "地鐵空港線",
@@ -1360,6 +1398,25 @@
               },
             },
             {
+              time: "13:30",
+              icon: "",
+              dur: "20 分",
+              name: "FUK COFFEE 布丁冰淇淋",
+              ja: "FUK COFFEE 福岡空港店",
+              lat: 33.5863,
+              lng: 130.4522,
+              desc: "",
+              gmap: "https://maps.app.goo.gl/JHMB5BpZRNuQ91am6",
+              place: "FUK COFFEE 福岡空港",
+              tr: {
+                m: "步行",
+                d: "FUK COFFEE → 國際線航廈 · 約 5 分",
+                from: "FUK COFFEE 福岡空港",
+                to: "福岡空港国際線ターミナル",
+                mode: "walking",
+              },
+            },
+            {
               time: "14:30",
               icon: "",
               dur: "採買+報到",
@@ -1367,27 +1424,8 @@
               ja: "福岡空港 国際線ターミナル",
               lat: 33.5862,
               lng: 130.4516,
-              desc: "先逛國內線航廈商店街採買（伴手禮更多），再搭免費接駁巴士前往國際線辦理 IT721 登機手續。",
+              desc: "",
               place: "福岡空港 国際線ターミナル",
-              tr: {
-                m: "步行",
-                d: "辦理登機後 → FUK COFFEE · 約 5 分",
-                from: "福岡空港国際線ターミナル",
-                to: "FUK COFFEE 福岡空港",
-                mode: "walking",
-              },
-            },
-            {
-              time: "15:30",
-              icon: "",
-              dur: "20 分",
-              name: "FUK COFFEE 布丁冰淇淋",
-              ja: "FUK COFFEE 福岡空港店",
-              lat: 33.5863,
-              lng: 130.4522,
-              desc: "機場內特色咖啡店。招牌「布丁冰淇淋」不能錯過。上機前最後一份甜點！⏰ 08:30–19:30",
-              gmap: null,
-              place: "FUK COFFEE 福岡空港",
               tr: null,
             },
             {
@@ -1398,7 +1436,7 @@
               ja: "Tigerair Taiwan IT721 → TPE",
               lat: 33.589,
               lng: 130.449,
-              desc: "臺灣虎航 IT721 起飛，預計 18:40 抵達桃園機場。福岡再見！またね！",
+              desc: "",
               place: null,
               tr: null,
             },
@@ -1628,32 +1666,30 @@
  <div class="stop-card">
  <div class="stop-row1">
  <span class="stop-time">${s.time}</span>
+ <div class="stop-nav-box">
+ ${s.place ? `<a href="${navUrl(s.place)}" target="_blank" class="btn-mini-nav">導航</a>` : s.gmap ? `<a href="${s.gmap}" target="_blank" class="btn-mini-nav">導航</a>` : ""}
+ </div>
  <div style="flex:1;min-width:0">
  <div class="stop-name">${s.name}</div>
  <span class="stop-name-ja">${s.ja || ""}</span>
  ${(() => {
    const hrs = extractHours(s.desc);
-   return hrs ? `<span class="stop-hours">⏰ ${hrs}</span>` : "";
+   return hrs ? `<span class="stop-hours">${hrs}</span>` : "";
  })()}
  </div>
  ${s.dur ? `<span class="stop-dur">${s.dur}</span>` : ""}
  </div>
  <div class="stop-desc">${s.desc}</div>
- <div class="stop-btns">
- ${s.place ? `<a href="${navUrl(s.place)}" target="_blank" class="btn btn-nav">Google 導航</a>` : s.gmap ? `<a href="${s.gmap}" target="_blank" class="btn btn-nav">Google 導航</a>` : ""}
- </div>
  </div>
  </div>`;
 
           if (s.tr && !isLast) {
-            const url = navUrl(s.tr.from, s.tr.to, s.tr.mode);
             h += `<div class="tl-transport" style="position:relative;padding-left:0">
  <div class="transport-line" style="border-left-color:${day.routeColor}">
  <div class="tr-info">
  <span class="tr-method">${s.tr.m}</span>
  <span class="tr-detail">${s.tr.d}</span>
  </div>
- <a href="${url}" target="_blank" class="btn btn-query tr-query-btn">即時時刻表</a>
  </div>
  </div>`;
           }
