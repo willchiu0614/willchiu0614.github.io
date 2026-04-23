@@ -378,18 +378,6 @@
         display: block;
         margin-top: 0.1rem;
       }
-      .stop-hours {
-        font-size: 0.68rem;
-        color: #4ade80;
-        background: rgba(74, 222, 128, 0.12);
-        border: 1px solid rgba(74, 222, 128, 0.28);
-        border-radius: 6px;
-        padding: 0.08rem 0.42rem;
-        display: inline-block;
-        margin-top: 0.22rem;
-        white-space: nowrap;
-        letter-spacing: 0.01em;
-      }
       .stop-dur {
         font-size: 0.72rem;
         padding: 0.18rem 0.55rem;
@@ -836,11 +824,6 @@
       function placeUrl(q) {
         return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
       }
-      function extractHours(desc) {
-        if (!desc) return null;
-        const m = desc.match(/\s*(.+)$/);
-        return m ? m[1].trim() : null;
-      }
 
       const DAYS = [
         //  DAY 1
@@ -958,6 +941,7 @@
               lat: 33.5905,
               lng: 130.3993,
               desc: "",
+              isReserved: false,
               gmap: "https://maps.app.goo.gl/VLjrdkMV4ohBbhpy6",
               place: "博多和牛まぶし 武蔵 天神店",
               tr: {
@@ -1150,12 +1134,13 @@
             {
               time: "09:00",
               icon: "",
-              dur: "1 小時",
+              dur: "預約 09:00",
               name: "Robata no Ito Okashi",
               ja: "炉端のいとおかし (朝食)",
               lat: 33.5878,
               lng: 130.4134,
-              desc: "預約 09:00 | 魚市場新鮮早餐",
+              desc: "魚市場新鮮早餐",
+              isReserved: true,
               gmap: "https://www.google.com/maps/search/?api=1&query=炉端のいとおかし",
               place: "炉端のいとおかし",
               tr: {
@@ -1245,12 +1230,12 @@
             {
               time: "17:00",
               icon: "",
-              dur: "1.5 小時",
+              dur: "預約 17:00",
               name: "肉屋肉一 警固店",
               ja: "肉屋肉一 薬院・警固店",
               lat: 33.5841,
               lng: 130.3934,
-              desc: "預約 17:00 | +81 92-716-1231",
+              desc: "+81 92-716-1231",
               gmap: "https://www.google.com/maps/search/?api=1&query=肉屋肉一+薬院・警固店",
               place: "肉屋肉一 薬院・警固店",
               tr: {
@@ -1349,14 +1334,15 @@
               },
             },
             {
-              time: "11:30",
+              time: "12:00",
               icon: "",
-              dur: "1 小時",
+              dur: "預約 12:00",
               name: "Menya ISHII 午餐",
               ja: "Menya ISHII",
               lat: 33.5895,
               lng: 130.421,
               desc: "",
+              isReserved: true,
               gmap: "https://maps.app.goo.gl/8XY56u6eBpb9xdcQA",
               place: "Menya ISHII",
               tr: {
@@ -1368,7 +1354,7 @@
               },
             },
             {
-              time: "12:30",
+              time: "13:00",
               icon: "",
               dur: "1 小時",
               name: "博多駅・採買 (可麗露/布丁)",
@@ -1387,7 +1373,7 @@
               },
             },
             {
-              time: "13:30",
+              time: "14:00",
               icon: "",
               dur: "20 分",
               name: "Jiichiro 至一郎布丁",
@@ -1406,7 +1392,7 @@
               },
             },
             {
-              time: "14:30",
+              time: "14:45",
               icon: "",
               dur: "採買+報到",
               name: "福岡機場 國內線→國際線",
@@ -1665,12 +1651,9 @@
  <div style="flex:1;min-width:0">
  <div class="stop-name">${s.name}</div>
  <span class="stop-name-ja">${s.ja || ""}</span>
- ${(() => {
-   const hrs = extractHours(s.desc);
-   return hrs ? `<span class="stop-hours">${hrs}</span>` : "";
- })()}
+ ${s.isReserved && day.id !== 1 ? `<span style="font-size: 0.68rem; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.28); border-radius: 6px; padding: 0.08rem 0.42rem; display: inline-block; margin-top: 0.22rem; white-space: nowrap; letter-spacing: 0.01em;">預約</span>` : ""}
  </div>
- ${s.dur ? `<span class="stop-dur">${s.dur}</span>` : ""}
+ ${s.dur ? `<span class="stop-dur" style="${s.dur.includes("預約") ? "color:#4ade80; background:rgba(74,222,128,0.12); border:1px solid rgba(74,222,128,0.2)" : ""}">${s.dur}</span>` : ""}
  </div>
  <div class="stop-desc">${s.desc}</div>
  </div>
