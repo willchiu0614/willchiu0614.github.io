@@ -1651,7 +1651,7 @@
  <div style="flex:1;min-width:0">
  <div class="stop-name">${s.name}</div>
  <span class="stop-name-ja">${s.ja || ""}</span>
- ${s.isReserved && day.id !== 1 ? `<span style="font-size: 0.68rem; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.28); border-radius: 6px; padding: 0.08rem 0.42rem; display: inline-block; margin-top: 0.22rem; white-space: nowrap; letter-spacing: 0.01em;">預約</span>` : ""}
+ ${s.isReserved && day.id !== 1 && day.id !== 4 ? `<span style="font-size: 0.68rem; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.28); border-radius: 6px; padding: 0.08rem 0.42rem; display: inline-block; margin-top: 0.22rem; white-space: nowrap; letter-spacing: 0.01em;">預約</span>` : ""}
  </div>
  ${s.dur ? `<span class="stop-dur" style="${s.dur.includes("預約") ? "color:#4ade80; background:rgba(74,222,128,0.12); border:1px solid rgba(74,222,128,0.2)" : ""}">${s.dur}</span>` : ""}
  </div>
