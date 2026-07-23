@@ -1,1606 +1,1343 @@
 <!doctype html>
 <html lang="zh-TW">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>福岡四天三夜 2026.05</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      crossorigin=""
-    />
+    <title>熊本福岡五天四夜 2026.07</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <style>
-      :root {
-        --bg: #0d1117;
-        --card: #161b22;
-        --card2: #1c2128;
-        --border: #30363d;
-        --text: #e6edf3;
-        --muted: #8b949e;
-        --yellow: #4ade80;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family:
-          "Segoe UI", "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
-        min-height: 100vh;
-      }
-
-      /*  HEADER  */
-      .header {
-        background: linear-gradient(
-          160deg,
-          #0f2027 0%,
-          #203a43 50%,
-          #2c5364 100%
-        );
-        padding: 2.5rem 1.5rem 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-      .header::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image:
-          radial-gradient(
-            circle at 20% 50%,
-            rgba(251, 191, 36, 0.06) 0%,
-            transparent 60%
-          ),
-          radial-gradient(
-            circle at 80% 20%,
-            rgba(96, 165, 250, 0.06) 0%,
-            transparent 60%
-          );
-      }
-      .header-en {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.75rem;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        position: relative;
-        margin-bottom: 0.4rem;
-      }
-      .header-title {
-        font-size: clamp(1.75rem, 5vw, 2.8rem);
-        font-weight: 800;
-        color: #fff;
-        position: relative;
-        line-height: 1.15;
-      }
-      .header-badges {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 1rem;
-        position: relative;
-      }
-      .badge {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 20px;
-        padding: 0.28rem 0.9rem;
-        font-size: 0.82rem;
-        color: rgba(255, 255, 255, 0.85);
-        line-height: 1.5;
-        vertical-align: middle;
-        display: inline-flex;
-        align-items: center;
-      }
-
-      /*  COUNTDOWN  */
-      .countdown-bar {
-        background: rgba(74, 222, 128, 0.08);
-        border-bottom: 1px solid rgba(74, 222, 128, 0.2);
-        padding: 0.6rem 1rem;
-        text-align: center;
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.6);
-      }
-      #countdown-text {
-        font-weight: 700;
-        color: var(--yellow);
-      }
-
-      /*  TABS  */
-      .tabs {
-        display: flex;
-        overflow-x: auto;
-        scrollbar-width: none;
-        background: var(--card);
-        border-bottom: 1px solid var(--border);
-        padding: 0 0.5rem;
-        position: sticky;
-        top: 0;
-        z-index: 200;
-      }
-      .tabs::-webkit-scrollbar {
-        display: none;
-      }
-      .tab {
-        flex-shrink: 0;
-        padding: 0.9rem 1.1rem;
-        cursor: pointer;
-        border-bottom: 3px solid transparent;
-        color: var(--muted);
-        font-size: 0.875rem;
-        font-weight: 500;
-        white-space: nowrap;
-        transition: color 0.15s;
-        line-height: 1.4;
-        text-align: center;
-      }
-      .tab span {
-        display: block;
-        font-size: 0.72rem;
-        color: var(--muted);
-      }
-      .tab:hover {
-        color: var(--text);
-      }
-      .tab.active {
-        color: var(--text);
-        font-weight: 700;
-      }
-      .tab.active span {
-        color: inherit;
-        opacity: 0.75;
-      }
-
-      /*  LAYOUT  */
-      .content-wrap {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 1.25rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-      .left-col {
-        min-width: 0;
-      }
-
-      /*  CARDS  */
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .card-header {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--muted);
-      }
-
-      /*  MAP DROPDOWN  */
-      .map-dropdown {
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .map-toggle {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.85rem 1rem;
-        background: none;
-        border: none;
-        border-bottom: 1px solid transparent;
-        color: var(--muted);
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-align: left;
-        transition:
-          background 0.15s,
-          color 0.15s,
-          border-color 0.15s;
-        font-family: inherit;
-      }
-      .map-toggle:hover {
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
-      }
-      .map-toggle.open {
-        color: var(--text);
-        border-bottom-color: var(--border);
-      }
-      .map-arrow {
-        margin-left: auto;
-        font-size: 0.7rem;
-        transition: transform 0.25s;
-        display: inline-block;
-      }
-      .map-arrow.open {
-        transform: rotate(180deg);
-      }
-      .map-body {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.35s ease;
-      }
-      #day-map {
-        height: 380px;
-        width: 100%;
-      }
-      .map-legend {
-        padding: 0.65rem 1rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem 0.9rem;
-      }
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        font-size: 0.72rem;
-        color: var(--muted);
-      }
-      .legend-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-
-      /*  DAY HEADER  */
-      .day-header {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-      }
-      .day-tag {
-        display: inline-block;
-        padding: 0.2rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-      .day-title {
-        font-size: 1.4rem;
-        font-weight: 800;
-      }
-      .day-sub {
-        color: var(--muted);
-        font-size: 0.875rem;
-        margin-top: 0.3rem;
-      }
-
-      /*  HOTEL STRIP  */
-      .hotel-strip {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.9rem 1.25rem;
-        border-bottom: 1px solid var(--border);
-        background: linear-gradient(
-          90deg,
-          rgba(37, 99, 235, 0.15) 0%,
-          transparent 100%
-        );
-      }
-      .hotel-strip .icon {
-        font-size: 1.7rem;
-      }
-      .hotel-name {
-        font-weight: 700;
-        font-size: 0.95rem;
-      }
-      .hotel-sub {
-        font-size: 0.75rem;
-        color: var(--muted);
-        margin-top: 0.15rem;
-      }
-
-      /*  TIMELINE  */
-      .timeline {
-        padding: 1.25rem 1.5rem;
-      }
-      .tl-wrap {
-        position: relative;
-        padding-left: 0;
-      }
-      .tl-wrap::before {
-        display: none;
-      }
-      .tl-stop {
-        position: relative;
-        margin-bottom: 0.5rem;
-      }
-      .tl-dot {
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 9px;
-        font-weight: 800;
-        color: #fff;
-        z-index: 1;
-        border: 2px solid var(--bg);
-        flex-shrink: 0;
-      }
-      .stop-card {
-        background: var(--card2);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 0.9rem 1.1rem;
-        transition: border-color 0.15s;
-      }
-      .stop-card:hover {
-        border-color: #484f58;
-      }
-      .stop-row1 {
-        display: flex;
-        align-items: baseline;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-      }
-      .stop-time {
-        font-family: "JetBrains Mono", "Courier New", monospace;
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--yellow);
-        min-width: 48px;
-        flex-shrink: 0;
-      }
-      .stop-name {
-        font-size: 0.95rem;
-        font-weight: 700;
-        flex: 1;
-      }
-      .stop-name-ja {
-        font-size: 0.72rem;
-        color: var(--muted);
-        display: block;
-        margin-top: 0.1rem;
-      }
-      .stop-dur {
-        font-size: 0.72rem;
-        padding: 0.18rem 0.55rem;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 8px;
-        color: var(--muted);
-        white-space: nowrap;
-        margin-top: 2px;
-      }
-      .stop-desc {
-        margin-top: 0.55rem;
-        font-size: 0.82rem;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-      .stop-btns {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-top: 0.7rem;
-      }
-
-      .btn-mini-nav {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.1rem 0.6rem;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-decoration: none;
-        background: #21262d;
-        color: #c9d1d9;
-        border: 1px solid #30363d;
-        transition: background 0.15s;
-        height: 22px;
-        white-space: nowrap;
-      }
-      .btn-mini-nav:hover {
-        background: #30363d;
-      }
-      .stop-nav-box {
-        display: flex;
-        align-items: center;
-        min-width: 42px;
-      }
-
-      /*  TRANSPORT CONNECTOR  */
-      .tl-transport {
-        position: relative;
-        margin-bottom: 0.25rem;
-      }
-      .transport-line {
-        margin-left: 0.5rem;
-        border-left: 3px solid var(--route-color, #475569);
-        border-radius: 0 8px 8px 0;
-        background: rgba(255, 255, 255, 0.02);
-        padding: 0.55rem 0.9rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem 0.75rem;
-        flex-wrap: wrap;
-      }
-      .tr-query-btn {
-        flex-shrink: 0;
-      }
-      .tr-info {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-      }
-      .tr-method {
-        font-size: 0.83rem;
-        font-weight: 700;
-      }
-      .tr-detail {
-        font-size: 0.75rem;
-        color: var(--muted);
-      }
-
-      /*  BUTTONS  */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.3rem 0.75rem;
-        border-radius: 7px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        border: none;
-        transition: filter 0.15s;
-        user-select: none;
-        line-height: 1.4;
-      }
-      .btn:hover {
-        filter: brightness(1.15);
-      }
-      .btn-nav,
-      .btn-place,
-      .btn-query {
-        background: #21262d;
-        color: #c9d1d9;
-        border: 1px solid #30363d;
-      }
-      .btn-nav:hover,
-      .btn-place:hover,
-      .btn-query:hover {
-        background: #30363d;
-        filter: none;
-      }
-
-      /*  TIPS  */
-      .tips-section {
-        padding: 1rem 1.5rem 1.5rem;
-      }
-      .tips-title {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--muted);
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-      }
-      .tip-item {
-        display: flex;
-        gap: 0.65rem;
-        padding: 0.5rem 0;
-        border-top: 1px solid var(--border);
-        font-size: 0.82rem;
-        line-height: 1.6;
-      }
-      .tip-num {
-        color: var(--yellow);
-        font-weight: 800;
-        min-width: 16px;
-      }
-
-      /*  KLOOK DAY  */
-      .klook-body {
-        padding: 2.5rem 1.5rem;
-        text-align: center;
-      }
-      .klook-big {
-        font-size: 3rem;
-        margin-bottom: 0.75rem;
-      }
-      .klook-text {
-        color: #86efac;
-        line-height: 1.8;
-        font-size: 0.9rem;
-      }
-
-      /*  FLIGHT BANNER  */
-      .flight-banner {
-        margin: 0 1.5rem 1rem;
-        padding: 0.75rem 1.1rem;
-        background: linear-gradient(
-          90deg,
-          rgba(74, 222, 128, 0.1) 0%,
-          transparent 100%
-        );
-        border: 1px solid rgba(74, 222, 128, 0.25);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 0.85rem;
-        flex-wrap: wrap;
-      }
-      .flight-num {
-        font-weight: 800;
-        color: var(--yellow);
-      }
-
-      /*  RESPONSIVE  */
-
-      /* 平板 / 大手機 */
-      @media (max-width: 820px) {
-        .content-wrap {
-          padding: 0.75rem;
-          gap: 0.75rem;
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --card2: #1c2128;
+            --border: #30363d;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --yellow: #4ade80;
         }
-        #day-map {
-          height: 280px;
-        }
-      }
 
-      /* 手機：進一步縮緊間距、放大觸控目標 */
-      @media (max-width: 480px) {
-        /* Header */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                "Segoe UI", "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        /*  HEADER  */
         .header {
-          padding: 1.5rem 1rem 1.25rem;
+            background: linear-gradient(160deg,
+                    #0f2027 0%,
+                    #203a43 50%,
+                    #2c5364 100%);
+            padding: 2.5rem 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%,
+                    rgba(251, 191, 36, 0.06) 0%,
+                    transparent 60%),
+                radial-gradient(circle at 80% 20%,
+                    rgba(96, 165, 250, 0.06) 0%,
+                    transparent 60%);
+        }
+
+        .header-en {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            position: relative;
+            margin-bottom: 0.4rem;
+        }
+
         .header-title {
-          font-size: 1.45rem;
+            font-size: clamp(1.75rem, 5vw, 2.8rem);
+            font-weight: 800;
+            color: #fff;
+            position: relative;
+            line-height: 1.15;
         }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
         .badge {
-          font-size: 0.72rem;
-          padding: 0.22rem 0.65rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 0.28rem 0.9rem;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
         }
+
+        /*  COUNTDOWN  */
         .countdown-bar {
-          font-size: 0.78rem;
-          padding: 0.5rem 0.75rem;
+            background: rgba(74, 222, 128, 0.08);
+            border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+            padding: 0.6rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Tabs：等寬分配，填滿螢幕 */
+        #countdown-text {
+            font-weight: 700;
+            color: var(--yellow);
+        }
+
+        /*  TABS  */
         .tabs {
-          padding: 0;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 200;
         }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
         .tab {
-          flex: 1;
-          padding: 0.7rem 0.5rem;
-          font-size: 0.75rem;
+            flex-shrink: 0;
+            padding: 0.9rem 1.1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            color: var(--muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.15s;
+            line-height: 1.4;
+            text-align: center;
         }
+
         .tab span {
-          font-size: 0.65rem;
+            display: block;
+            font-size: 0.72rem;
+            color: var(--muted);
         }
 
-        /* Layout */
+        .tab:hover {
+            color: var(--text);
+        }
+
+        .tab.active {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .tab.active span {
+            color: inherit;
+            opacity: 0.75;
+        }
+
+        /*  LAYOUT  */
         .content-wrap {
-          padding: 0.5rem;
-          gap: 0.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
+
+        .left-col {
+            min-width: 0;
+        }
+
+        /*  CARDS  */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+        }
+
+        /*  MAP DROPDOWN  */
+        .map-dropdown {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .map-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1rem;
+            background: none;
+            border: none;
+            border-bottom: 1px solid transparent;
+            color: var(--muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition:
+                background 0.15s,
+                color 0.15s,
+                border-color 0.15s;
+            font-family: inherit;
+        }
+
+        .map-toggle:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+        }
+
+        .map-toggle.open {
+            color: var(--text);
+            border-bottom-color: var(--border);
+        }
+
+        .map-arrow {
+            margin-left: auto;
+            font-size: 0.7rem;
+            transition: transform 0.25s;
+            display: inline-block;
+        }
+
+        .map-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .map-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
         #day-map {
-          height: 230px;
+            height: 380px;
+            width: 100%;
         }
 
-        /* Day header */
+        .map-legend {
+            padding: 0.65rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /*  DAY HEADER  */
         .day-header {
-          padding: 0.9rem 1rem;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
+
+        .day-tag {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
         .day-title {
-          font-size: 1.2rem;
+            font-size: 1.4rem;
+            font-weight: 800;
         }
+
         .day-sub {
-          font-size: 0.8rem;
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 0.3rem;
         }
 
-        /* Flight banner */
-        .flight-banner {
-          margin: 0 0.75rem 0.85rem;
-          padding: 0.6rem 0.85rem;
-          font-size: 0.8rem;
-        }
-
-        /* Hotel strip */
+        /*  HOTEL STRIP  */
         .hotel-strip {
-          padding: 0.7rem 0.9rem;
-          gap: 0.65rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg,
+                    rgba(37, 99, 235, 0.15) 0%,
+                    transparent 100%);
         }
+
         .hotel-strip .icon {
-          font-size: 1.35rem;
+            font-size: 1.7rem;
         }
+
         .hotel-name {
-          font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.95rem;
         }
+
         .hotel-sub {
-          font-size: 0.68rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.15rem;
         }
 
-        /* Timeline */
+        /*  TIMELINE  */
         .timeline {
-          padding: 0.9rem 0.75rem;
+            padding: 1.25rem 1.5rem;
         }
+
+        .tl-wrap {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .tl-wrap::before {
+            display: none;
+        }
+
+        .tl-stop {
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
         .tl-dot {
-          width: 18px;
-          height: 18px;
-          font-size: 8px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 800;
+            color: #fff;
+            z-index: 1;
+            border: 2px solid var(--bg);
+            flex-shrink: 0;
         }
 
-        /* Stop cards */
         .stop-card {
-          padding: 0.75rem 0.85rem;
-          border-radius: 8px;
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            transition: border-color 0.15s;
         }
+
+        .stop-card:hover {
+            border-color: #484f58;
+        }
+
         .stop-row1 {
-          gap: 0.4rem;
-          align-items: baseline;
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            flex-wrap: wrap;
         }
+
         .stop-time {
-          font-size: 0.875rem;
-          min-width: 42px;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--yellow);
+            min-width: 48px;
+            flex-shrink: 0;
         }
+
         .stop-name {
-          font-size: 0.875rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            flex: 1;
         }
+
         .stop-name-ja {
-          font-size: 0.68rem;
+            font-size: 0.72rem;
+            color: var(--muted);
+            display: block;
+            margin-top: 0.1rem;
         }
+
         .stop-dur {
-          font-size: 0.68rem;
-          padding: 0.15rem 0.45rem;
+            font-size: 0.72rem;
+            padding: 0.18rem 0.55rem;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            color: var(--muted);
+            white-space: nowrap;
+            margin-top: 2px;
         }
+
         .stop-desc {
-          font-size: 0.78rem;
-          margin-top: 0.45rem;
+            margin-top: 0.55rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.6;
         }
+
         .stop-btns {
-          gap: 0.35rem;
-          margin-top: 0.6rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.7rem;
         }
 
-        /* Buttons：放大觸控面積 */
-        .btn {
-          padding: 0.5rem 0.9rem;
-          font-size: 0.78rem;
-          min-height: 36px;
-          border-radius: 8px;
+        .btn-mini-nav {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.1rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            transition: background 0.15s;
+            height: 22px;
+            white-space: nowrap;
         }
 
-        /* Transport connector */
+        .btn-mini-nav:hover {
+            background: #30363d;
+        }
+
+        .stop-nav-box {
+            display: flex;
+            align-items: center;
+            min-width: 42px;
+        }
+
+        /*  TRANSPORT CONNECTOR  */
+        .tl-transport {
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+
         .transport-line {
-          margin-left: 0;
-          padding: 0.5rem 0.75rem;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
+            margin-left: 0.5rem;
+            border-left: 3px solid var(--route-color, #475569);
+            border-radius: 0 8px 8px 0;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.55rem 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem 0.75rem;
+            flex-wrap: wrap;
         }
+
+        .tr-query-btn {
+            flex-shrink: 0;
+        }
+
+        .tr-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
         .tr-method {
-          font-size: 0.78rem;
+            font-size: 0.83rem;
+            font-weight: 700;
         }
+
         .tr-detail {
-          font-size: 0.7rem;
+            font-size: 0.75rem;
+            color: var(--muted);
         }
 
-        /* Tips */
+        /*  BUTTONS  */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 7px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: filter 0.15s;
+            user-select: none;
+            line-height: 1.4;
+        }
+
+        .btn:hover {
+            filter: brightness(1.15);
+        }
+
+        .btn-nav,
+        .btn-place,
+        .btn-query {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+        }
+
+        .btn-nav:hover,
+        .btn-place:hover,
+        .btn-query:hover {
+            background: #30363d;
+            filter: none;
+        }
+
+        /*  TIPS  */
         .tips-section {
-          padding: 0.75rem 0.9rem 1.1rem;
+            padding: 1rem 1.5rem 1.5rem;
         }
+
+        .tips-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
         .tip-item {
-          font-size: 0.78rem;
+            display: flex;
+            gap: 0.65rem;
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem;
+            line-height: 1.6;
         }
 
-        /* Klook */
+        .tip-num {
+            color: var(--yellow);
+            font-weight: 800;
+            min-width: 16px;
+        }
+
+        /*  KLOOK DAY  */
         .klook-body {
-          padding: 2rem 1rem;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
         }
-        .klook-big {
-          font-size: 2.5rem;
-        }
-        .klook-text {
-          font-size: 0.85rem;
-        }
-      }
 
-      /* day-level CSS var injection */
-      .d1 {
-        --route-color: #4ade80;
-      }
-      .d2 {
-        --route-color: #4ade80;
-      }
-      .d3 {
-        --route-color: #4ade80;
-      }
-      .d4 {
-        --route-color: #4ade80;
-      }
+        .klook-big {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .klook-text {
+            color: #86efac;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+
+        /*  FLIGHT BANNER  */
+        .flight-banner {
+            margin: 0 1.5rem 1rem;
+            padding: 0.75rem 1.1rem;
+            background: linear-gradient(90deg,
+                    rgba(74, 222, 128, 0.1) 0%,
+                    transparent 100%);
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .flight-num {
+            font-weight: 800;
+            color: var(--yellow);
+        }
+
+        /*  RESPONSIVE  */
+        @media (max-width: 820px) {
+            .content-wrap {
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+
+            #day-map {
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 1.5rem 1rem 1.25rem;
+            }
+
+            .header-title {
+                font-size: 1.45rem;
+            }
+
+            .badge {
+                font-size: 0.72rem;
+                padding: 0.22rem 0.65rem;
+            }
+
+            .countdown-bar {
+                font-size: 0.78rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .tabs {
+                padding: 0;
+            }
+
+            .tab {
+                flex: 1;
+                padding: 0.7rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .tab span {
+                font-size: 0.65rem;
+            }
+
+            .content-wrap {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            #day-map {
+                height: 230px;
+            }
+
+            .day-header {
+                padding: 0.9rem 1rem;
+            }
+
+            .day-title {
+                font-size: 1.2rem;
+            }
+
+            .day-sub {
+                font-size: 0.8rem;
+            }
+
+            .flight-banner {
+                margin: 0 0.75rem 0.85rem;
+                padding: 0.6rem 0.85rem;
+                font-size: 0.8rem;
+            }
+
+            .hotel-strip {
+                padding: 0.7rem 0.9rem;
+                gap: 0.65rem;
+            }
+
+            .hotel-strip .icon {
+                font-size: 1.35rem;
+            }
+
+            .hotel-name {
+                font-size: 0.85rem;
+            }
+
+            .hotel-sub {
+                font-size: 0.68rem;
+            }
+
+            .timeline {
+                padding: 0.9rem 0.75rem;
+            }
+
+            .tl-dot {
+                width: 18px;
+                height: 18px;
+                font-size: 8px;
+            }
+
+            .stop-card {
+                padding: 0.75rem 0.85rem;
+                border-radius: 8px;
+            }
+
+            .stop-row1 {
+                gap: 0.4rem;
+                align-items: baseline;
+            }
+
+            .stop-time {
+                font-size: 0.875rem;
+                min-width: 42px;
+            }
+
+            .stop-name {
+                font-size: 0.875rem;
+            }
+
+            .stop-name-ja {
+                font-size: 0.68rem;
+            }
+
+            .stop-dur {
+                font-size: 0.68rem;
+                padding: 0.15rem 0.45rem;
+            }
+
+            .stop-desc {
+                font-size: 0.78rem;
+                margin-top: 0.45rem;
+            }
+
+            .stop-btns {
+                gap: 0.35rem;
+                margin-top: 0.6rem;
+            }
+
+            .btn {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.78rem;
+                min-height: 36px;
+                border-radius: 8px;
+            }
+
+            .transport-line {
+                margin-left: 0;
+                padding: 0.5rem 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .tr-method {
+                font-size: 0.78rem;
+            }
+
+            .tr-detail {
+                font-size: 0.7rem;
+            }
+
+            .tips-section {
+                padding: 0.75rem 0.9rem 1.1rem;
+            }
+
+            .tip-item {
+                font-size: 0.78rem;
+            }
+
+            .klook-body {
+                padding: 2rem 1rem;
+            }
+
+            .klook-big {
+                font-size: 2.5rem;
+            }
+
+            .klook-text {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* day-level CSS var injection */
+        .d1,
+        .d2,
+        .d3,
+        .d4,
+        .d5 {
+            --route-color: #4ade80;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <!--  HEADER  -->
     <header class="header">
-      <p class="header-en">Fukuoka Trip · 福岡四天三夜</p>
-      <h1 class="header-title">博多・天神・太宰府・南藏院</h1>
-      <div class="header-badges">
-        <span class="badge">2026/05/01 – 05/04</span>
-        <span class="badge">IT240 去程 / IT721 回程</span>
-        <span class="badge">東洋酒店 博多站</span>
-      </div>
+        <p class="header-en">Kumamoto & Fukuoka Trip · 熊本福岡五天四夜</p>
+        <h1 class="header-title">熊本・阿蘇・高千穗・福岡</h1>
+        <div class="header-badges">
+            <span class="badge">2026/07/24 – 07/28</span>
+            <span class="badge">JX846 去程 / AK1511 回程</span>
+            <span class="badge">KOKO HOTEL 連鎖飯店</span>
+        </div>
     </header>
 
     <div class="countdown-bar">
-      <span id="countdown-text">計算中⋯</span>
+        <span id="countdown-text">計算中⋯</span>
     </div>
 
     <!--  TABS  -->
     <nav class="tabs" id="tabs">
-      <div class="tab" data-day="1" onclick="switchDay(1)">
-        <span>5/1 (五)</span>市區巡禮
-      </div>
-      <div class="tab" data-day="2" onclick="switchDay(2)">
-        <span>5/2 (六)</span>糸島一日遊
-      </div>
-      <div class="tab" data-day="3" onclick="switchDay(3)">
-        <span>5/3 (日)</span>太宰府・天神
-      </div>
-      <div class="tab" data-day="4" onclick="switchDay(4)">
-        <span>5/4 (一)</span>南藏院・回程
-      </div>
+        <div class="tab" data-day="1" onclick="switchDay(1)">
+            <span>7/24 (五)</span>熊本城
+        </div>
+        <div class="tab" data-day="2" onclick="switchDay(2)">
+            <span>7/25 (六)</span>阿蘇高千穗
+        </div>
+        <div class="tab" data-day="3" onclick="switchDay(3)">
+            <span>7/26 (日)</span>熊本逛街
+        </div>
+        <div class="tab" data-day="4" onclick="switchDay(4)">
+            <span>7/27 (一)</span>福岡逛街
+        </div>
+        <div class="tab" data-day="5" onclick="switchDay(5)">
+            <span>7/28 (二)</span>福岡回程
+        </div>
     </nav>
 
     <!--  MAIN  -->
     <div class="content-wrap">
-      <!-- Map Dropdown -->
-      <div class="card map-dropdown">
-        <button
-          class="map-toggle"
-          id="map-toggle-btn"
-          onclick="toggleMap()"
-          aria-expanded="false"
-        >
-          <span id="map-label">今日路線圖</span>
-          <span
-            style="
+        <!-- Map Dropdown -->
+        <div class="card map-dropdown">
+            <button class="map-toggle" id="map-toggle-btn" onclick="toggleMap()" aria-expanded="false">
+                <span id="map-label">今日路線圖</span>
+                <span style="
               font-size: 0.72rem;
               color: var(--muted);
               margin-left: 0.35rem;
-            "
-            >· OpenStreetMap</span
-          >
-          <span class="map-arrow" id="map-arrow">&#x25BC;</span>
-        </button>
-        <div class="map-body" id="map-body">
-          <div id="day-map"></div>
-          <div class="map-legend" id="map-legend"></div>
+            ">· OpenStreetMap</span>
+                <span class="map-arrow" id="map-arrow">&#x25BC;</span>
+            </button>
+            <div class="map-body" id="map-body">
+                <div id="day-map"></div>
+                <div class="map-legend" id="map-legend"></div>
+            </div>
         </div>
-      </div>
-      <!-- Timeline -->
-      <div id="left-col"></div>
+        <!-- Timeline -->
+        <div id="left-col"></div>
     </div>
 
     <!--  SCRIPTS  -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      crossorigin=""
-    ></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
-      //
-      //  TRIP DATA
-      //
-      const TRIP = {
-        start: new Date("2026-05-01T06:45:00+08:00"),
-        end: new Date("2026-05-04T18:40:00+08:00"),
-      };
+        //
+        //  TRIP DATA
+        //
+        const TRIP = {
+            start: new Date("2026-07-24T07:30:00+08:00"),
+            end: new Date("2026-07-28T17:50:00+08:00"),
+        };
 
-      function navUrl(dest) {
-        return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent("現在地")}&destination=${encodeURIComponent(dest)}&travelmode=transit`;
-      }
-      function placeUrl(q) {
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-      }
+        function navUrl(dest) {
+            return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent("現在地")}&destination=${encodeURIComponent(dest)}&travelmode=transit`;
+        }
+        function placeUrl(q) {
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+        }
 
-      const DAYS = [
-        //  DAY 1
-        {
-          id: 1,
-          label: "5/1 (五)",
-          title: "市區巡禮",
-          sub: "博多站 → 麵包超人 → 運河城 → 天神",
-          color: "#16a34a",
-          routeColor: "#4ade80",
-          center: [33.591, 130.408],
-          zoom: 14,
-          note: "IT240 · 06:45 桃園 → 10:05 福岡",
-          stops: [
+        const DAYS = [
+            // DAY 1
             {
-              time: "10:05",
-              icon: "",
-              dur: "~55 分",
-              name: "福岡機場",
-              ja: "Fukuoka Airport",
-              lat: 33.5857,
-              lng: 130.4516,
-              desc: "",
-              place: "福岡空港 国際線ターミナル",
-              tr: {
-                m: "地鐵空港線",
-                d: "福岡空港駅 → 博多駅 · 約 5 分 · ¥260",
-                from: "福岡空港駅",
-                to: "博多駅",
-                mode: "transit",
-              },
+                id: 1,
+                label: "7/24 (五)",
+                title: "熊本市區漫遊",
+                sub: "星宇航空抵達 → KOKO HOTEL 熊本上通 → 熊本城",
+                color: "#16a34a",
+                routeColor: "#4ade80",
+                center: [32.806, 130.705],
+                zoom: 13,
+                note: "JX846 · 07:30 桃園 → 10:45 熊本",
+                stops: [
+                    {
+                        time: "10:45",
+                        icon: "",
+                        dur: "~50 分",
+                        name: "熊本機場抵達與機場巴士",
+                        ja: "Kumamoto Airport Limousine Bus",
+                        lat: 32.837,
+                        lng: 130.855,
+                        desc: "搭乘星宇航空抵達。出關後請前往航廈外【4號乘車處】搭乘前往熊本市區的利木津巴士。<br><a href=\"https://www.sankobus.jp/busportal/wp-content/uploads/noriba_airport-tw.pdf\" target=\"_blank\" style=\"color:#4ade80; text-decoration:underline; margin-top:6px; margin-right:12px; display:inline-block;\">👉 搭乘地點圖</a><a href=\"https://www.sankobus.jp/busportal/wp-content/uploads/tt-limousine_airport-20260401-tw.pdf\" target=\"_blank\" style=\"color:#4ade80; text-decoration:underline; margin-top:6px; display:inline-block;\">👉 巴士時刻表</a>",
+                        place: "阿蘇くまもと空港",
+                        tr: {
+                            m: "機場利木津巴士",
+                            d: "熊本機場 4 號乘車處 → 熊本市區通町筋 · 約 40-50 分",
+                            from: "阿蘇くまもと空港",
+                            to: "通町筋",
+                            mode: "transit"
+                        }
+                    },
+                    {
+                        time: "12:00",
+                        icon: "",
+                        dur: "放行李",
+                        name: "KOKO HOTEL 熊本上通",
+                        ja: "KOKO HOTEL Kumamoto Kamitori",
+                        lat: 32.803,
+                        lng: 130.712,
+                        desc: "辦理手續或先寄放行李",
+                        place: "KOKO HOTEL 熊本上通",
+                        tr: {
+                            m: "步行",
+                            d: "飯店周邊 → 午餐",
+                            from: "KOKO HOTEL Kumamoto Kamitori",
+                            to: "Kumamoto",
+                            mode: "walking"
+                        }
+                    },
+                    {
+                        time: "14:00",
+                        icon: "",
+                        dur: "2 小時",
+                        name: "熊本城",
+                        ja: "Kumamoto Castle",
+                        lat: 32.806,
+                        lng: 130.705,
+                        desc: "參觀日本三大名城之一",
+                        place: "熊本城",
+                        tr: {
+                            m: "步行",
+                            d: "熊本城 → 櫻之馬場 城彩苑",
+                            from: "熊本城",
+                            to: "櫻之馬場 城彩苑",
+                            mode: "walking"
+                        }
+                    },
+                    {
+                        time: "16:00",
+                        icon: "",
+                        dur: "1.5 小時",
+                        name: "櫻之馬場 城彩苑",
+                        ja: "Sakuranobaba Josaien",
+                        lat: 32.804,
+                        lng: 130.702,
+                        desc: "採買特色伴手禮與品嚐小吃",
+                        place: "櫻之馬場 城彩苑",
+                        tr: null
+                    }
+                ],
+                tips: ["機場前往市區的利木津巴士（產交巴士）不需預約，可直接使用 Suica/ICOCA 等電子票證刷卡上車，或在現場售票機購票。"]
             },
+            // DAY 2
             {
-              time: "11:00",
-              icon: "",
-              dur: "30 分",
-              name: "東洋酒店 (博多站)",
-              ja: "Oriental Hotel Fukuoka Hakata Station",
-              lat: 33.5902,
-              lng: 130.4225,
-              desc: "",
-              gmap: null,
-              place: "Oriental Hotel Fukuoka Hakata Station",
-              tr: {
-                m: "步行",
-                d: "酒店 → Full Full 博多駅 · 約 2 分",
-                from: "Oriental Hotel Fukuoka Hakata Station",
-                to: "Full Full 博多駅",
-                mode: "walking",
-              },
+                id: 2,
+                label: "7/25 (六)",
+                title: "阿蘇高千穗一日遊",
+                sub: "阿蘇山 → 草千里 → 高千穗峽",
+                color: "#16a34a",
+                routeColor: "#4ade80",
+                center: [32.89, 131.08],
+                zoom: 9,
+                note: "Klook 導覽一日遊 (訂單 GZE858691)",
+                klook: true,
+                klookDetails: {
+                    meetTime: "07:50",
+                    startTime: "08:00",
+                    meetNote: "熊本站新幹線口（西口）廣場集合",
+                    link: "https://www.klook.com",
+                    schedule: [
+                        { time: "08:00", name: "熊本站出發", desc: "新幹線口（西口）廣場" },
+                        { time: "10:00", name: "阿蘇山", desc: "中嶽火山口 30分鐘 (如關閉則改至上色見熊野座神社)" },
+                        { time: "10:40", name: "草千里", desc: "廣闊的高原草原 1小時自由活動" },
+                        { time: "13:00", name: "高千穗峽", desc: "含高千穗船票 1小時30分鐘自由活動" },
+                        { time: "18:00", name: "返回熊本站", desc: "抵達熊本站解散" }
+                    ]
+                }
             },
+            // DAY 3
             {
-              time: "11:30",
-              icon: "",
-              dur: "1 小時",
-              name: "明太子麵包 & FUK COFFEE",
-              ja: "Full Full & FUK COFFEE",
-              lat: 33.5892,
-              lng: 130.4198,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/mKFdRYmiXng89vqv7",
-              place: "Full Full 博多駅",
-              tr: {
-                m: "地鐵空港線",
-                d: "博多駅 → 中洲川端駅 · 約 3 分 · ¥210",
-                from: "博多駅",
-                to: "中洲川端駅",
-                mode: "transit",
-              },
+                id: 3,
+                label: "7/26 (日)",
+                title: "熊本逛街",
+                sub: "上/下通商店街 → 鶴屋百貨",
+                color: "#16a34a",
+                routeColor: "#4ade80",
+                center: [32.802, 130.708],
+                zoom: 15,
+                note: "熊本市區購物日",
+                stops: [
+                    {
+                        time: "10:00",
+                        icon: "",
+                        dur: "2 小時",
+                        name: "上通/下通商店街",
+                        ja: "Kamitori / Shimotori Arcade",
+                        lat: 32.802,
+                        lng: 130.708,
+                        desc: "九州最大的商店街之一",
+                        place: "下通商店街",
+                        tr: { m: "步行", d: "商店街 → 鶴屋百貨", from: "下通商店街", to: "鶴屋百貨店", mode: "walking" }
+                    },
+                    {
+                        time: "13:00",
+                        icon: "",
+                        dur: "3 小時",
+                        name: "鶴屋百貨 & 熊本熊廣場",
+                        ja: "Tsuruya Department Store",
+                        lat: 32.801,
+                        lng: 130.711,
+                        desc: "採買伴手禮與觀看熊本熊部長",
+                        place: "鶴屋百貨店",
+                        tr: { m: "步行", d: "鶴屋百貨 → 櫻町購物中心", from: "鶴屋百貨店", to: "SAKURA MACHI Kumamoto", mode: "walking" }
+                    },
+                    {
+                        time: "16:30",
+                        icon: "",
+                        dur: "自由時間",
+                        name: "櫻町熊本 SAKURA MACHI",
+                        ja: "Sakura Machi Kumamoto",
+                        lat: 32.800,
+                        lng: 130.703,
+                        desc: "熊本大型複合式商場與頂樓庭園",
+                        place: "SAKURA MACHI Kumamoto",
+                        tr: null
+                    }
+                ],
+                tips: ["熊本熊部長辦公室的表演時間建議提前上網確認。"]
             },
+            // DAY 4
             {
-              time: "12:00",
-              icon: "",
-              dur: "2.5 小時",
-              name: "麵包超人博物館",
-              ja: "アンパンマンこどもミュージアム in FUKUOKA",
-              lat: 33.5948,
-              lng: 130.4115,
-              desc: "",
-              gmap: null,
-              place: "アンパンマンこどもミュージアム in FUKUOKA",
-              tr: {
-                m: "步行",
-                d: "中洲川端 → 博多運河城 · 約 8 分",
-                from: "中洲川端駅",
-                to: "キャナルシティ博多",
-                mode: "walking",
-              },
+                id: 4,
+                label: "7/27 (一)",
+                title: "轉移福岡逛街",
+                sub: "熊本搭乘新幹線 → 博多/天神",
+                color: "#16a34a",
+                routeColor: "#4ade80",
+                center: [33.590, 130.420],
+                zoom: 14,
+                note: "Sakura 742 (07:42 出發)",
+                stops: [
+                    {
+                        time: "07:42",
+                        icon: "",
+                        dur: "39 分",
+                        name: "搭乘新幹線前往博多",
+                        ja: "Sakura 742 (8號車 1A,1B)",
+                        lat: 32.789,
+                        lng: 130.688,
+                        desc: "熊本出發 (07:42) → 博多抵達 (08:21)",
+                        place: "熊本駅",
+                        tr: { m: "新幹線", d: "熊本站 → 博多站", from: "熊本駅", to: "博多駅", mode: "transit" }
+                    },
+                    {
+                        time: "08:45",
+                        icon: "",
+                        dur: "放行李",
+                        name: "KOKO HOTEL 博多新幹線口",
+                        ja: "KOKO HOTEL Hakata Shinkansenguchi",
+                        lat: 33.589,
+                        lng: 130.425,
+                        desc: "抵達飯店先寄放行李",
+                        place: "KOKO HOTEL Hakata Shinkansenguchi",
+                        tr: { m: "步行", d: "飯店 → 博多站商圈", from: "KOKO HOTEL Hakata Shinkansenguchi", to: "博多駅", mode: "walking" }
+                    },
+                    {
+                        time: "10:00",
+                        icon: "",
+                        dur: "3 小時",
+                        name: "博多站周邊百貨",
+                        ja: "Hakata Station Shopping",
+                        lat: 33.589,
+                        lng: 130.420,
+                        desc: "逛 AMU Plaza、阪急等百貨",
+                        place: "博多駅",
+                        tr: { m: "地鐵", d: "博多站 → 天神站", from: "博多駅", to: "天神駅", mode: "transit" }
+                    },
+                    {
+                        time: "14:00",
+                        icon: "",
+                        dur: "3 小時",
+                        name: "天神商圈 / 天神地下街",
+                        ja: "Tenjin Shopping",
+                        lat: 33.590,
+                        lng: 130.398,
+                        desc: "福岡市區最大購物商圈",
+                        place: "天神地下街",
+                        tr: null
+                    }
+                ],
+                tips: ["新幹線車票為對號座，請記得提前至車站取票，預訂編號 65266。"]
             },
+            // DAY 5
             {
-              time: "14:30",
-              icon: "",
-              dur: "2.5 小時",
-              name: "博多運河城",
-              ja: "Canal City Hakata",
-              lat: 33.5893,
-              lng: 130.411,
-              desc: "",
-              gmap: null,
-              place: "キャナルシティ博多",
-              tr: {
-                m: "地鐵空港線",
-                d: "中洲川端駅 → 天神駅 · 約 3 分 · ¥210",
-                from: "中洲川端駅",
-                to: "天神駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "17:30",
-              icon: "",
-              dur: "預約 17:30",
-              name: "和牛丼飯 武蔵 天神店",
-              ja: "博多和牛まぶし 武蔵 天神店",
-              lat: 33.5905,
-              lng: 130.3993,
-              desc: "",
-              isReserved: false,
-              gmap: "https://maps.app.goo.gl/VLjrdkMV4ohBbhpy6",
-              place: "博多和牛まぶし 武蔵 天神店",
-              tr: {
-                m: "步行",
-                d: "武蔵 天神店 → 天神地下街 · 約 3 分",
-                from: "黒毛和牛 博多和牛まぶし 武蔵 天神店",
-                to: "天神地下街 福岡",
-                mode: "walking",
-              },
-            },
-            {
-              time: "19:00",
-              icon: "",
-              dur: "1 小時",
-              name: "天神地下街",
-              ja: "天神地下街 (Tenjin Underground Mall)",
-              lat: 33.5903,
-              lng: 130.3987,
-              desc: "",
-              gmap: null,
-              place: "天神地下街 福岡",
-              tr: {
-                m: "地鐵空港線",
-                d: "天神駅 → 博多駅 · 約 5 分 · ¥210",
-                from: "天神駅",
-                to: "博多駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "20:00",
-              icon: "",
-              dur: null,
-              name: "返回東洋酒店",
-              ja: "Oriental Hotel Fukuoka Hakata Station",
-              lat: 33.5902,
-              lng: 130.4225,
-              desc: "",
-              place: "Oriental Hotel Fukuoka Hakata Station",
-              tr: null,
-            },
-          ],
-          tips: [
-            "建議在機場購買 SUGOCA IC 卡並儲值 ¥3,000 以上，方便搭乘地鐵 / JR。",
-            "博多運河城每天 13:00 / 17:00 / 19:00 有大型水舞秀，記得排進行程！",
-            "天神地下街晚上 20:00 左右商店開始陸續打烊，建議 18:00 後就進場。",
-          ],
-        },
-
-        //  DAY 2
-        {
-          id: 2,
-          label: "5/2 (六)",
-          title: "海岸鳥居・櫛田神社",
-          sub: "生之松原海中鳥居 → 櫻井二見ヶ浦 夫妻岩 → 櫛田神社",
-          color: "#16a34a",
-          routeColor: "#4ade80",
-          center: [33.585, 130.3],
-          zoom: 11,
-          note: "北九州海岸巡禮",
-          stops: [
-            {
-              time: "09:00",
-              icon: "",
-              dur: "1.5 小時",
-              name: "夫妻岩 & 天使之翼",
-              ja: "桜井二見浦・天使の翼",
-              lat: 33.6425,
-              lng: 130.199,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/rUf1gHt8n7yXb8Af7",
-              place: "櫻井二見ヶ浦 夫婦岩",
-              tr: {
-                m: "開車/巴士",
-                d: "夫妻岩 → 壱岐神社 · 約 30 分",
-                from: "櫻井二見ヶ浦",
-                to: "壱岐神社 一の鳥居",
-                mode: "driving",
-              },
-            },
-            {
-              time: "11:00",
-              icon: "",
-              dur: "1 小時",
-              name: "生之松原海中鳥居",
-              ja: "生の松原 壱岐神社",
-              lat: 33.5891,
-              lng: 130.3159,
-              desc: "壱岐神社鳥居 / 海中鳥居",
-              gmap: "https://maps.app.goo.gl/FNJNxrLZKv7wgUfSA",
-              place: "壱岐神社 一の鳥居",
-              tr: {
-                m: "開車/巴士",
-                d: "壱岐神社 → 博多站 · 約 20 分",
-                from: "壱岐神社 一の鳥居",
-                to: "博多駅",
-                mode: "driving",
-              },
-            },
-            {
-              time: "12:30",
-              icon: "",
-              dur: "1 小時",
-              name: "午餐 (博多站周邊)",
-              ja: "博多駅周辺でのランチ",
-              lat: 33.5898,
-              lng: 130.4207,
-              desc: "自由安排",
-              gmap: null,
-              place: "博多駅",
-              tr: {
-                m: "開車/巴士",
-                d: "博多站 → 櫛田神社 · 約 10 分",
-                from: "博多駅",
-                to: "櫛田神社",
-                mode: "driving",
-              },
-            },
-            {
-              time: "13:30",
-              icon: "",
-              dur: "45 分",
-              name: "櫛田神社",
-              ja: "櫛田神社 (Kushida Shrine)",
-              lat: 33.593,
-              lng: 130.4106,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/vjXfK4shcsmGf9Vv5",
-              place: "櫛神社",
-              tr: {
-                m: "開車/巴士",
-                d: "櫛田神社 → 博多站 · 約 10 分",
-                from: "櫛田神社",
-                to: "博多駅",
-                mode: "driving",
-              },
-            },
-            {
-              time: "18:00",
-              icon: "",
-              dur: "1 小時",
-              name: "TANYA博多晚餐",
-              ja: "TANYA博多 博多一番街店",
-              lat: 33.5895,
-              lng: 130.421,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/SH2d7JmHzkPNayVYA",
-              place: "TANYA博多 博多一番街店",
-              tr: {
-                m: "步行",
-                d: "博多一番街 → 飯店 · 約 5 分",
-                from: "博多駅",
-                to: "Oriental Hotel Fukuoka Hakata Station",
-                mode: "walking",
-              },
-            },
-            {
-              time: "19:00",
-              icon: "",
-              dur: null,
-              name: "返回博多站",
-              ja: "博多駅",
-              lat: 33.5898,
-              lng: 130.4207,
-              desc: "",
-              gmap: null,
-              place: "博多駅",
-              tr: null,
-            },
-          ],
-          tips: [
-            "壱岐神社鳥居位於生之松原海岸，建議確認當日潮汐時間。",
-            "若搭乘大眾運輸，可搭JR至「下山門駅」步行約 10 分鐘。",
-            "下午無固定行程，可於博多站百貨逛街或彈性運用。",
-          ],
-        },
-
-        //  DAY 3
-        {
-          id: 3,
-          label: "5/3 (日)",
-          title: "太宰府・天神逛街",
-          sub: "太宰府天滿宮 → 光明禪寺 → 天神百貨",
-          color: "#16a34a",
-          routeColor: "#4ade80",
-          center: [33.545, 130.478],
-          zoom: 11,
-          note: "西鐵電車一日遊",
-          stops: [
-            {
-              time: "09:00",
-              icon: "",
-              dur: "預約 09:00",
-              name: "Robata no Ito Okashi",
-              ja: "炉端のいとおかし (朝食)",
-              lat: 33.5878,
-              lng: 130.4134,
-              desc: "魚市場新鮮早餐",
-              isReserved: true,
-              gmap: "https://www.google.com/maps/search/?api=1&query=炉端のいとおかし",
-              place: "炉端のいとおかし",
-              tr: {
-                m: "地鐵/西鐵",
-                d: "博多駅 → 太宰府駅 · 約 50-60 分",
-                from: "博多駅",
-                to: "太宰府駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "10:30",
-              icon: "",
-              dur: "2 小時",
-              name: "太宰府天滿宮",
-              ja: "太宰府天満宮",
-              lat: 33.5122,
-              lng: 130.5321,
-              desc: "",
-              gmap: null,
-              place: "太宰府天滿宮",
-              tr: {
-                m: "步行",
-                d: "太宰府天滿宮 → 光明禪寺 · 約 5 分",
-                from: "太宰府天滿宮",
-                to: "光明禪寺 太宰府",
-                mode: "walking",
-              },
-            },
-            {
-              time: "12:30",
-              icon: "",
-              dur: "1 小時",
-              name: "光明禪寺",
-              ja: "光明禪寺",
-              lat: 33.5105,
-              lng: 130.532,
-              desc: "",
-              gmap: null,
-              place: "光明禪寺 太宰府",
-              tr: {
-                m: "西鐵電車",
-                d: "太宰府駅 → 天神區域 · 約 40 分",
-                from: "太宰府駅",
-                to: "天神駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "14:00",
-              icon: "",
-              dur: "1 小時",
-              name: "午餐 (天神區域)",
-              ja: "天神でのランチ",
-              lat: 33.5905,
-              lng: 130.3985,
-              desc: "自由安排",
-              gmap: null,
-              place: "天神地下街",
-              tr: {
-                m: "步行",
-                d: "午餐 → 天神百貨逛街 · 約 5 分",
-                from: "天神駅",
-                to: "天神地下街",
-                mode: "walking",
-              },
-            },
-            {
-              time: "15:00",
-              icon: "",
-              dur: "2 小時",
-              name: "天神百貨逛街",
-              ja: "天神 ショッピング",
-              lat: 33.5905,
-              lng: 130.3985,
-              desc: "",
-              gmap: null,
-              place: "天神地下街",
-              tr: {
-                m: "步行/公車",
-                d: "天神區域 → 肉屋肉一 警固店 · 約 10-15 分",
-                from: "天神駅",
-                to: "肉屋肉一 薬院・警固店",
-                mode: "walking",
-              },
-            },
-            {
-              time: "17:00",
-              icon: "",
-              dur: "預約 17:00",
-              name: "肉屋肉一 警固店",
-              ja: "肉屋肉一 薬院・警固店",
-              lat: 33.5841,
-              lng: 130.3934,
-              desc: "+81 92-716-1231",
-              gmap: "https://www.google.com/maps/search/?api=1&query=肉屋肉一+薬院・警固店",
-              place: "肉屋肉一 薬院・警固店",
-              tr: {
-                m: "地鐵空港線",
-                d: "天神駅 → 博多駅 · 約 5 分 · ¥210",
-                from: "天神駅",
-                to: "博多駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "19:00",
-              icon: "",
-              dur: null,
-              name: "返回博多站",
-              ja: "博多駅",
-              lat: 33.5898,
-              lng: 130.4207,
-              desc: "自由時間 / 藥妝採買",
-              place: "博多駅",
-              tr: null,
-            },
-          ],
-          tips: [
-            "西鐵有「旅人きっぷ（旅人套票）」1 日 ¥1,500，天神太宰府來回即值回票價。",
-            "太宰府的梅ヶ枝餅每家略有不同口感，可多走幾家試試現烤的。",
-            "天神地下街由西通→東通→大丸→三越→岩田屋，步行即可串聯，下午自由逛。",
-          ],
-        },
-
-        //  DAY 4
-        {
-          id: 4,
-          label: "5/4 (一)",
-          title: "南藏院・回程",
-          sub: "南藏院 → 博多採買 → 福岡機場",
-          color: "#16a34a",
-          routeColor: "#4ade80",
-          center: [33.608, 130.482],
-          zoom: 11,
-          note: "IT721 · 17:10 福岡 → 18:40 桃園",
-          stops: [
-            {
-              time: "08:30",
-              icon: "",
-              dur: "行李寄存",
-              name: "博多站・寄存行李",
-              ja: "博多駅 コインロッカー",
-              lat: 33.5898,
-              lng: 130.4207,
-              desc: "",
-              place: "博多駅 コインロッカー KITTE",
-              tr: {
-                m: "JR 篠栗線",
-                d: "博多駅 9號月台 → 城戸南蔵院前駅 · 約 25 分 · ¥510",
-                from: "博多駅",
-                to: "城戸南蔵院前駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "09:00",
-              icon: "",
-              dur: "步行 ~5 分",
-              name: "城戶南藏院前駅",
-              ja: "城戸南蔵院前駅 (JR 篠栗線)",
-              lat: 33.6266,
-              lng: 130.545,
-              desc: "",
-              place: "城戸南蔵院前駅",
-              tr: {
-                m: "步行",
-                d: "城戸南蔵院前駅 → 南蔵院 · 約 5 分",
-                from: "城戸南蔵院前駅",
-                to: "南蔵院 篠栗",
-                mode: "walking",
-              },
-            },
-            {
-              time: "09:10",
-              icon: "",
-              dur: "2.5 小時",
-              name: "南藏院",
-              ja: "南蔵院 (Nanzoin Temple)",
-              lat: 33.6293,
-              lng: 130.5483,
-              desc: "",
-              gmap: null,
-              place: "南蔵院 篠栗",
-              tr: {
-                m: "JR 篠栗線",
-                d: "城戸南蔵院前駅 → 博多駅 · 約 25 分 · ¥510",
-                from: "城戸南蔵院前駅",
-                to: "博多駅",
-                mode: "transit",
-              },
-            },
-            {
-              time: "12:00",
-              icon: "",
-              dur: "預約 12:00",
-              name: "Menya ISHII 午餐",
-              ja: "Menya ISHII",
-              lat: 33.5895,
-              lng: 130.421,
-              desc: "",
-              isReserved: true,
-              gmap: "https://maps.app.goo.gl/8XY56u6eBpb9xdcQA",
-              place: "Menya ISHII",
-              tr: {
-                m: "步行",
-                d: "博多一番街 → KITTE 博多 · 約 2 分",
-                from: "TANYA博多 博多一番街",
-                to: "KITTE 博多",
-                mode: "walking",
-              },
-            },
-            {
-              time: "13:00",
-              icon: "",
-              dur: "1 小時",
-              name: "博多駅・採買 (可麗露/布丁)",
-              ja: "博多駅 KITTE / 伴手禮",
-              lat: 33.5898,
-              lng: 130.4207,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/wh8TcPiEwaksMuRAA",
-              place: "KITTE 博多",
-              tr: {
-                m: "地鐵空港線",
-                d: "博多駅 → 福岡空港駅 · 約 5 分 · ¥260",
-                from: "博多駅",
-                to: "福岡空港",
-                mode: "transit",
-              },
-            },
-            {
-              time: "14:00",
-              icon: "",
-              dur: "20 分",
-              name: "Jiichiro 至一郎布丁",
-              ja: "治一郎 福岡空港店",
-              lat: 33.5863,
-              lng: 130.4522,
-              desc: "",
-              gmap: "https://maps.app.goo.gl/JHMB5BpZRNuQ91am6",
-              place: "治一郎 福岡空港店",
-              tr: {
-                m: "步行",
-                d: "治一郎 → 國際線航廈 · 約 5 分",
-                from: "治一郎 福岡空港店",
-                to: "福岡空港国際線ターミナル",
-                mode: "walking",
-              },
-            },
-            {
-              time: "14:45",
-              icon: "",
-              dur: "採買+報到",
-              name: "福岡機場 國內線→國際線",
-              ja: "福岡空港 国際線ターミナル",
-              lat: 33.5862,
-              lng: 130.4516,
-              desc: "",
-              place: "福岡空港 国際線ターミナル",
-              tr: null,
-            },
-            {
-              time: "17:10",
-              icon: "",
-              dur: "18:40 抵臺",
-              name: "IT721 起飛！",
-              ja: "Tigerair Taiwan IT721 → TPE",
-              lat: 33.589,
-              lng: 130.449,
-              desc: "",
-              place: null,
-              tr: null,
-            },
-          ],
-          tips: [
-            "起飛前 45 分鐘務必完成報到登機，IT721 建議 14:30 前抵達國際線報到櫃台。",
-            "大型置物櫃建議使用 KITTE 1F，取出行李後直接地鐵到機場僅需 5 分鐘。",
-            "免費接駁巴士「國內線國際線」約 5 分鐘一班，不可步行，時間充裕再去逛國內線。",
-          ],
-        },
-      ];
-
-      //
-      //  MAP (Leaflet)
-      //
-      let map = null;
-      let layers = [];
-      let mapOpen = false;
-      let lastMapDay = null;
-
-      function toggleMap() {
-        mapOpen = !mapOpen;
-        const body = document.getElementById("map-body");
-        const btn = document.getElementById("map-toggle-btn");
-        const arrow = document.getElementById("map-arrow");
-        if (mapOpen) {
-          // Use scrollHeight + buffer for smooth animation
-          body.style.maxHeight = body.scrollHeight + 500 + "px";
-          btn.classList.add("open");
-          arrow.classList.add("open");
-          btn.setAttribute("aria-expanded", "true");
-          // Leaflet needs visible container to layout correctly
-          setTimeout(() => {
-            map.invalidateSize();
-            if (lastMapDay) {
-              if (!lastMapDay.klook && lastMapDay.stops) {
-                const coords = lastMapDay.stops.map((s) => [s.lat, s.lng]);
-                map.fitBounds(L.polyline(coords).getBounds(), {
-                  padding: [25, 25],
-                });
-              } else {
-                map.setView(lastMapDay.center, lastMapDay.zoom);
-              }
+                id: 5,
+                label: "7/28 (二)",
+                title: "福岡最後採買與回程",
+                sub: "博多採買 → 福岡機場",
+                color: "#16a34a",
+                routeColor: "#4ade80",
+                center: [33.586, 130.451],
+                zoom: 13,
+                note: "AK1511 · 16:20 福岡 → 17:50 桃園",
+                stops: [
+                    {
+                        time: "10:00",
+                        icon: "",
+                        dur: "退房",
+                        name: "KOKO HOTEL 辦理退房",
+                        ja: "Check-out",
+                        lat: 33.589,
+                        lng: 130.425,
+                        desc: "行李可先寄放飯店或博多站置物櫃",
+                        place: "KOKO HOTEL Hakata Shinkansenguchi",
+                        tr: { m: "步行", d: "飯店 → 博多站", from: "KOKO HOTEL Hakata Shinkansenguchi", to: "博多駅", mode: "walking" }
+                    },
+                    {
+                        time: "10:30",
+                        icon: "",
+                        dur: "3 小時",
+                        name: "博多站最後採買",
+                        ja: "Last Shopping",
+                        lat: 33.589,
+                        lng: 130.420,
+                        desc: "買齊所需的藥妝與伴手禮",
+                        place: "博多駅",
+                        tr: { m: "地鐵", d: "博多站 → 福岡空港站", from: "博多駅", to: "福岡空港", mode: "transit" }
+                    },
+                    {
+                        time: "13:50",
+                        icon: "",
+                        dur: "報到",
+                        name: "福岡機場 國際線航廈",
+                        ja: "Fukuoka Airport",
+                        lat: 33.586,
+                        lng: 130.451,
+                        desc: "預留時間安檢及免稅店逛街",
+                        place: "福岡空港 国際線ターミナル",
+                        tr: null
+                    },
+                    {
+                        time: "16:20",
+                        icon: "",
+                        dur: "起飛",
+                        name: "AirAsia AK1511 班機",
+                        ja: "Flight to Taipei",
+                        lat: 33.589,
+                        lng: 130.449,
+                        desc: "17:50 抵達台灣桃園國際機場",
+                        place: null,
+                        tr: null
+                    }
+                ],
+                tips: ["回程機票沒有包含免費託運行李，若行李超過 7kg 請確認是否已加購託運重量。"]
             }
-          }, 350);
-        } else {
-          body.style.maxHeight = "0";
-          btn.classList.remove("open");
-          arrow.classList.remove("open");
-          btn.setAttribute("aria-expanded", "false");
-        }
-      }
+        ];
 
-      function mkIcon(color, label) {
-        return L.divIcon({
-          className: "",
-          html: `<div style="width:30px;height:30px;border-radius:50%;background:${color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">${label}</div>`,
-          iconSize: [30, 30],
-          iconAnchor: [15, 15],
-          popupAnchor: [0, -17],
-        });
-      }
+        //
+        //  MAP (Leaflet)
+        //
+        let map = null;
+        let layers = [];
+        let mapOpen = false;
+        let lastMapDay = null;
 
-      function initMap() {
-        map = L.map("day-map", { zoomControl: true });
-        L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 20,
-          },
-        ).addTo(map);
-      }
-
-      function renderMap(day) {
-        lastMapDay = day;
-        layers.forEach((l) => map.removeLayer(l));
-        layers = [];
-        document.getElementById("map-label").textContent =
-          `${day.label} 路線圖`;
-
-        if (day.klook || !day.stops) {
-          map.setView(day.center, day.zoom);
-          const m = L.marker(day.center, { icon: mkIcon(day.color, "") })
-            .bindPopup("<b>博多站</b><br>Klook 集合點")
-            .addTo(map);
-          layers.push(m);
-          document.getElementById("map-legend").innerHTML = "";
-          return;
+        function toggleMap() {
+            mapOpen = !mapOpen;
+            const body = document.getElementById("map-body");
+            const btn = document.getElementById("map-toggle-btn");
+            const arrow = document.getElementById("map-arrow");
+            if (mapOpen) {
+                body.style.maxHeight = body.scrollHeight + 500 + "px";
+                btn.classList.add("open");
+                arrow.classList.add("open");
+                btn.setAttribute("aria-expanded", "true");
+                setTimeout(() => {
+                    map.invalidateSize();
+                    if (lastMapDay) {
+                        if (!lastMapDay.klook && lastMapDay.stops) {
+                            const coords = lastMapDay.stops.map((s) => [s.lat, s.lng]);
+                            map.fitBounds(L.polyline(coords).getBounds(), {
+                                padding: [25, 25],
+                            });
+                        } else {
+                            map.setView(lastMapDay.center, lastMapDay.zoom);
+                        }
+                    }
+                }, 350);
+            } else {
+                body.style.maxHeight = "0";
+                btn.classList.remove("open");
+                arrow.classList.remove("open");
+                btn.setAttribute("aria-expanded", "false");
+            }
         }
 
-        const coords = day.stops.map((s) => [s.lat, s.lng]);
-        const poly = L.polyline(coords, {
-          color: day.routeColor,
-          weight: 3,
-          opacity: 0.75,
-          dashArray: "8 5",
-        }).addTo(map);
-        layers.push(poly);
-
-        day.stops.forEach((s, i) => {
-          const isFirst = i === 0;
-          const isLast = i === day.stops.length - 1;
-          const dotColor = "#16a34a";
-          const m = L.marker([s.lat, s.lng], { icon: mkIcon(dotColor, i + 1) })
-            .bindPopup(
-              `
- <div style="font-family:system-ui;min-width:170px;font-size:13px">
- <b style="font-size:14px">${s.name}</b><br>
- <span style="color:#666;font-size:11px">${s.ja}</span><br>
- <span style="color:#555"> ${s.time}${s.dur ? "　" + s.dur : ""}</span>
- ${
-   s.place
-     ? `<br><a href="${navUrl(s.place)}" target="_blank"
- style="display:inline-block;margin-top:6px;padding:2px 8px;background:#1d4ed8;color:#fff;border-radius:5px;font-size:11px;text-decoration:none"> Google 導航</a>`
-     : s.gmap
-       ? `<br><a href="${s.gmap}" target="_blank"
- style="display:inline-block;margin-top:6px;padding:2px 8px;background:#1d4ed8;color:#fff;border-radius:5px;font-size:11px;text-decoration:none"> Google 導航</a>`
-       : ""
- }
- </div>`,
-            )
-            .addTo(map);
-          layers.push(m);
-        });
-
-        // fitBounds 只在地圖可見時執行，否則等 toggleMap 後再觸發
-        if (mapOpen) {
-          map.fitBounds(poly.getBounds(), { padding: [25, 25] });
-        } else {
-          map.setView(day.center, day.zoom);
+        function mkIcon(color, label) {
+            return L.divIcon({
+                className: "",
+                html: `<div style="width:30px;height:30px;border-radius:50%;background:${color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">${label}</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -17],
+            });
         }
 
-        const legend = document.getElementById("map-legend");
-        legend.innerHTML = day.stops
-          .slice(0, 6)
-          .map((s, i) => {
-            const c = "#16a34a";
-            return `<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${s.name}</div>`;
-          })
-          .join("");
-      }
+        function initMap() {
+            map = L.map("day-map", { zoomControl: true });
+            L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+                {
+                    attribution:
+                        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: "abcd",
+                    maxZoom: 20,
+                },
+            ).addTo(map);
+        }
 
-      //
-      //  RENDER TIMELINE
-      //
-      function renderTimeline(day) {
-        const col = document.getElementById("left-col");
-        col.className = `left-col d${day.id}`;
-        let h = "";
+        function renderMap(day) {
+            lastMapDay = day;
+            layers.forEach((l) => map.removeLayer(l));
+            layers = [];
+            document.getElementById("map-label").textContent =
+                `${day.label} 路線圖`;
 
-        // Day header
-        h += `<div class="card" style="margin-bottom:1rem">
+            if (day.klook || !day.stops) {
+                map.setView(day.center, day.zoom);
+                const m = L.marker(day.center, { icon: mkIcon(day.color, "") })
+                    .bindPopup("<b>集合地點</b>")
+                    .addTo(map);
+                layers.push(m);
+                document.getElementById("map-legend").innerHTML = "";
+                return;
+            }
+
+            const coords = day.stops.filter(s => s.lat && s.lng).map((s) => [s.lat, s.lng]);
+            if (coords.length > 0) {
+                const poly = L.polyline(coords, {
+                    color: day.routeColor,
+                    weight: 3,
+                    opacity: 0.75,
+                    dashArray: "8 5",
+                }).addTo(map);
+                layers.push(poly);
+
+                day.stops.forEach((s, i) => {
+                    if (!s.lat || !s.lng) return;
+                    const dotColor = "#16a34a";
+                    const m = L.marker([s.lat, s.lng], { icon: mkIcon(dotColor, i + 1) })
+                        .bindPopup(
+                            `
+  <div style="font-family:system-ui;min-width:170px;font-size:13px">
+  <b style="font-size:14px">${s.name}</b><br>
+  <span style="color:#666;font-size:11px">${s.ja}</span><br>
+  <span style="color:#555"> ${s.time}${s.dur ? " " + s.dur : ""}</span>
+  ${s.place
+                                ? `<br><a href="${navUrl(s.place)}" target="_blank"
+  style="display:inline-block;margin-top:6px;padding:2px 8px;background:#1d4ed8;color:#fff;border-radius:5px;font-size:11px;text-decoration:none"> Google 導航</a>`
+                                : s.gmap
+                                    ? `<br><a href="${s.gmap}" target="_blank"
+  style="display:inline-block;margin-top:6px;padding:2px 8px;background:#1d4ed8;color:#fff;border-radius:5px;font-size:11px;text-decoration:none"> Google 導航</a>`
+                                    : ""
+                            }
+  </div>`,
+                        )
+                        .addTo(map);
+                    layers.push(m);
+                });
+
+                if (mapOpen) {
+                    map.fitBounds(poly.getBounds(), { padding: [25, 25] });
+                } else {
+                    map.setView(day.center, day.zoom);
+                }
+
+                const legend = document.getElementById("map-legend");
+                legend.innerHTML = day.stops
+                    .slice(0, 6)
+                    .map((s, i) => {
+                        const c = "#16a34a";
+                        return `<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${s.name}</div>`;
+                    })
+                    .join("");
+            }
+        }
+
+        //
+        //  RENDER TIMELINE
+        //
+        function renderTimeline(day) {
+            const col = document.getElementById("left-col");
+            col.className = `left-col d${day.id}`;
+            let h = "";
+
+            // Day header
+            h += `<div class="card" style="margin-bottom:1rem">
  <div class="day-header">
  <div class="day-tag" style="background:${day.color}22;color:${day.color}">${day.label}</div>
  <div class="day-title">${day.title}</div>
  <div class="day-sub">${day.sub}</div>
  </div>`;
 
-        // Flight note
-        h += `<div class="flight-banner">
+            if (day.note) {
+                h += `<div class="flight-banner">
  <span class="flight-num">${day.note}</span>
  </div>`;
+            }
 
-        // Hotel strip
-        h += `<div class="hotel-strip">
+            // Hotel details based on day
+            let hotelName = day.id <= 3 ? "KOKO HOTEL 熊本上通" : "KOKO HOTEL 博多新幹線口";
+            let hotelSub = day.id <= 3 ? "熊本市中央區水道町2-13" : "博多區博多站東1-17-17";
+            let hotelPlace = day.id <= 3 ? "KOKO HOTEL Kumamoto Kamitori" : "KOKO HOTEL Hakata Shinkansenguchi";
+
+            h += `<div class="hotel-strip">
  <div>
- <div class="hotel-name">東洋酒店 博多站</div>
- <div class="hotel-sub">Oriental Hotel · 博多駅筑紫口 1 分鐘</div>
+ <div class="hotel-name">${hotelName}</div>
+ <div class="hotel-sub">${hotelSub}</div>
  </div>
  <div style="margin-left:auto">
- <a href="${navUrl("Oriental Hotel Fukuoka Hakata Station")}" target="_blank" class="btn btn-nav">Google 導航</a>
+ <a href="${navUrl(hotelPlace)}" target="_blank" class="btn btn-nav">Google 導航</a>
  </div>
  </div>`;
 
-        // Klook special
-        if (day.klook) {
-          const kd = day.klookDetails;
-          let sched = "";
-          if (kd && kd.schedule) {
-            kd.schedule.forEach((s, i) => {
-              const dot =
-                i === 0 || i === kd.schedule.length - 1 ? "#16a34a" : "#4ade80";
-              const gmapBtn = s.gmap
-                ? `<a href="${s.gmap}" target="_blank" class="btn btn-nav" style="font-size:.8rem;padding:.25rem .75rem;margin-top:.4rem">Google 導航</a>`
-                : "";
-              sched += `<div style="display:flex;gap:.75rem;margin-bottom:.6rem;align-items:flex-start">
+            // Klook special
+            if (day.klook) {
+                const kd = day.klookDetails;
+                let sched = "";
+                if (kd && kd.schedule) {
+                    kd.schedule.forEach((s, i) => {
+                        const dot =
+                            i === 0 || i === kd.schedule.length - 1 ? "#16a34a" : "#4ade80";
+                        const gmapBtn = s.gmap
+                            ? `<a href="${s.gmap}" target="_blank" class="btn btn-nav" style="font-size:.8rem;padding:.25rem .75rem;margin-top:.4rem">Google 導航</a>`
+                            : "";
+                        sched += `<div style="display:flex;gap:.75rem;margin-bottom:.6rem;align-items:flex-start">
  <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:${dot};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px">${i + 1}</div>
  <div style="flex:1">
    <div style="display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap">
@@ -1611,154 +1348,155 @@
    ${gmapBtn}
  </div>
 </div>`;
-            });
-          }
-          h += `<div class="klook-body">
- <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:.5rem">Klook 糸島一日遊</h2>
- <p class="klook-text" style="margin-bottom:.75rem">精緻小團（6人起），司機兼中文導遊。全程約 8 小時。</p>
+                    });
+                }
+                h += `<div class="klook-body">
+ <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:.5rem">Klook 阿蘇山高千穗一日遊</h2>
  <div style="background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.25);border-radius:8px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;line-height:1.7">
-   <span style="color:#4ade80;font-weight:700">集合 ${kd ? kd.meetTime : "08:20"}</span> ／ <span style="color:#4ade80;font-weight:700">出發 ${kd ? kd.startTime : "08:30"}</span>　逾時不候<br>
-   <span style="color:#8b949e">${kd ? kd.meetNote : "出行前一天收 email 確認集合點"}</span>
+   <span style="color:#4ade80;font-weight:700">集合 ${kd ? kd.meetTime : "07:50"}</span> ／ <span style="color:#4ade80;font-weight:700">出發 ${kd ? kd.startTime : "08:00"}</span><br>
+   <span style="color:#8b949e">${kd ? kd.meetNote : "熊本站新幹線口集合"}</span>
  </div>
- <div style="margin-bottom:1rem">${sched}</div>
+ <div style="margin-bottom:1rem; text-align:left;">${sched}</div>
  <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
  <a href="${kd ? kd.link : "https://www.klook.com"}" target="_blank" class="btn" style="background:#16a34a;color:#fff;font-size:.9rem;padding:.5rem 1.25rem">查看 Klook 訂單</a>
- <a href="${placeUrl("博多駅")}" target="_blank" class="btn btn-nav" style="font-size:.9rem;padding:.5rem 1.25rem">博多站地圖</a>
  </div>
  </div>`;
-          h += "</div>";
-          col.innerHTML = h;
-          return;
-        }
+                h += "</div>";
+                col.innerHTML = h;
+                return;
+            }
 
-        h += "</div>"; // card
+            h += "</div>"; // card
 
-        // Timeline
-        h += `<div class="card" style="margin-bottom:1rem"><div class="timeline"><div class="tl-wrap">`;
+            // Timeline
+            h += `<div class="card" style="margin-bottom:1rem"><div class="timeline"><div class="tl-wrap">`;
 
-        day.stops.forEach((s, i) => {
-          const isLast = i === day.stops.length - 1;
-          const dotColor = "#16a34a";
+            if (day.stops) {
+                day.stops.forEach((s, i) => {
+                    const isLast = i === day.stops.length - 1;
+                    const dotColor = "#16a34a";
 
-          h += `<div class="tl-stop">
- <div class="tl-dot" style="background:${dotColor}">${i + 1}</div>
- <div class="stop-card">
- <div class="stop-row1">
- <span class="stop-time">${s.time}</span>
- <div class="stop-nav-box">
- ${s.place ? `<a href="${navUrl(s.place)}" target="_blank" class="btn-mini-nav">導航</a>` : s.gmap ? `<a href="${s.gmap}" target="_blank" class="btn-mini-nav">導航</a>` : ""}
- </div>
- <div style="flex:1;min-width:0">
- <div class="stop-name">${s.name}</div>
- <span class="stop-name-ja">${s.ja || ""}</span>
- ${s.isReserved && day.id !== 1 && day.id !== 4 ? `<span style="font-size: 0.68rem; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.28); border-radius: 6px; padding: 0.08rem 0.42rem; display: inline-block; margin-top: 0.22rem; white-space: nowrap; letter-spacing: 0.01em;">預約</span>` : ""}
- </div>
- ${s.dur ? `<span class="stop-dur" style="${s.dur.includes("預約") ? "color:#4ade80; background:rgba(74,222,128,0.12); border:1px solid rgba(74,222,128,0.2)" : ""}">${s.dur}</span>` : ""}
- </div>
- <div class="stop-desc">${s.desc}</div>
- </div>
- </div>`;
+                    h += `<div class="tl-stop">
+  <div class="tl-dot" style="background:${dotColor}">${i + 1}</div>
+  <div class="stop-card">
+  <div class="stop-row1">
+  <span class="stop-time">${s.time}</span>
+  <div class="stop-nav-box">
+  ${s.place ? `<a href="${navUrl(s.place)}" target="_blank" class="btn-mini-nav">導航</a>` : s.gmap ? `<a href="${s.gmap}" target="_blank" class="btn-mini-nav">導航</a>` : ""}
+  </div>
+  <div style="flex:1;min-width:0">
+  <div class="stop-name">${s.name}</div>
+  <span class="stop-name-ja">${s.ja || ""}</span>
+  </div>
+  ${s.dur ? `<span class="stop-dur">${s.dur}</span>` : ""}
+  </div>
+  <div class="stop-desc">${s.desc}</div>
+  </div>
+  </div>`;
 
-          if (s.tr && !isLast) {
-            h += `<div class="tl-transport" style="position:relative;padding-left:0">
- <div class="transport-line" style="border-left-color:${day.routeColor}">
- <div class="tr-info">
- <span class="tr-method">${s.tr.m}</span>
- <span class="tr-detail">${s.tr.d}</span>
- </div>
- </div>
- </div>`;
-          }
-        });
+                    if (s.tr && !isLast) {
+                        h += `<div class="tl-transport" style="position:relative;padding-left:0">
+  <div class="transport-line" style="border-left-color:${day.routeColor}">
+  <div class="tr-info">
+  <span class="tr-method">${s.tr.m}</span>
+  <span class="tr-detail">${s.tr.d}</span>
+  </div>
+  </div>
+  </div>`;
+                    }
+                });
+            }
 
-        h += `</div></div></div>`; // tl-wrap / timeline / card
+            h += `</div></div></div>`; // tl-wrap / timeline / card
 
-        // Tips
-        if (day.tips && day.tips.length) {
-          h += `<div class="card"><div class="tips-section">
+            // Tips
+            if (day.tips && day.tips.length) {
+                h += `<div class="card"><div class="tips-section">
  <div class="tips-title">小提示 & 注意事項</div>
  ${day.tips.map((t, i) => `<div class="tip-item"><span class="tip-num">${i + 1}</span><span>${t}</span></div>`).join("")}
  </div></div>`;
+            }
+
+            col.innerHTML = h;
         }
 
-        col.innerHTML = h;
-      }
+        //
+        //  DAY SWITCHING
+        //
+        let currentDay = 1;
 
-      //
-      //  DAY SWITCHING
-      //
-      let currentDay = 1;
+        function switchDay(id) {
+            currentDay = id;
+            const day = DAYS[id - 1];
 
-      function switchDay(id) {
-        currentDay = id;
-        const day = DAYS[id - 1];
+            document.querySelectorAll(".tab").forEach((t) => {
+                const active = parseInt(t.dataset.day) === id;
+                t.classList.toggle("active", active);
+                t.style.borderBottomColor = active ? day.color : "transparent";
+                t.style.color = active ? "#e6edf3" : "";
+            });
 
-        document.querySelectorAll(".tab").forEach((t) => {
-          const active = parseInt(t.dataset.day) === id;
-          t.classList.toggle("active", active);
-          t.style.borderBottomColor = active ? day.color : "transparent";
-          t.style.color = active ? "#e6edf3" : "";
+            renderTimeline(day);
+            renderMap(day);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        //
+        //  COUNTDOWN
+        //
+        function updateCountdown() {
+            const now = new Date();
+            const el = document.getElementById("countdown-text");
+            const diff = TRIP.start - now;
+            const endDiff = TRIP.end - now;
+
+            if (endDiff < 0) {
+                el.textContent = "行程已結束，回憶無限美好";
+                return;
+            }
+            if (diff <= 0) {
+                const tripDay = Math.min(
+                    Math.floor((now - TRIP.start) / 864e5) + 1,
+                    5,
+                );
+                const dLeft = Math.floor(endDiff / 864e5);
+                const hLeft = Math.floor((endDiff % 864e5) / 36e5);
+                el.textContent = `旅途進行中！第 ${tripDay} 天 · 還剩 ${dLeft} 天 ${hLeft} 小時返台`;
+                if (tripDay !== currentDay) switchDay(tripDay);
+                return;
+            }
+            const days = Math.floor(diff / 864e5);
+            const hrs = Math.floor((diff % 864e5) / 36e5);
+            const mins = Math.floor((diff % 36e5) / 6e4);
+            el.textContent =
+                days > 0
+                    ? `距離出發還有 ${days} 天 ${hrs} 小時 ─ 期待中！`
+                    : `今天就出發了！還有 ${hrs} 小時 ${mins} 分鐘！`;
+        }
+
+        //
+        //  INIT
+        //
+        window.addEventListener("DOMContentLoaded", () => {
+            initMap();
+
+            const now = new Date();
+            const start = new Date("2026-07-24T00:00:00+08:00");
+            const end = new Date("2026-07-28T23:59:59+08:00");
+            const dayIdx = Math.min(
+                Math.max(Math.floor((now - start) / 864e5) + 1, 1),
+                5,
+            );
+            const initialDay =
+                now >= start && now <= end
+                    ? dayIdx
+                    : 1;
+
+            switchDay(initialDay);
+            updateCountdown();
+            setInterval(updateCountdown, 30000);
         });
-
-        renderTimeline(day);
-        renderMap(day);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      //
-      //  COUNTDOWN
-      //
-      function updateCountdown() {
-        const now = new Date();
-        const el = document.getElementById("countdown-text");
-        const diff = TRIP.start - now;
-        const endDiff = TRIP.end - now;
-
-        if (endDiff < 0) {
-          el.textContent = "行程已結束，回憶無限美好";
-          return;
-        }
-        if (diff <= 0) {
-          const tripDay = Math.min(
-            Math.floor((now - TRIP.start) / 864e5) + 1,
-            4,
-          );
-          const dLeft = Math.floor(endDiff / 864e5);
-          const hLeft = Math.floor((endDiff % 864e5) / 36e5);
-          el.textContent = `旅途進行中！第 ${tripDay} 天 · 還剩 ${dLeft} 天 ${hLeft} 小時返台`;
-          if (tripDay !== currentDay) switchDay(tripDay);
-          return;
-        }
-        const days = Math.floor(diff / 864e5);
-        const hrs = Math.floor((diff % 864e5) / 36e5);
-        const mins = Math.floor((diff % 36e5) / 6e4);
-        el.textContent =
-          days > 0
-            ? `距離出發還有 ${days} 天 ${hrs} 小時 ─ 期待中！`
-            : `今天就出發了！還有 ${hrs} 小時 ${mins} 分鐘！`;
-      }
-
-      //
-      //  INIT
-      //
-      window.addEventListener("DOMContentLoaded", () => {
-        initMap();
-
-        // Determine initial day
-        const now = new Date();
-        const dayIdx = Math.min(
-          Math.max(Math.floor((now - new Date("2026-05-01")) / 864e5) + 1, 1),
-          4,
-        );
-        const initialDay =
-          now >= new Date("2026-05-01") && now <= new Date("2026-05-04")
-            ? dayIdx
-            : 1;
-
-        switchDay(initialDay);
-        updateCountdown();
-        setInterval(updateCountdown, 30000);
-      });
     </script>
-  </body>
+</body>
+
 </html>
