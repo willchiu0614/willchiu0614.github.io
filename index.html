@@ -1,9 +1,12 @@
-<html lang="zh-TW"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>關西楓葉之旅 2026.11</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-    <style>
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>關西楓葉之旅 2026.11</title>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<style>
       :root {
         --bg: #0d1117;
         --card: #161b22;
@@ -188,7 +191,6 @@
         .tab[data-day="3"]::after { content: "稻荷"; }
         .tab[data-day="4"]::after { content: "箕面"; }
         .tab[data-day="5"]::after { content: "大阪城"; }
-        .tab[data-day="pass"]::after { content: "劃位"; }
       }
 
       /* LAYOUT */
@@ -570,7 +572,6 @@
       }
 
       /* JR Pass: independent green palette and synchronized visibility */
-      .tab[data-day="pass"].active, .tab[data-day="pass"].active span { color:#4ade80; }
       .pass-container { --pass-green:#22c55e; --pass-green-soft:rgba(34,197,94,.12); }
       .pass-container > .pass-heading { color:#4ade80; }
       .pass-container .lang-btn.active { background:var(--pass-green-soft); border-color:rgba(34,197,94,.55); color:#4ade80; }
@@ -919,998 +920,933 @@ body:has(#static-day-4:target) #left-col{display:none}
 body:has(#static-day-4:target) #static-day-4{display:block}
 body:has(#static-day-5:target) #left-col{display:none}
 body:has(#static-day-5:target) #static-day-5{display:block}
-body:has(#static-day-pass:target) #left-col{display:none}
-body:has(#static-day-pass:target) #static-day-pass{display:block}
 .tabs a.tab{color:inherit;text-decoration:none}
 </style>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" async=""></script></head>
-  <body>
-    <!-- HEADER -->
-    <header class="header">
-      <p class="header-en">Kansai Autumn Trip / 關西楓葉之旅 2026</p>
-      <h1 class="header-title">京都・嵐山・伏見稻荷・箕面・大阪</h1>
-    </header>
-
-    <!-- TABS -->
-    <nav class="tabs" id="tabs">
-      <a class="tab active" href="#static-day-1" data-day="1" onclick="switchDay(1)" style="border-bottom-color: rgb(249, 115, 22);">
-        <span>11/20 (五)</span>清水寺賞楓
+</head>
+<body>
+<!-- HEADER -->
+<header class="header">
+<p class="header-en">Kansai Autumn Trip / 關西楓葉之旅 2026</p>
+<h1 class="header-title">京都・嵐山・伏見稻荷・箕面・大阪</h1>
+</header>
+<!-- TABS -->
+<nav class="tabs" id="tabs">
+<a class="tab" data-day="1" href="#static-day-1" onclick="switchDay(1)">
+<span>11/20 (五)</span>清水寺賞楓
       </a>
-      <a class="tab" href="#static-day-2" data-day="2" onclick="switchDay(2)" style="border-bottom-color: transparent;">
-        <span>11/21 (六)</span>嵐山・金閣寺
+<a class="tab" data-day="2" href="#static-day-2" onclick="switchDay(2)">
+<span>11/21 (六)</span>嵐山・金閣寺
       </a>
-      <a class="tab" href="#static-day-3" data-day="3" onclick="switchDay(3)" style="border-bottom-color: transparent;">
-        <span>11/22 (日)</span>伏見稻荷/大阪
+<a class="tab" data-day="3" href="#static-day-3" onclick="switchDay(3)">
+<span>11/22 (日)</span>伏見稻荷/大阪
       </a>
-      <a class="tab" href="#static-day-4" data-day="4" onclick="switchDay(4)" style="border-bottom-color: transparent;">
-        <span>11/23 (一)</span>勝尾寺・箕面
+<a class="tab" data-day="4" href="#static-day-4" onclick="switchDay(4)">
+<span>11/23 (一)</span>勝尾寺・箕面
       </a>
-      <a class="tab" href="#static-day-5" data-day="5" onclick="switchDay(5)" style="border-bottom-color: transparent;">
-        <span>11/24 (二)</span>大阪城/回台
+<a class="tab" data-day="5" href="#static-day-5" onclick="switchDay(5)">
+<span>11/24 (二)</span>大阪城/回台
       </a>
-      <a class="tab" href="#static-day-pass" data-day="pass" onclick="switchPassTab()" style="border-bottom-color: transparent;">
-        <span>JR Pass</span>指定席劃位清單 (4人)
-      </a>
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <div class="content-wrap" id="main-content-wrap">
-      <!-- Map Dropdown Card -->
-      <div class="card map-dropdown" id="map-card-wrap" style="display: block;">
-        <button class="map-toggle" id="map-toggle-btn" onclick="toggleMap()" aria-expanded="false">
-          <span id="map-label">11/20 (五) 路線圖</span>
-          <span style="font-size: 0.72rem; color: var(--muted); margin-left: 0.35rem;">- Esri Street Map</span>
-          <span class="map-arrow" id="map-arrow">▼</span>
-        </button>
-        <div class="map-body" id="map-body">
-          <div id="day-map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/11/810/1795" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-64px, -194px, 0px); opacity: 1;"><img alt="" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/11/810/1796" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(192px, -194px, 0px); opacity: 1;"><img alt="" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/11/811/1795" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-64px, 62px, 0px); opacity: 1;"><img alt="" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/11/811/1796" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(192px, 62px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="450" height="276" viewBox="-37 -23 450 276" style="transform: translate3d(-37px, -23px, 0px);"><g><path class="leaflet-interactive" stroke="#f97316" stroke-opacity="0.8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 5" fill="none" d="M187 115L187 115"></path></g></svg></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">1</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">2</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">3</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">4</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">5</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">6</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -15px; margin-top: -15px; width: 30px; height: 30px; transform: translate3d(187px, 115px, 0px); z-index: 115;"><div style="width:30px;height:30px;border-radius:50%;background:#f97316;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)">7</div></div></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(459771.448889px, 207669.33978px, 0px) scale(1024);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> Tiles © Esri — Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, and the GIS User Community</div></div></div></div>
-          <div class="map-legend" id="map-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>抵達關西國際機場 KIX</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>關西機場站</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>京都站</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>京都五條飯店</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>清水寺</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>炸牛 元村 三條河原町店</div>
-        
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>永觀堂</div>
-        </div>
-        </div>
-      </div>
-      <!-- Timeline / Pass Container -->
-      <div id="left-col" class="left-col d1"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section class="travel-flight" aria-label="航班資訊">
-            <div class="travel-flight-top"><span>抵達日本 · 11/20</span><strong>台灣虎航 IT210</strong></div>
-            <div class="flight-compact-route">
-              <span class="flight-point"><span class="flight-main"><strong>TPE</strong><b>07:00</b></span><small>桃園機場 T1</small></span>
-              <span class="flight-arrow" aria-hidden="true">→</span>
-              <span class="flight-point"><span class="flight-main"><strong>KIX</strong><b>10:25</b></span><small>關西機場 T1</small></span>
-            </div>
-          </section><section class="travel-hotel" aria-label="住宿資訊">
-            <div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 入住 · 14:00 後</span><a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="hotel-compact-nav">導航 ↗</a></div>
-            <div class="travel-hotel-name" title="京都五條飯店">京都五條飯店</div>
-            <div class="travel-hotel-detail">京都五條站周邊</div>
-          </section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">1</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">10:25</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">抵達關西國際機場 KIX</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%B8%80%E8%88%AA%E5%BB%88&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">抵達第一航廈，辦理入境及提領行李。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">JR 車站</span>
-                    <span class="tr-detail">入境、提領行李後前往 JR 關西機場站</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">2</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">11:30</span>
-                <span class="stop-stay-inline">11:30–12:20 (50分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">關西機場站</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E6%A9%9F%E5%A0%B4%E7%AB%99&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">4 位大人領取 JR Pass；優先處理當日車票。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">JR 特急 HARUKA｜關西機場站 → 京都站</span>
-                    <span class="tr-detail">12:44–14:04（已選 24 號；時刻待確認）</span>
-                  </div>
-                  <button class="schedule-btn" type="button" onclick="openSchedule('harukaOutbound')">選擇班次</button>
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">3</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">14:04</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都站</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E7%AB%99&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">班次可切換；實際時刻及座位待確認。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">地下鐵／計程車</span>
-                    <span class="tr-detail">京都站前往五條站周邊飯店</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">4</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">14:05</span>
-                <span class="stop-stay-inline">14:05–14:45 (40分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都五條飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">14:00 後可入住，否則先寄放行李。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">公車／計程車</span>
-                    <span class="tr-detail">前往清水寺及東山散策</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">5</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">14:45</span>
-                <span class="stop-stay-inline">14:45–16:20 (95分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">清水寺</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B8%85%E6%B0%B4%E5%AF%BA&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">清水寺參拜與東山散策；停留時間隨 HARUKA 班次調整。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行</span>
-                    <span class="tr-detail">清水寺 → 三年坂、二年坂 → 三條河原町炸牛元村（步行估計 40–60 分鐘）</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">6</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">17:00</span>
-                <span class="stop-stay-inline">17:00–18:00 (60分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">炸牛 元村 三條河原町店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%20%E7%82%B8%E7%89%9B%20%E5%85%83%E6%9D%91%20%E4%B8%89%E6%A2%9D%E6%B2%B3%E5%8E%9F%E7%94%BA%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">請預留候位時間。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">京都市巴士 5 號＋步行</span>
-                    <span class="tr-detail">河原町三條 → 南禪寺・永觀堂道，下車後步行至永觀堂（18:00–18:30 ）</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">7</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">18:30</span>
-                <span class="stop-stay-inline">18:30–20:30 (120分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">永觀堂</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B0%B8%E8%A7%80%E5%A0%82&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">夜間賞楓；開放時間與票價待公告。</div>
-            </div>
-          </div></div></div></div><div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            <div class="tip-item"><span class="tip-num">1</span><span>去程抵達 KIX T1，無需 T2 接駁；虎航 11/20 航班時間仍以電子機票為準。</span></div><div class="tip-item"><span class="tip-num">2</span><span>清水寺 → 炸牛元村三條河原町店採步行；餐後從河原町三條搭市巴士 5 號往南禪寺・永觀堂道，再步行至永觀堂。步行／用餐／公車皆為估計，遇排隊或塞車需縮短東山停留。</span></div>
-          </div></div></div><section class="static-day" id="static-day-2"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section class="travel-hotel" aria-label="住宿資訊">
-            <div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 續住</span><a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="hotel-compact-nav">導航 ↗</a></div>
-            <div class="travel-hotel-name" title="京都五條飯店">京都五條飯店</div>
-            <div class="travel-hotel-detail">京都五條站周邊</div>
-          </section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">1</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">07:30</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都五條飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">出發前往嵐山。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">地下鐵＋JR／步行</span>
-                    <span class="tr-detail">五條站 → 京都站 → JR 嵯峨嵐山站，步行至竹林；約 45–60 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">2</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">08:30</span>
-                <span class="stop-stay-inline">08:30–10:15 (105分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">嵐山竹林小徑</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%B5%90%E5%B1%B1%E7%AB%B9%E6%9E%97%E5%B0%8F%E5%BE%91&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">08:30–10:15 (105分鐘)
-竹林與周邊步道慢慢散策。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行</span>
-                    <span class="tr-detail">竹林 → 渡月橋周邊約 15–20 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">3</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">10:35</span>
-                <span class="stop-stay-inline">10:35–12:45 (130分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">渡月橋・嵐山商店街</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B8%A1%E6%9C%88%E6%A9%8B&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">10:35–12:45 (130分鐘)
-渡月橋、桂川河畔、商店街及午餐；嵐山合計約 4 小時。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">公車轉乘／計程車</span>
-                    <span class="tr-detail">嵐山 → 金閣寺，公車轉乘約 50–75 分鐘；計程車約 30–45 分鐘，假日可能塞車。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">4</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">13:45</span>
-                <span class="stop-stay-inline">13:45–14:45 (60分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">金閣寺</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%87%91%E9%96%A3%E5%AF%BA&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">13:45–14:45 (60分鐘)
-參觀金閣寺。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行／公車</span>
-                    <span class="tr-detail">金閣寺 → 北野天滿宮，步行約 20–25 分鐘；也可依實際路況搭公車。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">5</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">15:10</span>
-                <span class="stop-stay-inline">15:10–16:20 (70分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">北野天滿宮</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%8C%97%E9%87%8E%E5%A4%A9%E6%BB%BF%E5%AE%AE&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">15:10–16:20 (70分鐘)
-參拜與境內散策；若有開放的特別區域，可視時間調整。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">公車＋地下鐵／計程車</span>
-                    <span class="tr-detail">北野天滿宮 → 五條站周邊，約 35–55 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">6</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">17:10</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都五條飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">返回飯店；晚餐自由安排。</div>
-            </div>
-          </div></div></div></div><div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            <div class="tip-item"><span class="tip-num">1</span><span>嵐山約 08:30–12:45，包含竹林、渡月橋、午餐及步行轉場。</span></div><div class="tip-item"><span class="tip-num">2</span><span>11/21 為週六，嵐山與金閣寺周邊可能壅塞；交通時間為規劃值，非已確認班次。</span></div><div class="tip-item"><span class="tip-num">3</span><span>北野天滿宮若遇特別活動或開放時間變更，依現場公告。</span></div>
-          </div></div></section><section class="static-day" id="static-day-3"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section class="travel-hotel" aria-label="住宿資訊">
-            <div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 入住 · 16:00 後</span><a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="hotel-compact-nav">導航 ↗</a></div>
-            <div class="travel-hotel-name" title="Benikea Calton Hotel Osaka Doutonbori">Benikea Calton Hotel Osaka Doutonbori</div>
-            <div class="travel-hotel-detail">大阪道頓堀</div>
-          </section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">1</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">07:30</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都五條飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">出發前往伏見稻荷。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">地下鐵＋JR／京阪＋步行</span>
-                    <span class="tr-detail">五條站周邊 → 伏見稻荷，約 25–40 分鐘；JR 稻荷站或京阪伏見稻荷站下車。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">2</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">08:10</span>
-                <span class="stop-stay-inline">08:10–10:40 (150分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">伏見稻荷大社</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BC%8F%E8%A6%8B%E7%A8%BB%E8%8D%B7%E5%A4%A7%E7%A4%BE&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">08:10–10:40 (150分鐘)
-千本鳥居與山徑散策；2.5 小時不保證走完整座稻荷山。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">JR／京阪＋地下鐵</span>
-                    <span class="tr-detail">伏見稻荷 → 京都五條飯店，約 25–40 分鐘，取寄放行李。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">3</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">11:15</span>
-                <span class="stop-stay-inline">11:15–11:35 (20分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都五條飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E4%BA%94%E6%A2%9D%E9%A3%AF%E5%BA%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">領取行李、辦理退房。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">地下鐵烏丸線／步行</span>
-                    <span class="tr-detail">五條 → 京都站，含步行與候車約 15–25 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">4</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">12:00</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">京都站</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E7%AB%99&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">前往大阪。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">JR 京都線新快速</span>
-                    <span class="tr-detail">京都 → 大阪站，車程約 29 分鐘；依現場班次搭乘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">5</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">12:35</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">大阪站</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E7%AB%99&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">轉乘前往飯店寄放行李。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋步行</span>
-                    <span class="tr-detail">大阪站／梅田 → 日本橋或長堀橋站 → 島之內飯店，約 30–45 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">6</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">13:20</span>
-                <span class="stop-stay-inline">13:20–13:40 (20分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">寄放行李；16:00 後可辦理入住。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋步行</span>
-                    <span class="tr-detail">飯店 → 梅田商圈，約 25–40 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">7</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">14:20</span>
-                <span class="stop-stay-inline">14:20–19:00 (280分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">梅田逛街購物</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E6%A2%85%E7%94%B0&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">14:20–19:00 (280分鐘)
-百貨、地下街與晚餐；可自行決定返飯店時間。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋步行</span>
-                    <span class="tr-detail">梅田 → 道頓堀／島之內飯店，約 25–40 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">8</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">19:40</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">返回飯店辦理入住、休息。</div>
-            </div>
-          </div></div></div></div><div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            <div class="tip-item"><span class="tip-num">1</span><span>伏見稻荷安排完整 150 分鐘；若要走至山頂，可能需要更長時間。</span></div><div class="tip-item"><span class="tip-num">2</span><span>梅田安排於抵達大阪、寄放行李後，飯店入住時間仍以現場規定為準。</span></div>
-          </div></div></section><section class="static-day" id="static-day-4"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section class="travel-hotel" aria-label="住宿資訊">
-            <div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 續住</span><a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="hotel-compact-nav">導航 ↗</a></div>
-            <div class="travel-hotel-name" title="Benikea Calton Hotel Osaka Doutonbori">Benikea Calton Hotel Osaka Doutonbori</div>
-            <div class="travel-hotel-detail">大阪道頓堀</div>
-          </section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">1</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">07:30</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">大阪道頓堀飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">出發前往勝尾寺。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋北大阪急行＋巴士</span>
-                    <span class="tr-detail">飯店 → 箕面萱野站 → 勝尾寺；鐵路與巴士合計約 70–100 分鐘，公車班次需確認。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">2</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">09:00</span>
-                <span class="stop-stay-inline">09:00–10:30 (90分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">勝尾寺</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%8B%9D%E5%B0%BE%E5%AF%BA&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">09:00–10:30 (90分鐘)
-參拜、達摩與紅葉散策。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">公車／計程車＋步行</span>
-                    <span class="tr-detail">勝尾寺 → 箕面瀑布登山口方向，需轉乘或搭計程車；道路與步道連接方式需現場確認。勿假設可直接短距離步行。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">3</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">11:15</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">箕面瀑布步道入口</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E7%AE%95%E9%9D%A2%E5%85%AC%E5%9C%92&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">開始瀑布步道；實際抵達時間取決於勝尾寺轉乘。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行</span>
-                    <span class="tr-detail">步道入口 → 箕面瀑布，單程約 40–60 分鐘，依入口與步行速度調整。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">4</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">12:10</span>
-                <span class="stop-stay-inline">12:10–12:45 (35分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">箕面瀑布</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E7%AE%95%E9%9D%A2%E5%A4%A7%E6%BB%9D&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">12:10–12:45 (35分鐘)
-瀑布觀景與休息。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行</span>
-                    <span class="tr-detail">沿步道返回箕面站方向，約 40–60 分鐘；預留午餐與候車緩衝。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">5</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">13:45</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">阪急箕面站</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%98%AA%E6%80%A5%E7%AE%95%E9%9D%A2%E7%AB%99&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">午餐或簡單補給後返回大阪市區。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">阪急電鐵＋大阪 Metro</span>
-                    <span class="tr-detail">箕面站 → 石橋阪大前 → 大阪梅田，轉 Metro 至心齋橋；約 50–75 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">6</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">15:00</span>
-                <span class="stop-stay-inline">15:00–19:00 (240分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">心齋橋逛街購物</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%BF%83%E9%BD%8B%E6%A9%8B%E7%AD%8B%E5%95%86%E5%BA%97%E8%A1%97&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">15:00–19:00 (240分鐘)
-心齋橋筋、道頓堀周邊購物與晚餐。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">步行</span>
-                    <span class="tr-detail">心齋橋／道頓堀 → 島之內飯店，約 10–25 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">7</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">19:30</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">返回飯店休息。</div>
-            </div>
-          </div></div></div></div><div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            <div class="tip-item"><span class="tip-num">1</span><span>勝尾寺與箕面瀑布位於不同交通動線，兩地間轉乘是本日最大不確定因素；務必核對 11/23 假日公車與道路狀況。</span></div><div class="tip-item"><span class="tip-num">2</span><span>箕面瀑布步道若有封閉、施工或天候限制，需改走開放路線；時間可能大幅變動。</span></div><div class="tip-item"><span class="tip-num">3</span><span>下午心齋橋購物時間取決於上午轉乘與步道實際耗時。</span></div>
-          </div></div></section><section class="static-day" id="static-day-5"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section class="travel-flight" aria-label="航班資訊">
-            <div class="travel-flight-top"><span>返回台灣 · 11/24</span><strong>樂桃航空 MM027</strong></div>
-            <div class="flight-compact-route">
-              <span class="flight-point"><span class="flight-main"><strong>KIX</strong><b>15:25</b></span><small>關西機場 T2</small></span>
-              <span class="flight-arrow" aria-hidden="true">→</span>
-              <span class="flight-point"><span class="flight-main"><strong>TPE</strong><b>17:40</b></span><small>桃園機場 T1</small></span>
-            </div>
-          </section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">1</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">08:15</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">大阪道頓堀飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">退房並寄放行李；務必確認飯店可寄放。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋步行</span>
-                    <span class="tr-detail">飯店 → 惠美須町／動物園前周邊，再步行至通天閣；約 20–35 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">2</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">09:00</span>
-                <span class="stop-stay-inline">09:00–09:45 (45分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">通天閣・新世界</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%80%9A%E5%A4%A9%E9%96%A3&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">新世界街區短暫散策；此時段不保證能登塔。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro 堺筋線／中央線＋步行</span>
-                    <span class="tr-detail">新世界 → 谷町四丁目／森之宮站，再步行至大阪城；估計 35–50 分鐘。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">3</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">10:30</span>
-                <span class="stop-stay-inline">10:30–11:15 (45分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">大阪城公園</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E5%9F%8E%E5%85%AC%E5%9C%92&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">以公園散策為主；若入天守閣，需另增時間並壓縮其他安排。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">大阪 Metro＋步行</span>
-                    <span class="tr-detail">大阪城 → 島之內飯店取行李，約 30–45 分鐘；另預留約 10–15 分鐘領行李。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">4</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">12:00</span>
-                
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">大阪道頓堀飯店</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">領行李後立即前往機場。</div>
-            </div>
-          </div><div class="tl-transport">
-              <div class="transport-line">
-                <div class="tr-header">
-                  <div class="tr-info">
-                    <span class="tr-method">南海電鐵／JR＋機場 T2 接駁</span>
-                    <span class="tr-detail">飯店 → 難波站（或適合的 JR 站）→ 關西機場站，再轉 T1／Aeroplaza 至 T2 免費接駁；全程保守估計 85–115 分鐘，須按實際列車與接駁班次調整。</span>
-                  </div>
-                  
-                </div>
-              </div>
-            </div><div class="tl-stop">
-            <div class="tl-dot" style="background:#f97316">5</div>
-            <div class="stop-card">
-              <div class="stop-row1">
-                <span class="stop-time">13:30</span>
-                <span class="stop-stay-inline">13:30–14:00 (30分鐘)</span>
-              </div>
-              <div class="stop-row2">
-                <div class="stop-place-text">
-                  <div class="stop-name">關西國際機場 T2</div>
-                  
-                </div>
-                
-                <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%BA%8C%E8%88%AA%E5%BB%88&amp;travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-mini-nav">導航</a>
-              </div>
-              <div class="stop-desc">辦理樂桃 MM027 報到與安檢；依航空公司當日截止時間為準。</div>
-            </div>
-          </div></div></div></div><div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            <div class="tip-item"><span class="tip-num">1</span><span>15:25 自 KIX T2 起飛，原本 12:30 才離開大阪城、13:30 抵達 T2 的安排未計入回飯店取行李與航廈接駁，已改成較早離開。</span></div><div class="tip-item"><span class="tip-num">2</span><span>第五天時間為交通估計而非確定班次；若要登通天閣或大阪城天守閣，建議二選一，並優先確保機場報到。</span></div><div class="tip-item"><span class="tip-num">3</span><span>南海／JR 抵達關西機場站後仍須搭接駁車到 T2；請確認樂桃國際線報到截止時間。</span></div>
-          </div></div></section><section class="static-day" id="static-day-pass"><div class="card"><div class="pass-container"><div class="pass-heading" style="font-size:1.05rem; font-weight:800; margin-bottom:.3rem;">JR 指定席劃位</div><div class="lang-switcher" style="margin-top:.45rem;">
-          <button class="lang-btn active" onclick="setLang('zh')">中文 (繁體)</button>
-          <button class="lang-btn " onclick="setLang('ja')">日本語</button>
-          <button class="lang-btn " onclick="setLang('en')">English</button>
-        </div><div class="pass-card ">
-            <button class="pass-card-toggle" type="button" onclick="togglePassCard('res-0')" aria-expanded="true" aria-label="1. HARUKA 24 號（目前選擇）：已選擇・請協助訂位">
-              <span class="pass-card-title">1. HARUKA 24 號（目前選擇）</span>
-              <span class="pass-card-state">已選擇・請協助訂位 －</span>
-            </button>
-            <div class="pass-card-body">
-              <div class="pass-route">關西機場 → 京都　(2026/11/20)</div>
-              <div class="pass-meta">
-                <b>發車時間:</b> 12:44 (14:04) <span class="pass-people-divider">|</span> <b>4 位</b>
-              </div>
-              <div class="pass-haruka-options"><button type="button" class="pass-haruka-disclosure" aria-expanded="false" onclick="togglePassHarukaOptions()"><span>更換 HARUKA 候選班次</span><span aria-hidden="true">+</span></button><div class="pass-haruka-grid" hidden=""><button type="button" class="pass-haruka-choice" aria-pressed="false" onclick="selectPassHaruka('22')">HARUKA 22號　12:14–13:34</button><button type="button" class="pass-haruka-choice" aria-pressed="true" onclick="selectPassHaruka('24')">HARUKA 24號　12:44–14:04</button><button type="button" class="pass-haruka-choice" aria-pressed="false" onclick="selectPassHaruka('26')">HARUKA 26號　13:14–14:34</button></div></div>
-            </div>
-          </div></div></div></section>
-    </div>
-
-    <dialog class="schedule-modal" id="schedule-modal" aria-labelledby="schedule-modal-title">
-      <div class="schedule-modal-head"><h2 id="schedule-modal-title">候選班次</h2><button class="schedule-close" onclick="closeSchedule()" aria-label="關閉視窗">關閉</button></div>
-      <div class="schedule-scroll" id="schedule-modal-table"></div>
-      <div class="schedule-note" id="schedule-modal-note"></div>
-    </dialog>
-    <!-- SCRIPTS -->
-    
-    <script>
+</nav>
+<!-- MAIN CONTENT -->
+<div class="content-wrap" id="main-content-wrap">
+<!-- Map Dropdown Card -->
+<div class="card map-dropdown" id="map-card-wrap">
+<button aria-expanded="false" class="map-toggle" id="map-toggle-btn" onclick="toggleMap()">
+<span id="map-label">今日路線圖</span>
+<span style="font-size: 0.72rem; color: var(--muted); margin-left: 0.35rem;">- Esri Street Map</span>
+<span class="map-arrow" id="map-arrow">▼</span>
+</button>
+<div class="map-body" id="map-body">
+<div id="day-map"></div>
+<div class="map-legend" id="map-legend"></div>
+</div>
+</div>
+<!-- Timeline / Pass Container -->
+<div id="left-col"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section aria-label="航班資訊" class="travel-flight">
+<div class="travel-flight-top"><span>抵達日本 · 11/20</span><strong>台灣虎航 IT210</strong></div>
+<div class="flight-compact-route">
+<span class="flight-point"><span class="flight-main"><strong>TPE</strong><b>07:00</b></span><small>桃園機場 T1</small></span>
+<span aria-hidden="true" class="flight-arrow">→</span>
+<span class="flight-point"><span class="flight-main"><strong>KIX</strong><b>10:25</b></span><small>關西機場 T1</small></span>
+</div>
+</section><section aria-label="住宿資訊" class="travel-hotel">
+<div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 入住 · 14:00 後</span><a class="hotel-compact-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航 ↗</a></div>
+<div class="travel-hotel-name" title="口袋飯店 – 京都烏丸五條">口袋飯店 – 京都烏丸五條</div>
+<div class="travel-hotel-detail">五條站 1 號出口步行約 1 分鐘</div>
+</section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">1</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">10:25</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">抵達關西國際機場 KIX</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%B8%80%E8%88%AA%E5%BB%88&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc"></div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">JR 車站</span>
+<span class="tr-detail">入境、提領行李後前往 JR 關西機場站</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">2</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">11:30</span>
+<span class="stop-stay-inline">11:30–12:20 (50分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">關西機場站</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E6%A9%9F%E5%A0%B4%E7%AB%99&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc"></div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">JR 特急 HARUKA｜關西機場站 → 京都站</span>
+<span class="tr-detail">12:44–14:04（已選 24 號；時刻待確認）</span>
+</div>
+<button class="schedule-btn" onclick="openSchedule('harukaOutbound')" type="button">選擇班次</button>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">3</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">14:04</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">京都站</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E7%AB%99&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">HARUKA 班次時間及指定席尚待確認。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">地下鐵／計程車</span>
+<span class="tr-detail">京都站前往五條站周邊飯店</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">4</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">14:05</span>
+<span class="stop-stay-inline">14:05–14:30 (25分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">口袋飯店 – 京都烏丸五條</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">14:00 後入住。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">飯店 → 清水寺（14:30–15:10，約 40 分鐘）</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">5</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">15:10</span>
+<span class="stop-stay-inline">15:10–15:45 (35分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">清水寺</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B8%85%E6%B0%B4%E5%AF%BA&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">開放時間：06:00–18:00（2026/11/20）。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">清水寺 → 三年坂、二年坂（順坡而下）</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">6</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">15:45</span>
+<span class="stop-stay-inline">15:45–16:20 (35分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">三年坂、二年坂</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%B8%89%E5%B9%B4%E5%9D%82&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">沿途散策、拍照。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">二年坂 → 八坂神社（約 5 分鐘）</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">7</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">16:20</span>
+<span class="stop-stay-inline">16:20–16:35 (15分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">八坂神社</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%85%AB%E5%9D%82%E7%A5%9E%E7%A4%BE&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">僅途經，不安排長時間停留。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">八坂神社 → 三條河原町，抵達餐廳（16:35–17:00，約 25 分鐘）</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">8</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">17:00</span>
+<span class="stop-stay-inline">17:00–18:00 (60分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">炸牛 元村 三條河原町店</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%20%E7%82%B8%E7%89%9B%20%E5%85%83%E6%9D%91%20%E4%B8%89%E6%A2%9D%E6%B2%B3%E5%8E%9F%E7%94%BA%E5%BA%97&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc"></div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">京都市巴士 5 號＋步行</span>
+<span class="tr-detail">河原町三條 → 南禪寺・永觀堂道，下車後步行至永觀堂（18:00–19:00）</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">9</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">19:00</span>
+<span class="stop-stay-inline">19:00–20:30 (90分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">永觀堂</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B0%B8%E8%A7%80%E5%A0%82&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">夜間特別拝觀：17:30–20:30 受付，21:00 閉門；中學生以上 ¥1,000。</div>
+</div>
+</div></div></div></div></div></div><section class="static-day" id="static-day-2"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section aria-label="住宿資訊" class="travel-hotel">
+<div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 續住</span><a class="hotel-compact-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航 ↗</a></div>
+<div class="travel-hotel-name" title="口袋飯店 – 京都烏丸五條">口袋飯店 – 京都烏丸五條</div>
+<div class="travel-hotel-detail">五條站 1 號出口步行約 1 分鐘</div>
+</section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">1</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">07:00</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">口袋飯店 – 京都烏丸五條</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">地下鐵＋JR／步行</span>
+<span class="tr-detail">五條站 → 京都站 → JR 嵯峨嵐山站，步行至竹林；約 45–60 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">2</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">08:00</span>
+<span class="stop-stay-inline">08:00–10:00 (120分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">嵐山竹林小徑</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%B5%90%E5%B1%B1%E7%AB%B9%E6%9E%97%E5%B0%8F%E5%BE%91&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">竹林 → 渡月橋周邊約 15–20 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">3</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">10:20</span>
+<span class="stop-stay-inline">10:20–12:40 (140分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">渡月橋・嵐山商店街</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E6%B8%A1%E6%9C%88%E6%A9%8B&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">公車轉乘／計程車</span>
+<span class="tr-detail">嵐山 → 金閣寺，公車轉乘約 50–75 分鐘；計程車約 30–45 分鐘，假日可能塞車。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">4</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">13:40</span>
+<span class="stop-stay-inline">13:40–14:30 (50分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">金閣寺</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%87%91%E9%96%A3%E5%AF%BA&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div><div class="stop-desc">參觀時間：09:00–17:00。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行／公車</span>
+<span class="tr-detail">金閣寺 → 北野天滿宮，步行約 20–25 分鐘；也可依實際路況搭公車。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">5</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">14:55</span>
+<span class="stop-stay-inline">14:55–15:45 (50分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">北野天滿宮</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%8C%97%E9%87%8E%E5%A4%A9%E6%BB%BF%E5%AE%AE&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div><div class="stop-desc">境內參拜：07:00–17:00；御土居紅葉苑：09:00–20:00（夜間點燈期間，最終受付 19:40；2026/11/13–12/6）。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">計程車／公車＋步行</span>
+<span class="tr-detail">北野天滿宮 → 口袋飯店 – 京都烏丸五條，預估 30–45 分鐘（約 15:45–16:30）。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">6</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">16:30</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">口袋飯店 – 京都烏丸五條</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div></div></div></div></section><section class="static-day" id="static-day-3"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section aria-label="住宿資訊" class="travel-hotel">
+<div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 入住 · 16:00 後</span><a class="hotel-compact-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航 ↗</a></div>
+<div class="travel-hotel-name" title="Benikea Calton Hotel Osaka Doutonbori">Benikea Calton Hotel Osaka Doutonbori</div>
+<div class="travel-hotel-detail">大阪道頓堀</div>
+</section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">1</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">07:00</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">口袋飯店 – 京都烏丸五條</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">地下鐵＋JR／京阪＋步行</span>
+<span class="tr-detail">五條站周邊 → 伏見稻荷，約 25–40 分鐘；JR 稻荷站或京阪伏見稻荷站下車。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">2</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">07:40</span>
+<span class="stop-stay-inline">07:40–10:10 (150分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">伏見稻荷大社</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BC%8F%E8%A6%8B%E7%A8%BB%E8%8D%B7%E5%A4%A7%E7%A4%BE&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">JR 奈良線＋東海道線＋公車／步行</span>
+<span class="tr-detail">JR 稻荷站搭奈良線至京都站，轉東海道線至西大路站，再轉市巴士或計程車前往吉祥院天滿宮；預估 35–50 分鐘（約 10:10–10:50）。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">3</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">10:50</span>
+<span class="stop-stay-inline">10:50–11:20 (30分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">吉祥院天滿宮</div>
+<span class="stop-name-ja">吉祥院天満宮</span>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%90%89%E7%A5%A5%E9%99%A2%E5%A4%A9%E6%BB%BF%E5%AE%AE&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc"></div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">公車／計程車＋步行</span>
+<span class="tr-detail">吉祥院天滿宮 → 口袋飯店 – 京都烏丸五條，預估 25–45 分鐘（約 11:20–12:00），取寄放行李。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">4</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">12:00</span>
+<span class="stop-stay-inline">12:00–12:20 (20分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">口袋飯店 – 京都烏丸五條</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=THE%20POCKET%20HOTEL%20KYOTO-KARASUMAGOJO%2C%20423%20Matsuyacho%2C%20Shimogyo-ku%2C%20Kyoto%20600-8105&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">領取行李並辦理退房。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">地下鐵烏丸線／步行</span>
+<span class="tr-detail">五條 → 京都站，含步行與候車約 15–25 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">5</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">12:45</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">京都站</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E4%BA%AC%E9%83%BD%E7%AB%99&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">JR 京都線新快速</span>
+<span class="tr-detail">京都 → 大阪站，車程約 29 分鐘；依現場班次搭乘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">6</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">13:20</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">大阪站</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E7%AB%99&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro＋步行</span>
+<span class="tr-detail">大阪站／梅田 → 日本橋或長堀橋站 → 島之內飯店，約 30–45 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">7</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">14:05</span>
+<span class="stop-stay-inline">14:05–14:25 (20分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">可先寄放行李；16:00 後入住。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro＋步行</span>
+<span class="tr-detail">飯店 → 梅田商圈，約 25–40 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">8</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">15:05</span>
+<span class="stop-stay-inline">15:05–19:00 (235分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">梅田逛街購物</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E6%A2%85%E7%94%B0&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro＋步行</span>
+<span class="tr-detail">梅田 → 道頓堀／島之內飯店，約 25–40 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">9</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">19:40</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div></div></div></div></section><section class="static-day" id="static-day-4"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section aria-label="住宿資訊" class="travel-hotel">
+<div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · 續住</span><a class="hotel-compact-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航 ↗</a></div>
+<div class="travel-hotel-name" title="Benikea Calton Hotel Osaka Doutonbori">Benikea Calton Hotel Osaka Doutonbori</div>
+<div class="travel-hotel-detail">大阪道頓堀</div>
+</section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">1</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">06:35</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">大阪道頓堀飯店</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行＋大阪 Metro 御堂筋線／北大阪急行＋計程車</span>
+<span class="tr-detail">06:35 飯店出發 → 07:30 前抵達箕面萱野站南口；南交通廣場計程車乘車處（8 號巴士站對面）上車，約 15–20 分鐘，預留候車及塞車緩衝，目標 08:00 到寺。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">2</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">08:00</span>
+<span class="stop-stay-inline">08:00–09:30 (90分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">勝尾寺</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%8B%9D%E5%B0%BE%E5%AF%BA&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div><div class="stop-desc">一般參拜時間：08:00–17:00（最終受付 16:30；11/23 為祝日）。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">公車／計程車＋步行</span>
+<span class="tr-detail">勝尾寺 → 箕面瀑布登山口方向，需轉乘或搭計程車；道路與步道連接方式需現場確認。勿假設可直接短距離步行。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">3</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">10:15</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">箕面瀑布步道入口</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E7%AE%95%E9%9D%A2%E5%85%AC%E5%9C%92&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">勝尾寺後續接駁方式與步道入口需事先確認。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">步道入口 → 箕面瀑布，單程約 40–60 分鐘，依入口與步行速度調整。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">4</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">11:10</span>
+<span class="stop-stay-inline">11:10–11:45 (35分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">箕面瀑布</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E7%AE%95%E9%9D%A2%E5%A4%A7%E6%BB%9D&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">沿步道返回箕面站方向，約 40–60 分鐘；預留午餐與候車緩衝。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">5</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">12:50</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">阪急箕面站</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%98%AA%E6%80%A5%E7%AE%95%E9%9D%A2%E7%AB%99&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">阪急電鐵＋大阪 Metro</span>
+<span class="tr-detail">箕面站 → 石橋阪大前 → 大阪梅田，轉 Metro 至心齋橋；約 50–75 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">6</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">14:15</span>
+<span class="stop-stay-inline">14:15–15:40 (85分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">心齋橋・道頓堀散策</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%BF%83%E9%BD%8B%E6%A9%8B%E7%AD%8B%E5%95%86%E5%BA%97%E8%A1%97&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">心齋橋／道頓堀 → 燒肉力丸 なんば道頓堀店（道頓堀 1-9-1，5F），預留 10–20 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">7</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">16:00</span>
+<span class="stop-stay-inline">16:00–17:30 (90分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">燒肉力丸 なんば道頓堀店</div>
+<span class="stop-name-ja">焼肉力丸 なんば道頓堀店</span>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E7%84%BC%E8%82%89%E5%8A%9B%E4%B8%B8%20%E3%81%AA%E3%82%93%E3%81%B0%E9%81%93%E9%A0%93%E5%A0%80%E5%BA%97&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">16:00–17:30；尚未訂位。地址：大阪市中央區道頓堀 1-9-1 ベルスードビル 5F。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">餐後繼續逛道頓堀，約 5–10 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">8</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">17:30</span>
+<span class="stop-stay-inline">17:30–19:00 (90分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">道頓堀夜間散策</div>
+<span class="stop-name-ja">道頓堀</span>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%81%93%E9%A0%93%E5%A0%80&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">步行</span>
+<span class="tr-detail">道頓堀 → 島之內飯店，約 10–25 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">9</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">19:20</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">Benikea Calton Hotel Osaka Doutonbori</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+</div>
+</div></div></div></div></section><section class="static-day" id="static-day-5"><div class="card travel-summary-card" style="margin-bottom:.5rem"><div class="travel-essentials"><section aria-label="航班資訊" class="travel-flight">
+<div class="travel-flight-top"><span>返回台灣 · 11/24</span><strong>樂桃航空 MM027</strong></div>
+<div class="flight-compact-route">
+<span class="flight-point"><span class="flight-main"><strong>KIX</strong><b>15:25</b></span><small>關西機場 T2</small></span>
+<span aria-hidden="true" class="flight-arrow">→</span>
+<span class="flight-point"><span class="flight-main"><strong>TPE</strong><b>17:40</b></span><small>桃園機場 T1</small></span>
+</div>
+</section></div></div><div class="card" style="margin-bottom:.5rem"><div class="timeline"><div class="tl-wrap"><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">1</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">08:15</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">大阪道頓堀飯店</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">確認飯店可寄放行李。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro＋步行</span>
+<span class="tr-detail">飯店 → 惠美須町／動物園前周邊，再步行至通天閣；約 20–35 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">2</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">09:00</span>
+<span class="stop-stay-inline">09:00–09:45 (45分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">通天閣・新世界</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%80%9A%E5%A4%A9%E9%96%A3&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">通天閣展望台：09:00–21:45（一般展望台最終入場 21:15）；採入場時段預約制，建議事先預約。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro 堺筋線／中央線＋步行</span>
+<span class="tr-detail">新世界 → 谷町四丁目／森之宮站，再步行至大阪城；估計 35–50 分鐘。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">3</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">10:30</span>
+<span class="stop-stay-inline">10:30–11:15 (45分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">大阪城公園</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E5%A4%A7%E9%98%AA%E5%9F%8E%E5%85%AC%E5%9C%92&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">若進入天守閣：09:00–18:00（最終入館 17:30）；需另增時間並壓縮其他行程。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">大阪 Metro＋步行</span>
+<span class="tr-detail">大阪城 → 島之內飯店取行李，約 30–45 分鐘；另預留約 10–15 分鐘領行李。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">4</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">12:00</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">大阪道頓堀飯店</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=Benikea%20Calton%20Hotel%20Osaka%20Doutonbori&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">領取行李後前往機場。</div>
+</div>
+</div><div class="tl-transport">
+<div class="transport-line">
+<div class="tr-header">
+<div class="tr-info">
+<span class="tr-method">南海電鐵／JR＋機場 T2 接駁</span>
+<span class="tr-detail">飯店 → 難波站（或適合的 JR 站）→ 關西機場站，再轉 T1／Aeroplaza 至 T2 免費接駁；全程保守估計 85–115 分鐘，須按實際列車與接駁班次調整。</span>
+</div>
+</div>
+</div>
+</div><div class="tl-stop">
+<div class="tl-dot" style="background:#f97316">5</div>
+<div class="stop-card">
+<div class="stop-row1">
+<span class="stop-time">13:30</span>
+<span class="stop-stay-inline">13:30–14:00 (30分鐘)</span>
+</div>
+<div class="stop-row2">
+<div class="stop-place-text">
+<div class="stop-name">關西國際機場 T2</div>
+</div>
+<a class="btn-mini-nav" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%BA%8C%E8%88%AA%E5%BB%88&amp;travelmode=transit" rel="noopener noreferrer" target="_blank">導航</a>
+</div>
+<div class="stop-desc">Peach MM027 報到與安檢；請確認航空公司報到截止時間。</div>
+</div>
+</div></div></div></div></section>
+</div>
+<dialog aria-labelledby="schedule-modal-title" class="schedule-modal" id="schedule-modal">
+<div class="schedule-modal-head"><h2 id="schedule-modal-title">候選班次</h2><button aria-label="關閉視窗" class="schedule-close" onclick="closeSchedule()">關閉</button></div>
+<div class="schedule-scroll" id="schedule-modal-table"></div>
+<div class="schedule-note" id="schedule-modal-note"></div>
+</dialog>
+<!-- SCRIPTS -->
+<script>
       const TRIP = {
         start: new Date("2026-11-20T07:00:00+08:00"),
         end: new Date("2026-11-24T17:40:00+08:00"),
       };
 
       function navUrl(dest) {
-        return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent("現在地")}&destination=${encodeURIComponent(dest)}&travelmode=transit`;
+        const destination = dest === "口袋飯店 – 京都烏丸五條" ? "THE POCKET HOTEL KYOTO-KARASUMAGOJO, 423 Matsuyacho, Shimogyo-ku, Kyoto 600-8105" : dest;
+        return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent("現在地")}&destination=${encodeURIComponent(destination)}&travelmode=transit`;
       }
 
       // JR Pass Reservation Data for Window Clerk (Tri-lingual - 4 Adults Complete List)
@@ -1948,22 +1884,22 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
     "color": "#f97316",
     "routeColor": "#f97316",
     "center": [
-      35,
-      135.7
+      34.83847,
+      135.6221
     ],
     "zoom": 11,
     "note": "虎航 IT210｜TPE T1 07:00 → KIX T1 10:25",
-    "hotelName": "京都五條飯店",
+    "hotelName": "口袋飯店 – 京都烏丸五條",
     "hotelSub": "五條站周邊｜14:00 後入住",
     "stops": [
       {
         "time": "10:25",
         "name": "抵達關西國際機場 KIX",
-        "desc": "抵達第一航廈，辦理入境及提領行李。",
+        "desc": "",
         "place": "關西國際機場 第一航廈",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.4353,
+        "lng": 135.244,
         "tr": {
           "m": "JR 車站",
           "d": "入境、提領行李後前往 JR 關西機場站",
@@ -1973,11 +1909,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "11:30–12:20",
         "name": "關西機場站",
-        "desc": "4 位大人領取 JR Pass；優先處理當日車票。",
+        "desc": "",
         "place": "關西機場站",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.4356,
+        "lng": 135.2437,
         "tr": {
           "m": "JR 特急 HARUKA",
           "scheduleKey": "harukaOutbound",
@@ -1988,98 +1924,126 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "12:44–14:04（首選）",
         "name": "京都站",
-        "desc": "列車時間與指定席尚待確認。",
+        "desc": "HARUKA 班次時間及指定席尚待確認。",
         "place": "京都站",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9858,
+        "lng": 135.7588,
         "tr": {
-          "m": "地下鐵／計程車",
-          "d": "京都站前往五條站周邊飯店",
+          "m": "地下鐵烏丸線",
+          "d": "京都站 → 五條站（1 站，約 2 分鐘）；由 1 號出口步行約 1 分鐘抵達飯店。",
           "detail": ""
         }
       },
       {
-        "time": "14:05–14:45（彈性）",
-        "name": "京都五條飯店",
-        "desc": "14:00 後可入住，否則先寄放行李。",
-        "place": "京都五條飯店",
-        "ja": "",
-        "lat": 35,
-        "lng": 135.7,
-        "tr": {
-          "m": "公車／計程車",
-          "d": "前往清水寺及東山散策",
-          "detail": ""
+          "time": "14:05–14:30",
+          "name": "口袋飯店 – 京都烏丸五條",
+          "desc": "14:00 後入住。",
+          "place": "口袋飯店 – 京都烏丸五條",
+          "ja": "",
+          "lat": 34.9957,
+          "lng": 135.7596,
+          "tr": {
+            "m": "步行",
+            "d": "飯店 → 清水寺（14:30–15:10，約 40 分鐘）",
+            "detail": ""
+          }
+        },
+        {
+          "time": "15:10–15:45",
+          "name": "清水寺",
+          "desc": "開放時間：06:00–18:00（2026/11/20）。",
+          "place": "清水寺",
+          "ja": "",
+          "lat": 34.9949,
+          "lng": 135.785,
+          "tr": {
+            "m": "步行",
+            "d": "清水寺 → 三年坂、二年坂（順坡而下）",
+            "detail": ""
+          }
+        },
+        {
+          "time": "15:45–16:20",
+          "name": "三年坂、二年坂",
+          "desc": "沿途散策、拍照。",
+          "place": "三年坂",
+          "ja": "",
+          "lat": 34.9979,
+          "lng": 135.7807,
+          "tr": {
+            "m": "步行",
+            "d": "二年坂 → 八坂神社（約 5 分鐘）",
+            "detail": ""
+          }
+        },
+        {
+          "time": "16:20–16:35",
+          "name": "八坂神社",
+          "desc": "僅途經，不安排長時間停留。",
+          "place": "八坂神社",
+          "ja": "",
+          "lat": 35.0037,
+          "lng": 135.7785,
+          "tr": {
+            "m": "步行",
+            "d": "八坂神社 → 三條河原町，抵達餐廳（16:35–17:00，約 25 分鐘）",
+            "detail": ""
+          }
+        },
+        {
+          "time": "17:00–18:00",
+          "name": "炸牛 元村 三條河原町店",
+          "desc": "",
+          "place": "京都 炸牛 元村 三條河原町店",
+          "ja": "",
+          "lat": 35.0066,
+          "lng": 135.7693,
+          "tr": {
+            "m": "京都市巴士 5 號＋步行",
+            "d": "河原町三條 → 南禪寺・永觀堂道，下車後步行至永觀堂（18:00–19:00）",
+            "detail": "從餐廳步行至河原町三條站牌，搭乘往銀閣寺／國際會館方向的 5 號巴士，於南禪寺・永觀堂道下車後步行。實際候車及車程以當日為準。"
+          }
+        },
+        {
+          "time": "19:00–20:30",
+          "name": "永觀堂",
+          "desc": "夜間特別拝觀：17:30–20:30 受付，21:00 閉門；中學生以上 ¥1,000。",
+          "place": "永觀堂",
+          "ja": "",
+          "lat": 35.0147,
+          "lng": 135.7944
         }
-      },
-      {
-        "time": "14:45–17:30（彈性）",
-        "name": "清水寺",
-        "desc": "參拜清水寺，漫步三年坂、二年坂。",
-        "place": "清水寺",
-        "ja": "",
-        "lat": 35,
-        "lng": 135.7,
-        "tr": {
-          "m": "步行",
-          "d": "清水寺 → 三年坂、二年坂 → 三條河原町炸牛元村（步行估計 40–60 分鐘）",
-          "detail": ""
-        }
-      },
-      {
-        "time": "17:00–18:00",
-        "name": "炸牛 元村 三條河原町店",
-        "desc": "請預留候位時間。",
-        "place": "京都 炸牛 元村 三條河原町店",
-        "ja": "",
-        "lat": 35,
-        "lng": 135.7,
-        "tr": {
-          "m": "京都市巴士 5 號＋步行",
-          "d": "河原町三條 → 南禪寺・永觀堂道，下車後步行至永觀堂（18:00–18:30 ）",
-          "detail": "從餐廳步行至河原町三條站牌，搭乘往銀閣寺／國際會館方向的 5 號巴士，於南禪寺・永觀堂道下車後步行。實際候車及車程以當日為準。"
-        }
-      },
-      {
-        "time": "18:30–20:30",
-        "name": "永觀堂",
-        "desc": "夜間賞楓；開放時間與票價待公告。",
-        "place": "永觀堂",
-        "ja": "",
-        "lat": 35,
-        "lng": 135.7
-      }
-    ],
+      ],
     "tips": [
       "去程抵達 KIX T1，無需 T2 接駁；虎航 11/20 航班時間仍以電子機票為準。",
-      "清水寺 → 炸牛元村三條河原町店採步行；餐後從河原町三條搭市巴士 5 號往南禪寺・永觀堂道，再步行至永觀堂。步行／用餐／公車皆為估計，遇排隊或塞車需縮短東山停留。"
+      "14:30 自飯店步行至清水寺；清水寺 → 三年坂・二年坂 → 八坂神社（僅途經）→ 三條河原町皆採步行，17:00 抵達炸牛元村。餐後 18:00 起從河原町三條搭市巴士 5 號前往永觀堂，預留 1 小時含候車與步行。步行／用餐／公車皆為估計，遇排隊或塞車需縮短東山停留。"
     ]
   },
   {
     "id": 2,
     "label": "11/21 (六)",
     "title": "嵐山・金閣寺・北野天滿宮",
-    "sub": "京都整日散策・嵐山充裕停留",
+    "sub": "07:00 出發・嵐山充裕散策・京都三景點",
     "color": "#f97316",
     "routeColor": "#f97316",
     "center": [
-      35.019,
-      135.7
+      35.01006,
+      135.72377
     ],
     "zoom": 12,
     "note": "",
-    "hotelName": "京都五條飯店",
-    "hotelSub": "五條站周邊｜續住",
+    "hotelName": "口袋飯店 – 京都烏丸五條",
+    "hotelSub": "THE POCKET HOTEL｜續住",
     "stops": [
       {
-        "time": "07:30",
-        "name": "京都五條飯店",
-        "desc": "出發前往嵐山。",
-        "place": "京都五條飯店",
+        "time": "07:00",
+        "name": "口袋飯店 – 京都烏丸五條",
+        "desc": "",
+        "place": "口袋飯店 – 京都烏丸五條",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9957,
+        "lng": 135.7596,
         "tr": {
           "m": "地下鐵＋JR／步行",
           "d": "五條站 → 京都站 → JR 嵯峨嵐山站，步行至竹林；約 45–60 分鐘。",
@@ -2087,13 +2051,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "08:30–10:15",
+        "time": "08:00–10:00",
         "name": "嵐山竹林小徑",
-        "desc": "08:30–10:15 (105分鐘)\n竹林與周邊步道慢慢散策。",
+        "desc": "",
         "place": "嵐山竹林小徑",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 35.0172,
+        "lng": 135.6713,
         "tr": {
           "m": "步行",
           "d": "竹林 → 渡月橋周邊約 15–20 分鐘。",
@@ -2101,13 +2065,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "10:35–12:45",
+        "time": "10:20–12:40",
         "name": "渡月橋・嵐山商店街",
-        "desc": "10:35–12:45 (130分鐘)\n渡月橋、桂川河畔、商店街及午餐；嵐山合計約 4 小時。",
+        "desc": "",
         "place": "渡月橋",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 35.0128,
+        "lng": 135.6778,
         "tr": {
           "m": "公車轉乘／計程車",
           "d": "嵐山 → 金閣寺，公車轉乘約 50–75 分鐘；計程車約 30–45 分鐘，假日可能塞車。",
@@ -2115,13 +2079,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "13:45–14:45",
+        "time": "13:40–14:30",
         "name": "金閣寺",
-        "desc": "13:45–14:45 (60分鐘)\n參觀金閣寺。",
+        "desc": "參觀時間：09:00–17:00。",
         "place": "金閣寺",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 35.0394,
+        "lng": 135.7292,
         "tr": {
           "m": "步行／公車",
           "d": "金閣寺 → 北野天滿宮，步行約 20–25 分鐘；也可依實際路況搭公車。",
@@ -2129,31 +2093,31 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "15:10–16:20",
+        "time": "14:55–15:45",
         "name": "北野天滿宮",
-        "desc": "15:10–16:20 (70分鐘)\n參拜與境內散策；若有開放的特別區域，可視時間調整。",
+        "desc": "境內參拜：07:00–17:00；御土居紅葉苑：09:00–20:00（夜間點燈期間，最終受付 19:40；2026/11/13–12/6）。",
         "place": "北野天滿宮",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 35.0311,
+        "lng": 135.7351,
         "tr": {
-          "m": "公車＋地下鐵／計程車",
-          "d": "北野天滿宮 → 五條站周邊，約 35–55 分鐘。",
+          "m": "計程車／公車＋步行",
+          "d": "北野天滿宮 → 口袋飯店 – 京都烏丸五條，預估 30–45 分鐘（約 15:45–16:30）。",
           "detail": ""
         }
       },
       {
-        "time": "17:10",
-        "name": "京都五條飯店",
-        "desc": "返回飯店；晚餐自由安排。",
-        "place": "京都五條飯店",
+        "time": "16:30",
+        "name": "口袋飯店 – 京都烏丸五條",
+        "desc": "",
+        "place": "口袋飯店 – 京都烏丸五條",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7
+        "lat": 34.9957,
+        "lng": 135.7596
       }
     ],
     "tips": [
-      "嵐山約 08:30–12:45，包含竹林、渡月橋、午餐及步行轉場。",
+      "07:00 從飯店出發；嵐山約 08:00–12:40，含竹林、渡月橋、午餐與轉場。",
       "11/21 為週六，嵐山與金閣寺周邊可能壅塞；交通時間為規劃值，非已確認班次。",
       "北野天滿宮若遇特別活動或開放時間變更，依現場公告。"
     ]
@@ -2161,13 +2125,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
   {
     "id": 3,
     "label": "11/22 (日)",
-    "title": "伏見稻荷大社 ➔ 大阪・梅田",
-    "sub": "伏見稻荷 2.5 小時・下午移動大阪與梅田購物",
+    "title": "伏見稻荷大社・吉祥院天滿宮 ➔ 大阪・梅田",
+    "sub": "07:00 出發・伏見稻荷 2.5 小時・吉祥院天滿宮・下午大阪梅田購物",
     "color": "#f97316",
     "routeColor": "#f97316",
     "center": [
-      34.98,
-      135.75
+      34.83606,
+      135.63214
     ],
     "zoom": 11,
     "note": "",
@@ -2175,13 +2139,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
     "hotelSub": "島之內／道頓堀｜16:00 後 Check-in",
     "stops": [
       {
-        "time": "07:30",
-        "name": "京都五條飯店",
-        "desc": "出發前往伏見稻荷。",
-        "place": "京都五條飯店",
+        "time": "07:00",
+        "name": "口袋飯店 – 京都烏丸五條",
+        "desc": "",
+        "place": "口袋飯店 – 京都烏丸五條",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9957,
+        "lng": 135.7596,
         "tr": {
           "m": "地下鐵＋JR／京阪＋步行",
           "d": "五條站周邊 → 伏見稻荷，約 25–40 分鐘；JR 稻荷站或京阪伏見稻荷站下車。",
@@ -2189,27 +2153,41 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "08:10–10:40",
+        "time": "07:40–10:10",
         "name": "伏見稻荷大社",
-        "desc": "08:10–10:40 (150分鐘)\n千本鳥居與山徑散策；2.5 小時不保證走完整座稻荷山。",
+        "desc": "",
         "place": "伏見稻荷大社",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9671,
+        "lng": 135.7727,
         "tr": {
-          "m": "JR／京阪＋地下鐵",
-          "d": "伏見稻荷 → 京都五條飯店，約 25–40 分鐘，取寄放行李。",
+          "m": "JR 奈良線＋東海道線＋公車／步行",
+          "d": "JR 稻荷站搭奈良線至京都站，轉東海道線至西大路站，再轉市巴士或計程車前往吉祥院天滿宮；預估 35–50 分鐘（約 10:10–10:50）。",
+          "detail": "稻荷站 → 京都站（奈良線）→ 西大路站（東海道線）後，可轉市巴士 202／208 系統，於「西大路九條」下車再步行約 13 分鐘（吉祥院天滿宮官方交通資訊）；也可在西大路站改搭計程車。西大路站至巴士站的轉乘方式與時間請出發前以 Google 地圖確認。"
+        }
+      },
+      {
+        "time": "10:50–11:20",
+        "name": "吉祥院天滿宮",
+        "desc": "",
+        "place": "吉祥院天滿宮",
+        "ja": "吉祥院天満宮",
+        "lat": 34.9771,
+        "lng": 135.734,
+        "tr": {
+          "m": "公車／計程車＋步行",
+          "d": "吉祥院天滿宮 → 口袋飯店 – 京都烏丸五條，預估 25–45 分鐘（約 11:20–12:00），取寄放行李。",
           "detail": ""
         }
       },
       {
-        "time": "11:15–11:35",
-        "name": "京都五條飯店",
-        "desc": "領取行李、辦理退房。",
-        "place": "京都五條飯店",
+        "time": "12:00–12:20",
+        "name": "口袋飯店 – 京都烏丸五條",
+        "desc": "領取行李並辦理退房。",
+        "place": "口袋飯店 – 京都烏丸五條",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9957,
+        "lng": 135.7596,
         "tr": {
           "m": "地下鐵烏丸線／步行",
           "d": "五條 → 京都站，含步行與候車約 15–25 分鐘。",
@@ -2217,13 +2195,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "12:00",
+        "time": "12:45",
         "name": "京都站",
-        "desc": "前往大阪。",
+        "desc": "",
         "place": "京都站",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.9858,
+        "lng": 135.7588,
         "tr": {
           "m": "JR 京都線新快速",
           "d": "京都 → 大阪站，車程約 29 分鐘；依現場班次搭乘。",
@@ -2231,13 +2209,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "12:35",
+        "time": "13:20",
         "name": "大阪站",
-        "desc": "轉乘前往飯店寄放行李。",
+        "desc": "",
         "place": "大阪站",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.7025,
+        "lng": 135.4959,
         "tr": {
           "m": "大阪 Metro＋步行",
           "d": "大阪站／梅田 → 日本橋或長堀橋站 → 島之內飯店，約 30–45 分鐘。",
@@ -2245,13 +2223,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "13:20–13:40",
+        "time": "14:05–14:25",
         "name": "Benikea Calton Hotel Osaka Doutonbori",
-        "desc": "寄放行李；16:00 後可辦理入住。",
+        "desc": "可先寄放行李；16:00 後入住。",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6689,
+        "lng": 135.5067,
         "tr": {
           "m": "大阪 Metro＋步行",
           "d": "飯店 → 梅田商圈，約 25–40 分鐘。",
@@ -2259,13 +2237,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "14:20–19:00",
+        "time": "15:05–19:00",
         "name": "梅田逛街購物",
-        "desc": "14:20–19:00 (280分鐘)\n百貨、地下街與晚餐；可自行決定返飯店時間。",
+        "desc": "",
         "place": "大阪梅田",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.7025,
+        "lng": 135.4973,
         "tr": {
           "m": "大阪 Metro＋步行",
           "d": "梅田 → 道頓堀／島之內飯店，約 25–40 分鐘。",
@@ -2275,28 +2253,29 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "19:40",
         "name": "Benikea Calton Hotel Osaka Doutonbori",
-        "desc": "返回飯店辦理入住、休息。",
+        "desc": "",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7
+        "lat": 34.6689,
+        "lng": 135.5067
       }
     ],
     "tips": [
-      "伏見稻荷安排完整 150 分鐘；若要走至山頂，可能需要更長時間。",
+      "07:00 從飯店出發；伏見稻荷安排完整 150 分鐘（07:40–10:10），若要走至山頂，可能需要更長時間。",
+      "吉祥院天滿宮位於京都市南區，與伏見稻荷距離較遠；10:50 抵達屬交通估算（奈良線＋東海道線＋轉乘，需視候車與轉乘而定），11:20 後返回飯店取行李，後續大阪行程已順延約 45 分鐘。",
       "梅田安排於抵達大阪、寄放行李後，飯店入住時間仍以現場規定為準。"
     ]
   },
   {
     "id": 4,
     "label": "11/23 (一)",
-    "title": "勝尾寺・箕面瀑布 ➔ 心齋橋",
-    "sub": "大阪北部賞楓・午後心齋橋購物",
+    "title": "勝尾寺・箕面瀑布・道頓堀燒肉",
+    "sub": "08:00 抵達勝尾寺・16:00 燒肉力丸・道頓堀散策",
     "color": "#f97316",
     "routeColor": "#f97316",
     "center": [
-      34.85,
-      135.47
+      34.74866,
+      135.49068
     ],
     "zoom": 11,
     "note": "",
@@ -2304,27 +2283,27 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
     "hotelSub": "大阪道頓堀｜續住",
     "stops": [
       {
-        "time": "07:30",
+        "time": "06:35",
         "name": "大阪道頓堀飯店",
-        "desc": "出發前往勝尾寺。",
+        "desc": "",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6689,
+        "lng": 135.5067,
         "tr": {
-          "m": "大阪 Metro＋北大阪急行＋巴士",
-          "d": "飯店 → 箕面萱野站 → 勝尾寺；鐵路與巴士合計約 70–100 分鐘，公車班次需確認。",
-          "detail": ""
+          "m": "步行＋大阪 Metro 御堂筋線／北大阪急行＋計程車",
+          "d": "06:35 飯店出發 → 07:30 前抵達箕面萱野站南口；南交通廣場計程車乘車處（8 號巴士站對面）上車，約 15–20 分鐘，預留候車及塞車緩衝，目標 08:00 到寺。",
+          "detail": "計程車參考費約 ¥3,400／車，非即時報價。"
         }
       },
       {
-        "time": "09:00–10:30",
+        "time": "08:00–09:30",
         "name": "勝尾寺",
-        "desc": "09:00–10:30 (90分鐘)\n參拜、達摩與紅葉散策。",
+        "desc": "一般參拜時間：08:00–17:00（最終受付 16:30；11/23 為祝日）。",
         "place": "勝尾寺",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.8655,
+        "lng": 135.4903,
         "tr": {
           "m": "公車／計程車＋步行",
           "d": "勝尾寺 → 箕面瀑布登山口方向，需轉乘或搭計程車；道路與步道連接方式需現場確認。勿假設可直接短距離步行。",
@@ -2332,13 +2311,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "11:15",
+        "time": "10:15",
         "name": "箕面瀑布步道入口",
-        "desc": "開始瀑布步道；實際抵達時間取決於勝尾寺轉乘。",
+        "desc": "勝尾寺後續接駁方式與步道入口需事先確認。",
         "place": "箕面公園",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.8345,
+        "lng": 135.47,
         "tr": {
           "m": "步行",
           "d": "步道入口 → 箕面瀑布，單程約 40–60 分鐘，依入口與步行速度調整。",
@@ -2346,13 +2325,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "12:10–12:45",
+        "time": "11:10–11:45",
         "name": "箕面瀑布",
-        "desc": "12:10–12:45 (35分鐘)\n瀑布觀景與休息。",
+        "desc": "",
         "place": "箕面大滝",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.8546,
+        "lng": 135.47,
         "tr": {
           "m": "步行",
           "d": "沿步道返回箕面站方向，約 40–60 分鐘；預留午餐與候車緩衝。",
@@ -2360,13 +2339,13 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "13:45",
+        "time": "12:50",
         "name": "阪急箕面站",
-        "desc": "午餐或簡單補給後返回大阪市區。",
+        "desc": "",
         "place": "阪急箕面站",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.835,
+        "lng": 135.4685,
         "tr": {
           "m": "阪急電鐵＋大阪 Metro",
           "d": "箕面站 → 石橋阪大前 → 大阪梅田，轉 Metro 至心齋橋；約 50–75 分鐘。",
@@ -2374,33 +2353,62 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         }
       },
       {
-        "time": "15:00–19:00",
-        "name": "心齋橋逛街購物",
-        "desc": "15:00–19:00 (240分鐘)\n心齋橋筋、道頓堀周邊購物與晚餐。",
+        "time": "14:15–15:40",
+        "name": "心齋橋・道頓堀散策",
+        "desc": "",
         "place": "心齋橋筋商店街",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6735,
+        "lng": 135.5015,
         "tr": {
           "m": "步行",
-          "d": "心齋橋／道頓堀 → 島之內飯店，約 10–25 分鐘。",
+          "d": "心齋橋／道頓堀 → 燒肉力丸 なんば道頓堀店（道頓堀 1-9-1，5F），預留 10–20 分鐘。",
           "detail": ""
         }
       },
       {
-        "time": "19:30",
+        "time": "16:00–17:30",
+        "name": "燒肉力丸 なんば道頓堀店",
+        "desc": "16:00–17:30；尚未訂位。地址：大阪市中央區道頓堀 1-9-1 ベルスードビル 5F。",
+        "place": "焼肉力丸 なんば道頓堀店",
+        "ja": "焼肉力丸 なんば道頓堀店",
+        "lat": 34.6683,
+        "lng": 135.5014,
+        "tr": {
+          "m": "步行",
+          "d": "餐後繼續逛道頓堀，約 5–10 分鐘。",
+          "detail": ""
+        }
+      },
+      {
+        "time": "17:30–19:00",
+        "name": "道頓堀夜間散策",
+        "desc": "",
+        "place": "道頓堀",
+        "ja": "道頓堀",
+        "lat": 34.6687,
+        "lng": 135.501,
+        "tr": {
+          "m": "步行",
+          "d": "道頓堀 → 島之內飯店，約 10–25 分鐘。",
+          "detail": ""
+        }
+      },
+      {
+        "time": "19:20",
         "name": "Benikea Calton Hotel Osaka Doutonbori",
-        "desc": "返回飯店休息。",
+        "desc": "",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7
+        "lat": 34.6689,
+        "lng": 135.5067
       }
     ],
     "tips": [
-      "勝尾寺與箕面瀑布位於不同交通動線，兩地間轉乘是本日最大不確定因素；務必核對 11/23 假日公車與道路狀況。",
+      "06:35 從大阪飯店出發，目標 07:30 前到箕面萱野站南交通廣場搭計程車，08:00 抵達勝尾寺；時間為估算，11/23 假日可能塞車。",
       "箕面瀑布步道若有封閉、施工或天候限制，需改走開放路線；時間可能大幅變動。",
-      "下午心齋橋購物時間取決於上午轉乘與步道實際耗時。"
+      "下午心齋橋購物時間取決於上午轉乘與步道實際耗時。",
+      "16:00–17:30 燒肉力丸晚餐尚未訂位；請另行確認是否可預約。"
     ]
   },
   {
@@ -2411,8 +2419,8 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
     "color": "#f97316",
     "routeColor": "#f97316",
     "center": [
-      35,
-      135.7
+      34.62102,
+      135.45524
     ],
     "zoom": 11,
     "note": "樂桃 MM027｜KIX T2 15:25 → TPE T1 17:40",
@@ -2422,11 +2430,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "08:15 左右（建議）",
         "name": "大阪道頓堀飯店",
-        "desc": "退房並寄放行李；務必確認飯店可寄放。",
+        "desc": "確認飯店可寄放行李。",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6689,
+        "lng": 135.5067,
         "tr": {
           "m": "大阪 Metro＋步行",
           "d": "飯店 → 惠美須町／動物園前周邊，再步行至通天閣；約 20–35 分鐘。",
@@ -2436,11 +2444,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "09:00–09:45（建議）",
         "name": "通天閣・新世界",
-        "desc": "新世界街區短暫散策；此時段不保證能登塔。",
+        "desc": "通天閣展望台：09:00–21:45（一般展望台最終入場 21:15）；採入場時段預約制，建議事先預約。",
         "place": "通天閣",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6525,
+        "lng": 135.5063,
         "tr": {
           "m": "大阪 Metro 堺筋線／中央線＋步行",
           "d": "新世界 → 谷町四丁目／森之宮站，再步行至大阪城；估計 35–50 分鐘。",
@@ -2450,11 +2458,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "10:30–11:15（建議）",
         "name": "大阪城公園",
-        "desc": "以公園散策為主；若入天守閣，需另增時間並壓縮其他安排。",
+        "desc": "若進入天守閣：09:00–18:00（最終入館 17:30）；需另增時間並壓縮其他行程。",
         "place": "大阪城公園",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6873,
+        "lng": 135.5262,
         "tr": {
           "m": "大阪 Metro＋步行",
           "d": "大阪城 → 島之內飯店取行李，約 30–45 分鐘；另預留約 10–15 分鐘領行李。",
@@ -2464,11 +2472,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "12:00 左右（目標）",
         "name": "大阪道頓堀飯店",
-        "desc": "領行李後立即前往機場。",
+        "desc": "領取行李後前往機場。",
         "place": "Benikea Calton Hotel Osaka Doutonbori",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7,
+        "lat": 34.6689,
+        "lng": 135.5067,
         "tr": {
           "m": "南海電鐵／JR＋機場 T2 接駁",
           "d": "飯店 → 難波站（或適合的 JR 站）→ 關西機場站，再轉 T1／Aeroplaza 至 T2 免費接駁；全程保守估計 85–115 分鐘，須按實際列車與接駁班次調整。",
@@ -2478,11 +2486,11 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       {
         "time": "13:30–14:00（目標）",
         "name": "關西國際機場 T2",
-        "desc": "辦理樂桃 MM027 報到與安檢；依航空公司當日截止時間為準。",
+        "desc": "Peach MM027 報到與安檢；請確認航空公司報到截止時間。",
         "place": "關西國際機場 第二航廈",
         "ja": "",
-        "lat": 35,
-        "lng": 135.7
+        "lat": 34.4275,
+        "lng": 135.2303
       }
     ],
     "tips": [
@@ -2522,9 +2530,9 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
       };
       // Day 1: selected HARUKA determines arrival-based (not fixed-event) times.
       const HARUKA_CHOICES = [
-        {id:'22',depart:'12:14',arrive:'13:34',hotel:'13:35–14:15',sight:'14:15–16:20',walk:'16:20–17:00'},
-        {id:'24',depart:'12:44',arrive:'14:04',hotel:'14:05–14:45',sight:'14:45–16:20',walk:'16:20–17:00'},
-        {id:'26',depart:'13:14',arrive:'14:34',hotel:'14:35–15:15',sight:'15:15–16:20',walk:'16:20–17:00'}
+        {id:'22',depart:'12:14',arrive:'13:34',hotel:'13:35–14:30',sight:'15:10–15:45',walk:'16:20–17:00'},
+        {id:'24',depart:'12:44',arrive:'14:04',hotel:'14:05–14:30',sight:'15:10–15:45',walk:'16:20–17:00'},
+        {id:'26',depart:'13:14',arrive:'14:34',hotel:'14:35–14:50',sight:'15:30–15:55',walk:'16:20–17:00'}
       ];
       let selectedHaruka = '24';
       try { const stored=localStorage.getItem('kansai2026_day1_haruka'); if(HARUKA_CHOICES.some(x=>x.id===stored)) selectedHaruka=stored; } catch(e) {}
@@ -2537,14 +2545,28 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         stops[1].tr = {...(stops[1].tr || {}), m:'JR 特急 HARUKA｜關西機場站 → 京都站', d:choice.depart+'–'+choice.arrive+'（已選 '+choice.id+' 號；時刻待確認）', scheduleKey:'harukaOutbound'};
         stops[2].time=choice.arrive;
         stops[2].name='京都站';
-        stops[2].desc='班次可切換；實際時刻及座位待確認。';
-        stops[3].time=choice.hotel+'';
-        stops[4].time=choice.sight+'';
-        stops[4].desc='清水寺參拜與東山散策；停留時間隨 HARUKA 班次調整。';
-        stops[5].time='17:00–18:00';
-        stops[6].time='18:30–20:30';
+        stops[2].desc='';
+        // 依所選 HARUKA 抵達時間往後推算；晚餐 17:00 與永觀堂 19:00 為固定錨點。
+        const M=t=>{const [h,m]=t.split(':').map(Number);return h*60+m;};
+        const F=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+        const arr=M(choice.arrive);
+        const hotelIn=arr+1;                       // 京都站 → 五條站 → 飯店約 1 分鐘後到
+        const depart=Math.min(hotelIn+25, M('14:50')); // 飯店休息／寄放行李 25 分鐘；最晚 14:50 出發
+        const kiyoIn=depart+40;                    // 步行約 40 分鐘
+        const kiyoOut=Math.max(kiyoIn+25, M('15:45')); // 清水寺至少 25 分鐘，通常排到 15:45
+        const sanIn=kiyoOut, sanOut=M('16:20');    // 三年坂、二年坂接 16:20
+        stops[3].time=F(hotelIn)+'–'+F(depart);
+        stops[3].tr={...stops[3].tr,d:'飯店 → 清水寺（'+F(depart)+'–'+F(kiyoIn)+'，約 40 分鐘）'};
+        stops[4].time=F(kiyoIn)+'–'+F(kiyoOut);
+        stops[4].desc='開放時間：06:00–18:00（2026/11/20）。'+(kiyoOut-kiyoIn>=60?' 此班較早抵達，清水寺可多停留。':'');
+        stops[5].time=F(sanIn)+'–'+F(sanOut);
+        stops[5].desc='沿途散策、拍照。'+(sanOut-sanIn<30?' 時間較短，可視人潮縮短。':'');
+        stops[6].time='16:20–16:35';
+        stops[7].time='17:00–18:00';
+        stops[8].time='19:00–20:30';
+        if(depart-hotelIn<25) stops[3].desc='14:00 後入住；此班較晚抵達，飯店僅停留 '+(depart-hotelIn)+' 分鐘（寄放行李）。';
+        if(sanOut-sanIn<25 || kiyoIn+25>sanOut) stops[4].desc+=' ⚠ 時間吃緊。';
         if(selectedHaruka==='22') stops[1].desc += ' 注意：選 22 號須在 12:14 前完成領票並到月台。';
-        if(selectedHaruka==='26') stops[4].desc += ' 此班散策時間較短。';
         return {...day,stops};
       }
       const DAY2_OPTIONS = {
@@ -2647,7 +2669,7 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
           const action=key==='harukaOutbound'?`selectHaruka('${id}')`:`selectDay2('${key}','${id}')`;
           return '<tr>'+r.slice(0,4).map((c,i)=>'<td>'+escapeHtml(c)+(i===0?'<span class="schedule-route-mobile">'+escapeHtml(r[3])+'</span>':'')+'</td>').join('')+(selectable?'<td><button class="schedule-select" type="button" onclick="'+action+'" '+(chosen||unavailable?'disabled':'')+'>'+(unavailable?'無法銜接':chosen?'已選擇':'選擇此班')+'</button></td>':'')+'</tr>';
         }).join('')+'</tbody></table>';
-        document.getElementById('schedule-modal-note').innerHTML=escapeHtml(item.note)+(key==='harukaOutbound'?'<div class="dynamic-hint">選擇後更新京都站、飯店與清水寺時間；晚餐與永觀堂維持固定目標時間。</div>':key in DAY2_OPTIONS?'<div class="dynamic-hint">去程改晚時會自動改選能銜接的回程公車與京都特急，無法銜接的候選會停用；選擇後重新計算 View Land、伊根整點／半點遊船、租車與沙洲時間；View Land 至少 90 分鐘、目標 90–120 分鐘，若不足或轉乘衝突會提示。</div>':'')+'<div style="margin-top:.5rem"><a href="'+item.url+'" target="_blank" rel="noopener noreferrer">查看參考時刻表</a></div>';
+        document.getElementById('schedule-modal-note').innerHTML=escapeHtml(item.note)+(key==='harukaOutbound'?'<div class="dynamic-hint">選擇後依抵達時間重新計算飯店、清水寺與三年坂時間（飯店停留約 25 分鐘後步行出發）；晚餐 17:00、永觀堂 19:00 維持固定。</div>':key in DAY2_OPTIONS?'<div class="dynamic-hint">去程改晚時會自動改選能銜接的回程公車與京都特急，無法銜接的候選會停用；選擇後重新計算 View Land、伊根整點／半點遊船、租車與沙洲時間；View Land 至少 90 分鐘、目標 90–120 分鐘，若不足或轉乘衝突會提示。</div>':'')+'<div style="margin-top:.5rem"><a href="'+item.url+'" target="_blank" rel="noopener noreferrer">查看參考時刻表</a></div>';
         document.getElementById('schedule-modal').showModal();
       }
       function closeSchedule(){document.getElementById('schedule-modal').close();}
@@ -2852,11 +2874,8 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
           layers.push(m);
         });
 
-        if (mapOpen) {
-          map.fitBounds(poly.getBounds(), { padding: [25, 25] });
-        } else {
-          map.setView(day.center, day.zoom);
-        }
+        // Fit actual stop coordinates on every date; never use a placeholder center.
+        map.fitBounds(poly.getBounds(), { padding: [25, 25], maxZoom: 15 });
 
         const legend = document.getElementById("map-legend");
         legend.innerHTML = day.stops.map(s => `
@@ -2926,7 +2945,7 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
 
         if(day.hotelName && day.id!==5){
           const hotelStatus = day.id===1?'入住 · 14:00 後':day.id===2?'續住':day.id===3?'入住 · 16:00 後':'續住';
-          const hotelLocation = day.id<=2?'京都五條站周邊':'大阪道頓堀';
+          const hotelLocation = day.id<=2?'五條站 1 號出口步行約 1 分鐘':'大阪道頓堀';
           h += `<section class="travel-hotel" aria-label="住宿資訊">
             <div class="hotel-compact-head"><span class="travel-hotel-tag">住宿 · ${hotelStatus}</span><a href="${navUrl(day.hotelName)}" target="_blank" rel="noopener noreferrer" class="hotel-compact-nav">導航 ↗</a></div>
             <div class="travel-hotel-name" title="${escapeHtml(day.hotelName)}">${escapeHtml(day.hotelName)}</div>
@@ -2981,14 +3000,6 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
 
         h += `</div></div></div>`;
 
-        // Tips Card
-        if (day.tips && day.tips.length) {
-          h += `<div class="card"><div class="tips-section">
-            <div class="tips-title">注意事項</div>
-            ${day.tips.map((t, i) => `<div class="tip-item"><span class="tip-num">${i + 1}</span><span>${/^https?:\/\//.test(t) ? `<a href="${t}" target="_blank" rel="noopener noreferrer">${t}</a>` : t.replace(/(https?:\/\/[^\s]+)/g, `<a href="$1" target="_blank" rel="noopener noreferrer">查看時刻表</a>`)}</span></div>`).join("")}
-          </div></div>`;
-        }
-
         col.innerHTML = h;
       }
 
@@ -3009,16 +3020,6 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         window.scrollTo({ top: 0, behavior: "instant" });
       }
 
-      function switchPassTab() {
-        document.querySelectorAll(".tab").forEach((t) => {
-          const active = t.dataset.day === "pass";
-          t.classList.toggle("active", active);
-          t.style.borderBottomColor = active ? "#22c55e" : "transparent";
-        });
-        if (map && mapOpen) toggleMap();
-        renderPassTab();
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
 
       // Render immediately: this script is at the end of <body>, so DOM is ready.
       // Do not depend on remote map libraries or delayed DOMContentLoaded events.
@@ -3045,5 +3046,5 @@ body:has(#static-day-pass:target) #static-day-pass{display:block}
         document.head.appendChild(script);
       })();
     </script>
-  
-</body></html>
+</body>
+</html>
