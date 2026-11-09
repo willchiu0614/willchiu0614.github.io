@@ -447,6 +447,10 @@
       .tab[data-day="5"]::after {
         content: "大阪城";
       }
+
+      .tab[data-day="6"]::after {
+        content: "退稅";
+      }
     }
 
     /* LAYOUT */
@@ -2247,6 +2251,393 @@
       display: block
     }
 
+    body:has(#static-day-6:target) #left-col,
+    body:has(#static-day-6:target) #map-card-wrap {
+      display: none
+    }
+
+    body:has(#static-day-6:target) #static-day-6 {
+      display: block
+    }
+
+    .refund-panel-body {
+      padding: .8rem 1rem 1rem;
+    }
+
+    .refund-intro {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.55;
+      margin-bottom: .75rem;
+    }
+
+    .refund-platform-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .65rem;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .refund-platform-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .refund-platform-summary:hover {
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .refund-disclosure-mark {
+      flex: 0 0 auto;
+      color: #fb923c;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .refund-platform[open]>.refund-platform-summary .refund-disclosure-mark::before {
+      content: "−";
+    }
+
+    .refund-platform:not([open])>.refund-platform-summary .refund-disclosure-mark::before {
+      content: "+";
+    }
+
+    .refund-panel-body {
+      padding: 0 .85rem .8rem;
+    }
+
+    .refund-switcher {
+      padding: .55rem;
+      min-width: 0;
+    }
+
+    .refund-inner-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .25rem;
+      margin-bottom: .55rem;
+      padding: .2rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    .refund-inner-tab {
+      min-width: 0;
+      min-height: 42px;
+      padding: .45rem .5rem;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .refund-inner-tab[aria-selected="true"] {
+      border-color: rgba(249, 115, 22, .45);
+      background: var(--orange-light);
+      color: #fb923c;
+    }
+
+    .refund-inner-tab:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: 2px;
+    }
+
+    .refund-tab-panel[hidden] {
+      display: none !important;
+    }
+
+    .refund-intro {
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.5;
+      margin: 0 0 .4rem;
+    }
+
+    .refund-platform {
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-platform-summary {
+      min-height: 64px;
+      padding: .6rem .15rem;
+    }
+
+    .refund-platform-logo {
+      display: block;
+      flex: 0 0 88px;
+      width: 88px;
+      height: 42px;
+      padding: 3px;
+      border-radius: 4px;
+      background: #fff;
+      object-fit: contain;
+    }
+
+    .refund-platform-brand {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      gap: .12rem;
+      min-width: 0;
+    }
+
+    .refund-platform-brand strong {
+      font-size: .84rem;
+    }
+
+    .refund-platform-type {
+      color: var(--muted);
+      font-size: .72rem;
+      white-space: nowrap;
+    }
+
+    .refund-platform-summary .refund-disclosure-mark {
+      margin-left: auto;
+    }
+
+    .refund-platform-body {
+      padding: 0 .2rem .7rem;
+    }
+
+    .refund-platform-facts {
+      margin: 0;
+      font-size: .76rem;
+      line-height: 1.45;
+    }
+
+    .refund-platform-facts>div {
+      padding: .45rem 0;
+      border-top: 1px solid rgba(48, 54, 61, .65);
+    }
+
+    .refund-platform-facts dt {
+      margin-bottom: .2rem;
+      color: #fb923c;
+      font-weight: 700;
+    }
+
+    .refund-platform-facts dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .refund-payment-row {
+      display: flex;
+      align-items: center;
+      gap: .28rem;
+    }
+
+    .refund-payment-row dt {
+      margin: 0;
+      color: #fb923c;
+      font-weight: 700;
+    }
+
+    .refund-payment-row dt:not(:first-child) {
+      margin-left: .5rem;
+    }
+
+    .refund-store-groups {
+      display: grid;
+      gap: .4rem;
+    }
+
+    .refund-store-group strong {
+      display: block;
+      margin-bottom: .12rem;
+      color: var(--muted);
+      font-size: .72rem;
+    }
+
+    .refund-store-group ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .2rem .6rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .refund-store-group li {
+      overflow-wrap: anywhere;
+    }
+
+    .refund-platform-summary:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: -2px;
+    }
+
+    .refund-calc-body {
+      padding: .9rem 1rem 1rem;
+    }
+
+    .refund-calc-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+      align-items: end;
+    }
+
+    .refund-field {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      min-width: 0;
+    }
+
+    .refund-field label {
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .refund-field input,
+    .refund-field select {
+      width: 100%;
+      min-width: 0;
+      padding: .55rem .65rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card2);
+      color: var(--text);
+      font: inherit;
+    }
+
+    .refund-field input:focus-visible,
+    .refund-field select:focus-visible,
+    .refund-rate-row button:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: 2px;
+    }
+
+    .refund-field small,
+    .refund-calc-note,
+    .refund-rate-status {
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.45;
+    }
+
+    .refund-rate-row {
+      display: flex;
+      gap: .4rem;
+    }
+
+    .refund-rate-row button {
+      flex: 0 0 auto;
+      padding: .45rem .6rem;
+      border: 1px solid rgba(249, 115, 22, .45);
+      border-radius: 6px;
+      background: transparent;
+      color: #fb923c;
+      font: inherit;
+      font-size: .75rem;
+      cursor: pointer;
+    }
+
+    .refund-rate-status {
+      margin-top: .35rem;
+    }
+
+    .refund-calc-result {
+      margin-top: .9rem;
+      padding-top: .8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-result-main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: .25rem .7rem;
+      color: #fb923c;
+    }
+
+    .refund-result-main strong {
+      font-size: 1.25rem;
+    }
+
+    .refund-result-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .4rem .8rem;
+      margin: .65rem 0 0;
+      font-size: .76rem;
+    }
+
+    .refund-result-breakdown div {
+      min-width: 0;
+    }
+
+    .refund-result-breakdown dt {
+      color: var(--muted);
+    }
+
+    .refund-result-breakdown dd {
+      margin: .12rem 0 0;
+      font-weight: 700;
+    }
+
+    .refund-calc-message {
+      margin-top: .55rem;
+      color: var(--muted);
+      font-size: .76rem;
+      line-height: 1.5;
+    }
+
+    .refund-formula {
+      margin-top: .7rem;
+      padding-top: .65rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-formula-title {
+      color: #fb923c;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+
+    .refund-formula-steps {
+      display: grid;
+      gap: .22rem;
+      margin: .35rem 0 0;
+      padding-left: 1.15rem;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.5;
+    }
+
+    .refund-formula-steps li {
+      padding-left: .1rem;
+      overflow-wrap: anywhere;
+    }
+
+    .refund-calc-note {
+      margin-top: .75rem;
+    }
+
+    @media (max-width: 520px) {
+
+      .refund-panel-body,
+      .refund-calc-body {
+        padding: .7rem;
+      }
+
+      .refund-calc-fields {
+        grid-template-columns: minmax(0, 1fr);
+        gap: .6rem;
+      }
+
+      .refund-result-breakdown {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     .tabs a.tab {
       color: inherit;
       text-decoration: none
@@ -2276,6 +2667,9 @@
     </a>
     <a class="tab" data-day="5" href="#static-day-5" onclick="switchDay(5)">
       <span>11/24 (二)</span>大阪城/回台
+    </a>
+    <a class="tab" data-day="6" href="#static-day-6" onclick="switchDay(6)">
+      <span>退稅工具</span>四平台／計算
     </a>
   </nav>
   <!-- MAIN CONTENT -->
@@ -3570,6 +3964,283 @@
         </div>
       </div>
     </section>
+    <section class="static-day" id="static-day-6">
+      <div class="refund-switcher">
+        <div class="refund-inner-tabs" role="tablist" aria-label="退稅工具">
+          <button class="refund-inner-tab" type="button" role="tab" id="refund-platforms-tab" aria-selected="true"
+            aria-controls="refund-platforms-panel" data-refund-tab>平台比較</button>
+          <button class="refund-inner-tab" type="button" role="tab" id="refund-calc-tab" aria-selected="false"
+            aria-controls="refund-calc-panel" tabindex="-1" data-refund-tab>退稅試算</button>
+        </div>
+        <section class="refund-tab-panel" id="refund-platforms-panel" role="tabpanel"
+          aria-labelledby="refund-platforms-tab" tabindex="0">
+          <section class="card refund-panel refund-platforms">
+            <div class="day-header">
+              <div class="day-tag" style="background:rgba(249,115,22,.15);color:#fb923c">退稅資訊</div>
+              <h2 class="day-title">四大退稅平台比較</h2>
+              <p class="day-sub">點選平台列查看合作店家、退款方式與費用。</p>
+            </div>
+            <div class="refund-panel-body">
+              <p class="refund-intro">店家支援依分店、收據與退款業者而異；合作店家為目前整理資料，結帳時請再確認。</p>
+              <details class="refund-platform">
+                <summary class="refund-platform-summary"><img class="refund-platform-logo"
+                    src="./assets/logos/j-taxrefund.png" alt=""><span
+                    class="refund-platform-brand"><strong>J-TaxRefund</strong><span
+                      class="refund-platform-type">網頁退稅</span></span><span class="refund-disclosure-mark"
+                    aria-hidden="true"></span></summary>
+                <div class="refund-platform-body">
+                  <dl class="refund-platform-facts">
+                    <div>
+                      <dt>合作店家</dt>
+                      <dd class="refund-store-groups">
+                        <div class="refund-store-group"><strong>電器／3C</strong>
+                          <ul>
+                            <li>Bic Camera</li>
+                            <li>山田電機 LABI</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>藥妝／美妝</strong>
+                          <ul>
+                            <li>鶴羽藥妝</li>
+                            <li>松本清</li>
+                            <li>Cocokara Fine</li>
+                            <li>札幌藥妝</li>
+                            <li>大國藥妝</li>
+                            <li>SUNDRUG</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>服飾／運動</strong>
+                          <ul>
+                            <li>UNIQLO</li>
+                            <li>GU</li>
+                            <li>ABC-MART</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>生活雜貨／綜合量販</strong>
+                          <ul>
+                            <li>唐吉訶德</li>
+                            <li>多慶屋</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>動漫／二手商品</strong>
+                          <ul>
+                            <li>駿河屋（部分分店）</li>
+                          </ul>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="refund-payment-row">
+                      <dt>信用卡</dt>
+                      <dd>✓</dd>
+                      <dt>現金</dt>
+                      <dd>✓</dd>
+                    </div>
+                    <div>
+                      <dt>費用</dt>
+                      <dd>機場現金兌付另扣退款額 10%；平台或店家費用另計。</dd>
+                    </div>
+                  </dl>
+                </div>
+              </details>
+              <details class="refund-platform">
+                <summary class="refund-platform-summary"><img class="refund-platform-logo"
+                    src="./assets/logos/jprefund.svg" alt=""><span
+                    class="refund-platform-brand"><strong>JPrefund</strong><span
+                      class="refund-platform-type">網頁退稅</span></span><span class="refund-disclosure-mark"
+                    aria-hidden="true"></span></summary>
+                <div class="refund-platform-body">
+                  <dl class="refund-platform-facts">
+                    <div>
+                      <dt>合作店家</dt>
+                      <dd class="refund-store-groups">
+                        <div class="refund-store-group"><strong>藥妝／美妝</strong>
+                          <ul>
+                            <li>FANCL</li>
+                            <li>KoKuMiN</li>
+                            <li>COSMOS*</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>服飾／運動</strong>
+                          <ul>
+                            <li>思夢樂</li>
+                            <li>MURASAKI SPORTS</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>生活雜貨／綜合量販</strong>
+                          <ul>
+                            <li>3COINS</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>動漫／二手商品</strong>
+                          <ul>
+                            <li>駿河屋（部分分店）</li>
+                          </ul>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="refund-payment-row">
+                      <dt>信用卡</dt>
+                      <dd>✓</dd>
+                      <dt>現金</dt>
+                      <dd>✓</dd>
+                    </div>
+                    <div>
+                      <dt>費用</dt>
+                      <dd>機場現金兌付另扣退款額 10%；平台或店家費用另計。</dd>
+                    </div>
+                  </dl>
+                </div>
+              </details>
+              <details class="refund-platform">
+                <summary class="refund-platform-summary"><img class="refund-platform-logo"
+                    src="./assets/logos/global-blue.svg" alt=""><span class="refund-platform-brand"><strong>Global
+                      Blue</strong><span class="refund-platform-type">國際退稅</span></span><span
+                    class="refund-disclosure-mark" aria-hidden="true"></span></summary>
+                <div class="refund-platform-body">
+                  <dl class="refund-platform-facts">
+                    <div>
+                      <dt>合作店家</dt>
+                      <dd class="refund-store-groups">
+                        <div class="refund-store-group"><strong>電器／3C</strong>
+                          <ul>
+                            <li>Yodobashi Camera</li>
+                            <li>LAOX（合作門市）</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>藥妝／美妝</strong>
+                          <ul>
+                            <li>Sugi 藥局</li>
+                          </ul>
+                        </div>
+                        <div class="refund-store-group"><strong>百貨／精品</strong>
+                          <ul>
+                            <li>大丸京都店</li>
+                            <li>大丸梅田店</li>
+                            <li>大丸心齋橋店</li>
+                            <li>阪急梅田本店</li>
+                            <li>阪神梅田本店</li>
+                          </ul>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="refund-payment-row">
+                      <dt>信用卡</dt>
+                      <dd>✓</dd>
+                      <dt>現金</dt>
+                      <dd>✓</dd>
+                    </div>
+                    <div>
+                      <dt>費用</dt>
+                      <dd>機場現金兌付另扣退款額 10%；平台或店家費用另計。</dd>
+                    </div>
+                  </dl>
+                </div>
+              </details>
+              <details class="refund-platform">
+                <summary class="refund-platform-summary"><img class="refund-platform-logo"
+                    src="./assets/logos/pie-vat.svg" alt=""><span class="refund-platform-brand"><strong>PIE
+                      VAT</strong><span class="refund-platform-type">App 退稅</span></span><span
+                    class="refund-disclosure-mark" aria-hidden="true"></span></summary>
+                <div class="refund-platform-body">
+                  <dl class="refund-platform-facts">
+                    <div>
+                      <dt>合作店家</dt>
+                      <dd class="refund-store-groups">
+                        <div class="refund-store-group"><strong>購物中心／Outlet</strong>
+                          <ul>
+                            <li>三井 Outlet</li>
+                            <li>LaLaport</li>
+                            <li>ABENO Q's MALL</li>
+                            <li>Canal City Hakata</li>
+                          </ul>
+                        </div>
+                      </dd>
+                    </div>
+                    <div class="refund-payment-row">
+                      <dt>信用卡</dt>
+                      <dd>✓</dd>
+                      <dt>現金</dt>
+                      <dd>—</dd>
+                    </div>
+                    <div>
+                      <dt>費用</dt>
+                      <dd>服務費為未稅價 1.5–3.0%，另有未稅價 0.28–0.32% 提款費。</dd>
+                    </div>
+                  </dl>
+                </div>
+              </details>
+              <p class="refund-intro" style="margin:.65rem 0 0">Cash Japan 是兌付服務，不是各平台通用費率；實際支援及費用以店家、退款業者和單筆交易畫面為準。</p>
+            </div>
+          </section>
+
+        </section>
+        <section class="card refund-calc-panel refund-tab-panel" id="refund-calc-panel" role="tabpanel"
+          aria-labelledby="refund-calc-tab" tabindex="0" hidden>
+          <div class="day-header">
+            <div class="day-tag" style="background:rgba(249,115,22,.15);color:#fb923c">Cash Japan</div>
+            <h2 class="day-title">現金退稅試算</h2>
+            <p class="day-sub">估算扣除 Cash Japan 服務費並按 ¥50 級距取整後的退款。</p>
+          </div>
+          <div class="refund-calc-body">
+            <div class="refund-calc-fields">
+              <div class="refund-field">
+                <label for="cash-calc-mode">計算方式</label>
+                <select id="cash-calc-mode">
+                  <option value="purchase">輸入同店同日含稅購物總額</option>
+                  <option value="refund">輸入退款業者提供的退款額</option>
+                </select>
+              </div>
+              <div class="refund-field">
+                <label id="cash-calc-amount-label" for="cash-calc-amount">同店同日含稅購物總額（日圓）</label>
+                <input id="cash-calc-amount" type="number" min="0" step="1" inputmode="numeric" value="10000">
+                <small id="cash-calc-amount-help">同一免稅店同一天的合計；未稅金額須至少 ¥5,000。</small>
+              </div>
+              <div class="refund-field" id="cash-calc-tax-field">
+                <label for="cash-calc-tax-rate">商品消費稅率</label>
+                <select id="cash-calc-tax-rate">
+                  <option value="0.1">10%</option>
+                  <option value="0.08">8%</option>
+                </select>
+              </div>
+              <div class="refund-field">
+                <label for="cash-calc-fx">匯率（1 日圓＝台幣）</label>
+                <div class="refund-rate-row">
+                  <input id="cash-calc-fx" type="number" min="0.0001" step="0.00001" inputmode="decimal" value="0.22">
+                  <button id="cash-calc-fx-refresh" type="button">更新匯率</button>
+                </div>
+                <div class="refund-rate-status" id="cash-calc-fx-status" aria-live="polite">預設估算匯率，可手動修改。</div>
+              </div>
+            </div>
+            <div class="refund-calc-result" aria-live="polite">
+              <div class="refund-result-main"><span>預估實退</span><strong id="cash-calc-result-jpy">¥—</strong><strong
+                  id="cash-calc-result-twd">NT$—</strong></div>
+              <dl class="refund-result-breakdown">
+                <div>
+                  <dt>估算退款額</dt>
+                  <dd id="cash-calc-refund">—</dd>
+                </div>
+                <div>
+                  <dt>名目服務費（10%）</dt>
+                  <dd id="cash-calc-fee">—</dd>
+                </div>
+                <div>
+                  <dt>¥50 取整調整</dt>
+                  <dd id="cash-calc-rounding">—</dd>
+                </div>
+              </dl>
+              <div class="refund-calc-message" id="cash-calc-message"></div>
+              <div class="refund-formula">
+                <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
+                <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
+              </div>
+            </div>
+            <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
+              10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
+                rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
+          </div>
+        </section>
+      </div>
+    </section>
   </div>
   <dialog aria-labelledby="schedule-modal-title" class="schedule-modal" id="schedule-modal">
     <div class="schedule-modal-head">
@@ -3580,6 +4251,7 @@
     <div class="schedule-note" id="schedule-modal-note"></div>
   </dialog>
   <!-- SCRIPTS -->
+  <script src="./cashJapanCalculator.js"></script>
   <script>
     const TRIP = {
       start: new Date("2026-11-20T07:00:00+08:00"),
@@ -4931,12 +5603,17 @@
 
 
     function switchDay(id) {
-      const day = DAYS[id - 1];
       document.querySelectorAll(".tab").forEach((t) => {
         const active = t.dataset.day == id;
         t.classList.toggle("active", active);
         t.style.borderBottomColor = active ? "#f97316" : "transparent";
       });
+      if (id === 6) {
+        document.getElementById("map-card-wrap").style.display = "none";
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
+      const day = DAYS[id - 1];
       renderTimeline(dayForDisplay(day));
       try { renderMap(day); } catch (error) {
         console.warn("Map rendering unavailable:", error);
@@ -4945,11 +5622,191 @@
       window.scrollTo({ top: 0, behavior: "instant" });
     }
 
+    const cashJapanYenFormat = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 0 });
+    const cashJapanFormulaYenFormat = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 2 });
+    const cashJapanTwdFormat = new Intl.NumberFormat('zh-TW', { maximumFractionDigits: 0 });
+    const cashJapanFormulaTwdFormat = new Intl.NumberFormat('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let cashJapanRateEdited = false;
+
+    function cashJapanRoundingRule(amountAfterFeeYen) {
+      const tail = amountAfterFeeYen % 100;
+      if (tail === 0 || tail === 50) return `末兩位 ${String(tail).padStart(2, '0')}，已是 ¥50 級距，不調整。`;
+      if (tail <= 24) return `末兩位 ${String(tail).padStart(2, '0')} 落在 01–24，向下調整至 00。`;
+      if (tail <= 49) return `末兩位 ${tail} 落在 25–49，向上調整至 50。`;
+      if (tail <= 74) return `末兩位 ${tail} 落在 51–74，向下調整至 50。`;
+      return `末兩位 ${tail} 落在 75–99，向上調整至下一個 100。`;
+    }
+
+    function renderCashJapanEstimate() {
+      const mode = document.getElementById('cash-calc-mode').value;
+      const amount = Number(document.getElementById('cash-calc-amount').value);
+      const taxRate = Number(document.getElementById('cash-calc-tax-rate').value);
+      const exchangeRate = Number(document.getElementById('cash-calc-fx').value);
+      const amountLabel = document.getElementById('cash-calc-amount-label');
+      const amountHelp = document.getElementById('cash-calc-amount-help');
+      const taxField = document.getElementById('cash-calc-tax-field');
+
+      const purchaseMode = mode === 'purchase';
+      amountLabel.textContent = purchaseMode ? '同店同日含稅購物總額（日圓）' : '退款業者提供的退款額（日圓）';
+      amountHelp.textContent = purchaseMode
+        ? '同一免稅店同一天的合計；未稅金額須至少 ¥5,000。'
+        : '輸入退稅業者顯示的退款額，直接計算 Cash Japan 費用與取整。';
+      taxField.hidden = !purchaseMode;
+
+      const message = document.getElementById('cash-calc-message');
+      const formulaList = document.getElementById('cash-calc-formula');
+      if (!Number.isFinite(amount) || amount < 0 || !Number.isFinite(exchangeRate) || exchangeRate <= 0) {
+        message.textContent = '請輸入有效的日圓金額與正數匯率。';
+        formulaList.replaceChildren();
+        return;
+      }
+
+      const result = window.cashJapanCalculator.calculateCashJapanRefund({
+        mode,
+        amount,
+        taxRate,
+        exchangeRate,
+      });
+      document.getElementById('cash-calc-result-jpy').textContent = `¥${cashJapanYenFormat.format(result.payoutYen)}`;
+      document.getElementById('cash-calc-result-twd').textContent = `約 NT$${cashJapanTwdFormat.format(result.payoutTwd)}`;
+      document.getElementById('cash-calc-refund').textContent = `¥${cashJapanYenFormat.format(result.refundBeforeFeeYen)}`;
+      document.getElementById('cash-calc-fee').textContent = `約 ¥${cashJapanYenFormat.format(result.nominalFeeYen)}`;
+      const adjustment = result.roundingAdjustmentYen;
+      const adjustmentPrefix = adjustment > 0 ? '+' : adjustment < 0 ? '−' : '';
+      document.getElementById('cash-calc-rounding').textContent = `${adjustmentPrefix}¥${cashJapanYenFormat.format(Math.abs(adjustment))}`;
+      message.textContent = purchaseMode && !result.eligible
+        ? `未稅合計約 ¥${cashJapanYenFormat.format(result.taxExclusivePurchaseYen)}，未達同店同日 ¥5,000 免稅門檻。`
+        : purchaseMode
+          ? `未稅合計約 ¥${cashJapanYenFormat.format(result.taxExclusivePurchaseYen)}；稅額為估算值。`
+          : '此模式假設輸入金額已是退款業者確認的退款額。';
+
+      const formulaSteps = [];
+      const formatYen = (value) => `¥${cashJapanYenFormat.format(value)}`;
+      const formatFormulaYen = (value) => `¥${cashJapanFormulaYenFormat.format(value)}`;
+      const formulaRate = exchangeRate.toFixed(5);
+
+      if (purchaseMode) {
+        const taxPercent = Math.round(taxRate * 100);
+        formulaSteps.push(`未稅消費額 = ${formatYen(amount)} ÷ (1 + ${taxPercent}%) ≈ ${formatYen(result.taxExclusivePurchaseYen)}。`);
+        if (result.eligible) {
+          const rawTaxRefund = amount * taxRate / (1 + taxRate);
+          formulaSteps.push(`估算退稅額 = ${formatYen(amount)} × ${taxPercent}% ÷ (100% + ${taxPercent}%) = ${formatFormulaYen(rawTaxRefund)}，取整為 ${formatYen(result.refundBeforeFeeYen)}。`);
+        } else {
+          formulaSteps.push(`門檻判斷：${formatYen(result.taxExclusivePurchaseYen)} < ¥5,000，未達同店同日門檻；估算實退為 ¥0。`);
+        }
+      } else {
+        formulaSteps.push(`退款業者提供的退款額 = ${formatYen(amount)}。`);
+      }
+
+      if (result.eligible) {
+        const rawFee = result.refundBeforeFeeYen * 0.1;
+        const rawAfterFee = result.refundBeforeFeeYen * 0.9;
+        const adjustment = result.roundingAdjustmentYen;
+        const adjustmentSign = adjustment < 0 ? '−' : '+';
+        const payoutEquation = adjustment === 0
+          ? `${formatYen(result.payoutYen)}（扣費後金額不需調整）`
+          : `${formatYen(result.amountAfterFeeYen)} ${adjustmentSign} ${formatYen(Math.abs(adjustment))} = ${formatYen(result.payoutYen)}`;
+        formulaSteps.push(`Cash Japan 名目服務費 = ${formatYen(result.refundBeforeFeeYen)} × 10% = ${formatFormulaYen(rawFee)}，取整約 ${formatYen(result.nominalFeeYen)}。`);
+        formulaSteps.push(`扣費後金額 = ${formatYen(result.refundBeforeFeeYen)} × 90% = ${formatFormulaYen(rawAfterFee)}，取整到日圓 ${formatYen(result.amountAfterFeeYen)}。`);
+        formulaSteps.push(adjustment === 0
+          ? `${formatYen(result.amountAfterFeeYen)}：${cashJapanRoundingRule(result.amountAfterFeeYen)}`
+          : `${formatYen(result.amountAfterFeeYen)}：${cashJapanRoundingRule(result.amountAfterFeeYen)}取整差額 ${adjustmentSign}${formatYen(Math.abs(adjustment))}。`);
+        formulaSteps.push(`估算實退 = ${payoutEquation}。`);
+      }
+
+      const payoutTwdExact = result.payoutYen * exchangeRate;
+      formulaSteps.push(`台幣估值 = ${formatYen(result.payoutYen)} × ${formulaRate} = NT$${cashJapanFormulaTwdFormat.format(payoutTwdExact)}，四捨五入約 NT$${cashJapanTwdFormat.format(result.payoutTwd)}。`);
+      formulaList.replaceChildren(...formulaSteps.map((step) => {
+        const item = document.createElement('li');
+        item.textContent = step;
+        return item;
+      }));
+    }
+
+    async function refreshCashJapanRate(forceUpdate = false) {
+      const rateInput = document.getElementById('cash-calc-fx');
+      const status = document.getElementById('cash-calc-fx-status');
+      const refreshButton = document.getElementById('cash-calc-fx-refresh');
+      refreshButton.disabled = true;
+      status.textContent = '正在更新 JPY／TWD 匯率…';
+
+      try {
+        const response = await fetch('https://open.er-api.com/v6/latest/JPY', { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        const rate = Number(data.rates && data.rates.TWD);
+        if (data.result !== 'success' || !Number.isFinite(rate) || rate <= 0) throw new Error('Invalid rate data');
+
+        if (forceUpdate || !cashJapanRateEdited) {
+          rateInput.value = rate.toFixed(5);
+          cashJapanRateEdited = false;
+        }
+        const updatedAt = new Intl.DateTimeFormat('zh-TW', {
+          dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Taipei',
+        }).format(new Date(data.time_last_update_utc));
+        status.textContent = cashJapanRateEdited
+          ? `API 匯率更新於 ${updatedAt}；目前保留手動匯率。`
+          : `API 匯率更新於 ${updatedAt}（台灣時間）。`;
+      } catch (error) {
+        status.textContent = '匯率 API 暫時無法連線；目前使用輸入框匯率，可手動修改。';
+      } finally {
+        refreshButton.disabled = false;
+        renderCashJapanEstimate();
+      }
+    }
+
+    function initCashJapanCalculator() {
+      const mode = document.getElementById('cash-calc-mode');
+      const amount = document.getElementById('cash-calc-amount');
+      const taxRate = document.getElementById('cash-calc-tax-rate');
+      const exchangeRate = document.getElementById('cash-calc-fx');
+      mode.addEventListener('change', renderCashJapanEstimate);
+      amount.addEventListener('input', renderCashJapanEstimate);
+      taxRate.addEventListener('change', renderCashJapanEstimate);
+      exchangeRate.addEventListener('input', () => {
+        cashJapanRateEdited = true;
+        document.getElementById('cash-calc-fx-status').textContent = '使用手動匯率。';
+        renderCashJapanEstimate();
+      });
+      document.getElementById('cash-calc-fx-refresh').addEventListener('click', () => refreshCashJapanRate(true));
+      renderCashJapanEstimate();
+      refreshCashJapanRate();
+    }
+
+    function initRefundContentTabs() {
+      const tabs = Array.from(document.querySelectorAll('[data-refund-tab]'));
+      const panels = tabs.map((tab) => document.getElementById(tab.getAttribute('aria-controls')));
+
+      function activateTab(index) {
+        tabs.forEach((tab, tabIndex) => {
+          const active = tabIndex === index;
+          tab.setAttribute('aria-selected', String(active));
+          tab.tabIndex = active ? 0 : -1;
+          panels[tabIndex].hidden = !active;
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activateTab(index));
+        tab.addEventListener('keydown', (event) => {
+          let nextIndex;
+          if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (nextIndex === undefined) return;
+          event.preventDefault();
+          activateTab(nextIndex);
+          tabs[nextIndex].focus();
+        });
+      });
+    }
+
 
     // Render immediately: this script is at the end of <body>, so DOM is ready.
     // Do not depend on remote map libraries or delayed DOMContentLoaded events.
     try {
-      switchDay(1);
+      initCashJapanCalculator();
+      initRefundContentTabs();
+      switchDay(location.hash === '#static-day-6' ? 6 : 1);
     } catch (error) {
       console.error("Itinerary initialization failed:", error);
       const panel = document.getElementById("left-col");
