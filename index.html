@@ -2314,7 +2314,7 @@
 
     .refund-inner-tabs {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: .25rem;
       margin-bottom: .55rem;
       padding: .2rem;
@@ -2350,6 +2350,56 @@
 
     .refund-tab-panel[hidden] {
       display: none !important;
+    }
+
+    .refund-flow-table-wrap {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .refund-flow-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: .75rem;
+      line-height: 1.5;
+    }
+
+    .refund-flow-table th,
+    .refund-flow-table td {
+      padding: .55rem .6rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+
+    .refund-flow-table thead th {
+      background: var(--card2);
+      color: #fb923c;
+    }
+
+    .refund-flow-table tbody th {
+      width: 22%;
+      color: #fb923c;
+      font-weight: 700;
+    }
+
+    .refund-flow-table td {
+      width: 39%;
+    }
+
+    .refund-flow-table tr:last-child th,
+    .refund-flow-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .refund-flow-note {
+      margin-top: .65rem;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.5;
     }
 
     .refund-intro {
@@ -3946,8 +3996,7 @@
               <div class="tl-dot" style="background:#f97316">5</div>
               <div class="stop-card">
                 <div class="stop-row1">
-                  <span class="stop-time">13:30</span>
-                  <span class="stop-stay-inline">13:30–14:00 (30分鐘)</span>
+                  <span class="stop-time">13:30 抵達</span>
                 </div>
                 <div class="stop-row2">
                   <div class="stop-place-text">
@@ -3957,7 +4006,8 @@
                     href="https://www.google.com/maps/dir/?api=1&amp;origin=%E7%8F%BE%E5%9C%A8%E5%9C%B0&amp;destination=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%BA%8C%E8%88%AA%E5%BB%88&amp;travelmode=transit"
                     rel="noopener noreferrer" target="_blank">導航</a>
                 </div>
-                <div class="stop-desc">Peach MM027 報到與安檢；請確認航空公司報到截止時間。</div>
+                <div class="stop-desc">退稅確認：<br>□ 報到前先到 T2 1F 安檢前的海關確認機掃護照；退稅商品不要托運。<br>□ 綠燈可報到托運；紅燈帶商品到海關查驗。<br>□
+                  完成報到、安檢與出境審查後，到 T2 1F 出境後的現金退稅機領日圓；須確認店家登記的退款服務支援現金。<br>請確認 Peach MM027 報到截止時間並預留排隊時間。</div>
               </div>
             </div>
           </div>
@@ -3971,6 +4021,8 @@
             aria-controls="refund-platforms-panel" data-refund-tab>平台比較</button>
           <button class="refund-inner-tab" type="button" role="tab" id="refund-calc-tab" aria-selected="false"
             aria-controls="refund-calc-panel" tabindex="-1" data-refund-tab>退稅試算</button>
+          <button class="refund-inner-tab" type="button" role="tab" id="refund-flow-tab" aria-selected="false"
+            aria-controls="refund-flow-panel" tabindex="-1" data-refund-tab>退稅流程</button>
         </div>
         <section class="refund-tab-panel" id="refund-platforms-panel" role="tabpanel"
           aria-labelledby="refund-platforms-tab" tabindex="0">
@@ -4173,6 +4225,61 @@
             </div>
           </section>
 
+        </section>
+        <section class="card refund-tab-panel" id="refund-flow-panel" role="tabpanel" aria-labelledby="refund-flow-tab"
+          tabindex="0" hidden>
+          <div class="day-header">
+            <div class="day-tag" style="background:rgba(249,115,22,.15);color:#fb923c">流程對照</div>
+            <h2 class="day-title">J-TaxRefund／JPrefund</h2>
+            <p class="day-sub">分清帳號設定、每筆購買登記與出境海關確認。</p>
+          </div>
+          <div class="refund-calc-body">
+            <div class="refund-flow-table-wrap">
+              <table class="refund-flow-table">
+                <thead>
+                  <tr>
+                    <th scope="col">階段</th>
+                    <th scope="col">J-TaxRefund</th>
+                    <th scope="col">JPrefund</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">出發前</th>
+                    <td>可先建立帳號、填基本資料；護照身分驗證須等首筆免稅消費後完成。</td>
+                    <td>可先註冊、驗證護照並設定退款方式；要領機場現金，選「Cash at Airport」。</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">每次結帳</th>
+                    <td colspan="2">兩平台相同：每次結帳都出示購買者本人護照，告知店員辦免稅；店家建立購買紀錄。</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">QR／交易登記</th>
+                    <td>首次消費後，依收據或店頭 QR 進入網站完成護照驗證、退款設定。旅客實測稱後續交易會依護照自動帶入，不必每次再掃；記得檢查紀錄是否出現。</td>
+                    <td>每筆購買都登記：掃該筆收據 QR，或輸入 20 碼交易 ID、日期及含稅金額。</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">出境海關</th>
+                    <td colspan="2">兩平台相同：帶護照與退稅商品到海關確認機；綠燈完成確認，紅燈則帶商品給海關查驗。</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">退款</th>
+                    <td>依已設定方式退款。官方公開方式列有信用卡、銀行匯款及 QR 支付；是否能領 Cash Japan 現金，須確認該筆交易有現金選項。</td>
+                    <td>依已設定方式退款；選 Cash at Airport 且該筆／機場支援時，至現金退款機領日圓。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="refund-flow-note">證據註記：J-TaxRefund「後續消費自動帶入」來自 <a
+                href="https://blog.jesselin.com/archives/194160/jtaxrefund-bic-camera-donki-tax-free/" target="_blank"
+                rel="noopener noreferrer">2026/11 旅客實測</a>，非 J&J 對所有合作店的明文保證；J&J 官方說明的是店家提供
+              QR，旅客進網站登記護照與退款方式。不同店家流程可能不同，若新交易沒出現，掃該筆收據 QR 或詢問店員。</p>
+            <p class="refund-flow-note">來源：<a href="https://j-taxfree.jp/service/j-taxrefund/" target="_blank"
+                rel="noopener noreferrer">J-TaxRefund 官方流程</a>、<a href="https://jprefund.com/faq" target="_blank"
+                rel="noopener noreferrer">JPrefund 官方說明</a>、<a
+                href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6559.htm" target="_blank"
+                rel="noopener noreferrer">日本國稅廳免稅店制度</a>。</p>
+          </div>
         </section>
         <section class="card refund-calc-panel refund-tab-panel" id="refund-calc-panel" role="tabpanel"
           aria-labelledby="refund-calc-tab" tabindex="0" hidden>
@@ -4904,9 +5011,9 @@
             }
           },
           {
-            "time": "13:30–14:00（目標）",
+            "time": "13:30 抵達（目標）",
             "name": "關西國際機場 T2",
-            "desc": "Peach MM027 報到與安檢；請確認航空公司報到截止時間。",
+            "desc": "退稅確認：<br>□ 報到前先到 T2 1F 安檢前的海關確認機掃護照；退稅商品不要托運。<br>□ 綠燈可報到托運；紅燈帶商品到海關查驗。<br>□ 完成報到、安檢與出境審查後，到 T2 1F 出境後的現金退稅機領日圓；須確認店家登記的退款服務支援現金。<br>請確認 Peach MM027 報到截止時間並預留排隊時間。",
             "place": "關西國際機場 第二航廈",
             "ja": "",
             "lat": 34.4275,
