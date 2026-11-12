@@ -1,6 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { calculateCashJapanRefund, roundCashJapanPayout, sumPurchaseItems } = require('../cashJapanCalculator.js');
+const {
+    calculateCashJapanRefund,
+    estimatePurchaseItemRefunds,
+    roundCashJapanPayout,
+    sumPurchaseItems,
+} = require('../cashJapanCalculator.js');
 
 test('gross purchase below the daily tax-free threshold returns zero', () => {
     const result = calculateCashJapanRefund({
@@ -85,4 +90,41 @@ test('item list mode uses the summed gross purchase amount', () => {
     assert.equal(result.eligible, true);
     assert.equal(result.refundBeforeFeeYen, 500);
     assert.equal(result.payoutYen, 450);
+});
+
+test('eligible purchase items show estimated after-refund totals and unit prices', () => {
+    const result = estimatePurchaseItemRefunds([
+        { name: 'Coffee', price: 5500, quantity: 1 },
+        { name: 'Tea', price: 1000, quantity: 2 },
+    ], { taxRate: 0.1, exchangeRate: 0.2, eligible: true });
+
+    assert.deepEqual(result.map(({ estimatedRefundYen, afterRefundTotalYen, afterRefundUnitYen, afterRefundUnitTwd }) => ({
+        estimatedRefundYen,
+        afterRefundTotalYen,
+        afterRefundUnitYen,
+        afterRefundUnitTwd,
+    })), [
+        { estimatedRefundYen: 500, afterRefundTotalYen: 5000, afterRefundUnitYen: 5000, afterRefundUnitTwd: 1000 },
+        { estimatedRefundYen: 181.82, afterRefundTotalYen: 1818.18, afterRefundUnitYen: 909.09, afterRefundUnitTwd: 181.82 },
+    ]);
+});
+
+test('ineligible purchases do not show estimated after-refund prices', () => {
+    const result = estimatePurchaseItemRefunds([
+        { name: 'Snack', price: 3000, quantity: 1 },
+    ], { taxRate: 0.1, exchangeRate: 0.2, eligible: false });
+
+    assert.equal(result[0].estimatedRefundYen, null);
+    assert.equal(result[0].afterRefundTotalYen, null);
+    assert.equal(result[0].afterRefundUnitYen, null);
+    assert.equal(result[0].afterRefundUnitTwd, null);
+});
+
+test('incomplete item rows do not produce NaN after-refund values', () => {
+    const result = estimatePurchaseItemRefunds([
+        { name: 'Editing row', price: 1200, quantity: 0 },
+    ], { taxRate: 0.1, exchangeRate: 0.2, eligible: true });
+
+    assert.equal(result[0].afterRefundUnitYen, null);
+    assert.equal(result[0].afterRefundUnitTwd, null);
 });

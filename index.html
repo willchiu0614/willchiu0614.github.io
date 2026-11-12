@@ -2546,13 +2546,40 @@
 
     .refund-item-list {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: .45rem;
       margin-top: .2rem;
     }
 
+    .refund-item-swipe {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 6px;
+      touch-action: pan-y;
+    }
+
+    .refund-item-delete {
+      position: absolute;
+      inset: 0 0 0 auto;
+      z-index: 0;
+      width: 64px;
+      border: 0;
+      border-radius: 6px;
+      background: #b83c36;
+      color: #fff;
+      font: inherit;
+      font-size: .76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     .refund-item-row {
+      position: relative;
+      z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 3.5rem 2.2rem;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 3.5rem;
       gap: .45rem;
       align-items: end;
       min-width: 0;
@@ -2560,6 +2587,22 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       background: rgba(255, 255, 255, .02);
+      width: 100%;
+      transition: width .18s ease;
+      touch-action: pan-y;
+    }
+
+    .refund-item-swipe.is-delete-revealed .refund-item-row {
+      width: calc(100% - 64px);
+    }
+
+    .refund-item-swipe:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: 2px;
+    }
+
+    .refund-item-swipe.is-delete-revealed .refund-item-delete {
+      z-index: 2;
     }
 
     .refund-item-row .refund-field label {
@@ -2572,28 +2615,46 @@
       padding: .45rem .5rem;
     }
 
-    .refund-item-remove {
-      width: 2.5rem;
-      height: 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: transparent;
+    .refund-item-summary {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+      gap: .25rem .55rem;
+      align-items: start;
+      min-width: 0;
       color: var(--muted);
-      font: inherit;
-      font-size: 1.15rem;
-      cursor: pointer;
+      font-size: .68rem;
+      line-height: 1.35;
     }
 
-    .refund-item-remove:hover {
-      border-color: #ef4444;
-      color: #fca5a5;
+    .refund-item-subtotal,
+    .refund-item-after-refund {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      text-align: right;
+    }
+
+    .refund-item-after-refund {
+      color: #fb923c;
+      font-weight: 600;
+    }
+
+    .refund-item-after-unit {
+      display: block;
+      color: var(--muted);
+      font-size: .64rem;
+      font-weight: 400;
+    }
+
+    .refund-item-swipe:focus-visible,
+    .refund-item-delete:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: 2px;
     }
 
     .refund-item-subtotal {
-      grid-column: 1 / -1;
       color: var(--muted);
-      font-size: .7rem;
-      text-align: right;
+      font-weight: 500;
     }
 
     .refund-item-actions {
@@ -2617,8 +2678,7 @@
       cursor: pointer;
     }
 
-    .refund-add-item:focus-visible,
-    .refund-item-remove:focus-visible {
+    .refund-add-item:focus-visible {
       outline: 2px solid #fb923c;
       outline-offset: 2px;
     }
@@ -2915,7 +2975,7 @@
         }
 
         .refund-item-row {
-          grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) 3rem 2.2rem;
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) 3rem;
           gap: .3rem;
           padding: .4rem;
         }
@@ -2929,9 +2989,9 @@
           font-size: .72rem;
         }
 
-        .refund-item-remove {
-          width: 2.2rem;
-          height: 2.2rem;
+        .refund-item-summary {
+          grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+          gap: .2rem .3rem;
         }
 
         .refund-result-breakdown {
@@ -6070,6 +6130,8 @@
       itemRows.forEach((row, index) => {
         row.querySelector('[data-item-name]').setAttribute('aria-label', `商品 ${index + 1} 名稱`);
         row.querySelector('[data-item-subtotal]').textContent = `小計 ¥${cashJapanYenFormat.format(items[index].price * items[index].quantity)}`;
+        row.querySelector('[data-item-after-total]').textContent = '—';
+        row.querySelector('[data-item-after-unit]').textContent = '';
       });
       document.getElementById('cash-calc-items-total').textContent = `合計 ¥${cashJapanYenFormat.format(itemsTotal)}`;
 
@@ -6086,6 +6148,22 @@
         amount,
         taxRate,
         exchangeRate,
+      });
+      const itemEstimates = window.cashJapanCalculator.estimatePurchaseItemRefunds(items, {
+        taxRate,
+        exchangeRate,
+        eligible: itemsMode && result.eligible,
+      });
+      itemRows.forEach((row, index) => {
+        const estimate = itemEstimates[index];
+        const afterTotal = row.querySelector('[data-item-after-total]');
+        const afterUnit = row.querySelector('[data-item-after-unit]');
+        afterTotal.textContent = estimate.afterRefundTotalYen === null
+          ? '未達退稅門檻'
+          : `退稅後總價 ¥${cashJapanYenFormat.format(estimate.afterRefundTotalYen)}`;
+        afterUnit.textContent = estimate.afterRefundUnitYen === null
+          ? ''
+          : `退稅後單價 ¥${cashJapanYenFormat.format(estimate.afterRefundUnitYen)}`;
       });
       document.getElementById('cash-calc-result-jpy').textContent = `¥${cashJapanYenFormat.format(result.payoutYen)}`;
       document.getElementById('cash-calc-result-twd').textContent = `約 NT$${cashJapanTwdFormat.format(result.payoutTwd)}`;
@@ -6191,6 +6269,21 @@
       const itemContainer = document.getElementById('cash-calc-items');
 
       function addPurchaseItem(price = '', quantity = '1') {
+        const swipeContainer = document.createElement('div');
+        swipeContainer.className = 'refund-item-swipe';
+        swipeContainer.dataset.itemSwipe = '';
+        swipeContainer.tabIndex = 0;
+        swipeContainer.setAttribute('role', 'group');
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'refund-item-delete';
+        deleteButton.type = 'button';
+        deleteButton.textContent = '刪除';
+        deleteButton.dataset.itemDelete = '';
+        deleteButton.setAttribute('aria-label', '刪除此商品');
+        deleteButton.setAttribute('aria-hidden', 'true');
+        deleteButton.tabIndex = -1;
+
         const row = document.createElement('div');
         row.className = 'refund-item-row';
         row.dataset.itemRow = '';
@@ -6236,19 +6329,25 @@
         quantityInput.value = quantity;
         quantityField.append(quantityLabel, quantityInput);
 
-        const removeButton = document.createElement('button');
-        removeButton.className = 'refund-item-remove';
-        removeButton.type = 'button';
-        removeButton.setAttribute('aria-label', '移除此商品');
-        removeButton.title = '移除此商品';
-        removeButton.textContent = '×';
-
         const subtotal = document.createElement('output');
         subtotal.className = 'refund-item-subtotal';
         subtotal.dataset.itemSubtotal = '';
 
-        row.append(nameField, priceField, quantityField, removeButton, subtotal);
-        itemContainer.append(row);
+        const summary = document.createElement('div');
+        summary.className = 'refund-item-summary';
+        const afterRefund = document.createElement('div');
+        afterRefund.className = 'refund-item-after-refund';
+        const afterTotal = document.createElement('output');
+        afterTotal.dataset.itemAfterTotal = '';
+        const afterUnit = document.createElement('small');
+        afterUnit.className = 'refund-item-after-unit';
+        afterUnit.dataset.itemAfterUnit = '';
+        afterRefund.append(afterTotal, afterUnit);
+        summary.append(subtotal, afterRefund);
+
+        row.append(nameField, priceField, quantityField, summary);
+        swipeContainer.append(deleteButton, row);
+        itemContainer.append(swipeContainer);
         renderCashJapanEstimate();
         priceInput.focus();
       }
@@ -6258,9 +6357,44 @@
       taxRate.addEventListener('change', renderCashJapanEstimate);
       itemContainer.addEventListener('input', renderCashJapanEstimate);
       itemContainer.addEventListener('click', (event) => {
-        const removeButton = event.target.closest('.refund-item-remove');
-        if (!removeButton) return;
-        removeButton.closest('[data-item-row]').remove();
+        const deleteButton = event.target.closest('[data-item-delete]');
+        if (!deleteButton) return;
+        deleteButton.closest('[data-item-swipe]').remove();
+        renderCashJapanEstimate();
+      });
+      let swipeStart = null;
+      itemContainer.addEventListener('pointerdown', (event) => {
+        const swipeContainer = event.target.closest('[data-item-swipe]');
+        if (!swipeContainer || event.target.closest('button')) return;
+        itemContainer.querySelectorAll('.is-delete-revealed').forEach((openRow) => {
+          if (openRow !== swipeContainer) {
+            openRow.classList.remove('is-delete-revealed');
+            const button = openRow.querySelector('.refund-item-delete');
+            button.tabIndex = -1;
+            button.setAttribute('aria-hidden', 'true');
+          }
+        });
+        swipeStart = { container: swipeContainer, x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+      });
+      document.addEventListener('pointerup', (event) => {
+        if (!swipeStart || event.pointerId !== swipeStart.pointerId) return;
+        const deltaX = swipeStart.x - event.clientX;
+        const deltaY = Math.abs(swipeStart.y - event.clientY);
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > deltaY) {
+          const reveal = deltaX > 0;
+          swipeStart.container.classList.toggle('is-delete-revealed', reveal);
+          const button = swipeStart.container.querySelector('.refund-item-delete');
+          button.tabIndex = reveal ? 0 : -1;
+          button.setAttribute('aria-hidden', String(!reveal));
+        }
+        swipeStart = null;
+      });
+      document.addEventListener('pointercancel', () => { swipeStart = null; });
+      itemContainer.addEventListener('keydown', (event) => {
+        const swipeContainer = event.target.closest('[data-item-swipe]');
+        if (!swipeContainer || event.target !== swipeContainer || !['Delete', 'Backspace'].includes(event.key)) return;
+        event.preventDefault();
+        swipeContainer.remove();
         renderCashJapanEstimate();
       });
       document.getElementById('cash-calc-add-item').addEventListener('click', () => addPurchaseItem());

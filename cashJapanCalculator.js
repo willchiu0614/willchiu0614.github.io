@@ -7,6 +7,32 @@
         }, 0);
     }
 
+    function estimatePurchaseItemRefunds(items, { taxRate, exchangeRate, eligible }) {
+        return items.map((item) => {
+            const price = Number(item.price);
+            const quantity = Number(item.quantity);
+            if (!eligible || !Number.isFinite(price) || price < 0 || !Number.isInteger(quantity) || quantity < 1) {
+                return {
+                    estimatedRefundYen: null,
+                    afterRefundTotalYen: null,
+                    afterRefundUnitYen: null,
+                    afterRefundUnitTwd: null,
+                };
+            }
+
+            const subtotalYen = price * quantity;
+            const estimatedRefundYen = Math.round(subtotalYen * taxRate / (1 + taxRate) * 100) / 100;
+            const afterRefundTotalYen = Math.round((subtotalYen - estimatedRefundYen) * 100) / 100;
+            const afterRefundUnitYen = Math.round((afterRefundTotalYen / quantity) * 100) / 100;
+            return {
+                estimatedRefundYen,
+                afterRefundTotalYen,
+                afterRefundUnitYen,
+                afterRefundUnitTwd: Math.round(afterRefundUnitYen * exchangeRate * 100) / 100,
+            };
+        });
+    }
+
     function roundCashJapanPayout(amountAfterFee) {
         const roundedYen = Math.round(amountAfterFee);
         const base = Math.floor(roundedYen / 100) * 100;
@@ -58,7 +84,12 @@
         };
     }
 
-    const calculator = { calculateCashJapanRefund, roundCashJapanPayout, sumPurchaseItems };
+    const calculator = {
+        calculateCashJapanRefund,
+        estimatePurchaseItemRefunds,
+        roundCashJapanPayout,
+        sumPurchaseItems,
+    };
     if (typeof module !== 'undefined' && module.exports) module.exports = calculator;
     root.cashJapanCalculator = calculator;
 })(globalThis);
