@@ -1,0 +1,156 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://willchiu0614.github.io/data/refund-record.schema.json",
+    "title": "Tax Refund Ledger Backup",
+    "type": "object",
+    "required": [
+        "format",
+        "version",
+        "exportedAt",
+        "records"
+    ],
+    "properties": {
+        "format": {
+            "const": "kansai-tax-refund-ledger"
+        },
+        "version": {
+            "const": 1
+        },
+        "exportedAt": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "records": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/record"
+            }
+        }
+    },
+    "$defs": {
+        "record": {
+            "type": "object",
+            "required": [
+                "schemaVersion",
+                "id",
+                "storeName",
+                "createdAt",
+                "updatedAt",
+                "calculationMode",
+                "items",
+                "purchaseTotalYen",
+                "taxRate",
+                "exchangeRate",
+                "taxExclusivePurchaseYen",
+                "refundBeforeFeeYen",
+                "serviceFeeYen",
+                "payoutYen",
+                "payoutTwd",
+                "roundingAdjustmentYen"
+            ],
+            "properties": {
+                "schemaVersion": {
+                    "const": 1
+                },
+                "id": {
+                    "type": "string"
+                },
+                "storeName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "calculationMode": {
+                    "enum": [
+                        "items",
+                        "purchase",
+                        "refund"
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "priceYen",
+                            "quantity",
+                            "subtotalYen"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "maxLength": 120
+                            },
+                            "priceYen": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "quantity": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "subtotalYen": {
+                                "type": "number",
+                                "minimum": 0
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "purchaseTotalYen": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "taxRate": {
+                    "enum": [
+                        0.08,
+                        0.1
+                    ]
+                },
+                "exchangeRate": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "taxExclusivePurchaseYen": {
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "minimum": 0
+                },
+                "refundBeforeFeeYen": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "serviceFeeYen": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "payoutYen": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "payoutTwd": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "roundingAdjustmentYen": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,4 +1,12 @@
 (function (root) {
+    function sumPurchaseItems(items) {
+        return items.reduce((total, item) => {
+            const price = Number(item.price) || 0;
+            const quantity = Number(item.quantity) || 0;
+            return total + Math.max(0, price) * Math.max(0, quantity);
+        }, 0);
+    }
+
     function roundCashJapanPayout(amountAfterFee) {
         const roundedYen = Math.round(amountAfterFee);
         const base = Math.floor(roundedYen / 100) * 100;
@@ -21,7 +29,7 @@
         let refundBeforeFeeYen;
         let eligible = true;
 
-        if (mode === 'purchase') {
+        if (mode === 'purchase' || mode === 'items') {
             if (![0.08, 0.1].includes(taxRate)) {
                 throw new RangeError('Tax rate must be 8% or 10%.');
             }
@@ -50,7 +58,7 @@
         };
     }
 
-    const calculator = { calculateCashJapanRefund, roundCashJapanPayout };
+    const calculator = { calculateCashJapanRefund, roundCashJapanPayout, sumPurchaseItems };
     if (typeof module !== 'undefined' && module.exports) module.exports = calculator;
     root.cashJapanCalculator = calculator;
 })(globalThis);

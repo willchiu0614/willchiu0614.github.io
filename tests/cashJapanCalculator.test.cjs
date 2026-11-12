@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { calculateCashJapanRefund, roundCashJapanPayout } = require('../cashJapanCalculator.js');
+const { calculateCashJapanRefund, roundCashJapanPayout, sumPurchaseItems } = require('../cashJapanCalculator.js');
 
 test('gross purchase below the daily tax-free threshold returns zero', () => {
     const result = calculateCashJapanRefund({
@@ -58,4 +58,31 @@ test('Cash Japan rounds the post-fee payout to the nearest 50 yen', () => {
     assert.equal(roundCashJapanPayout(425), 450);
     assert.equal(roundCashJapanPayout(474), 450);
     assert.equal(roundCashJapanPayout(475), 500);
+});
+
+test('purchase items sum unit price multiplied by quantity', () => {
+    assert.equal(sumPurchaseItems([
+        { price: 1200, quantity: 2 },
+        { price: 350, quantity: 3 },
+    ]), 3450);
+});
+
+test('empty purchase item list sums to zero', () => {
+    assert.equal(sumPurchaseItems([]), 0);
+});
+
+test('item list mode uses the summed gross purchase amount', () => {
+    const result = calculateCashJapanRefund({
+        mode: 'items',
+        amount: sumPurchaseItems([
+            { price: 5000, quantity: 1 },
+            { price: 500, quantity: 1 },
+        ]),
+        taxRate: 0.1,
+        exchangeRate: 0.21,
+    });
+
+    assert.equal(result.eligible, true);
+    assert.equal(result.refundBeforeFeeYen, 500);
+    assert.equal(result.payoutYen, 450);
 });

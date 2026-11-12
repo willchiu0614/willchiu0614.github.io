@@ -2534,11 +2534,230 @@
       align-items: end;
     }
 
+    .refund-items-field {
+      grid-column: 1 / -1;
+      min-width: 0;
+    }
+
+    .refund-store-name-field {
+      grid-column: 1 / -1;
+      min-width: 0;
+    }
+
+    .refund-item-list {
+      display: grid;
+      gap: .45rem;
+      margin-top: .2rem;
+    }
+
+    .refund-item-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 3.5rem 2.2rem;
+      gap: .45rem;
+      align-items: end;
+      min-width: 0;
+      padding: .5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .refund-item-row .refund-field label {
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 500;
+    }
+
+    .refund-item-row .refund-field input {
+      padding: .45rem .5rem;
+    }
+
+    .refund-item-remove {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 1.15rem;
+      cursor: pointer;
+    }
+
+    .refund-item-remove:hover {
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .refund-item-subtotal {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: .7rem;
+      text-align: right;
+    }
+
+    .refund-item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .45rem;
+      margin-top: .45rem;
+    }
+
+    .refund-add-item {
+      min-height: 38px;
+      padding: .35rem .65rem;
+      border: 1px solid rgba(249, 115, 22, .45);
+      border-radius: 6px;
+      background: transparent;
+      color: #fb923c;
+      font: inherit;
+      font-size: .76rem;
+      cursor: pointer;
+    }
+
+    .refund-add-item:focus-visible,
+    .refund-item-remove:focus-visible {
+      outline: 2px solid #fb923c;
+      outline-offset: 2px;
+    }
+
+    .refund-items-total {
+      color: #fb923c;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .refund-ledger-panel {
+      margin-top: .9rem;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-ledger-heading {
+      margin: 0 0 .45rem;
+      color: #fb923c;
+      font-size: .82rem;
+    }
+
+    .refund-ledger-status {
+      margin: .35rem 0;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.45;
+    }
+
+    .refund-ledger-status.is-error {
+      color: #f87171;
+    }
+
+    .refund-ledger-auth,
+    .refund-ledger-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      align-items: end;
+    }
+
+    .refund-ledger-panel [hidden] {
+      display: none !important;
+    }
+
+    .refund-ledger-auth .refund-field {
+      flex: 1 1 9rem;
+    }
+
+    .refund-ledger-actions {
+      margin-top: .55rem;
+    }
+
+    .refund-ledger-button {
+      min-height: 38px;
+      padding: .38rem .62rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card2);
+      color: var(--text);
+      font: inherit;
+      font-size: .74rem;
+      cursor: pointer;
+    }
+
+    .refund-ledger-button.primary {
+      border-color: rgba(249, 115, 22, .55);
+      background: var(--orange-light);
+      color: #fb923c;
+    }
+
+    .refund-ledger-button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .refund-ledger-button.is-disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .refund-ledger-records {
+      display: grid;
+      gap: .35rem;
+      margin-top: .55rem;
+    }
+
+    .refund-ledger-record {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: .35rem;
+      padding: .45rem .55rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .74rem;
+    }
+
+    .refund-ledger-record-main {
+      display: grid;
+      gap: .12rem;
+      min-width: 0;
+    }
+
+    .refund-ledger-record-main strong {
+      overflow-wrap: anywhere;
+    }
+
+    .refund-ledger-record-main small {
+      color: var(--muted);
+    }
+
+    .refund-ledger-record-actions {
+      display: flex;
+      gap: .3rem;
+    }
+
+    .refund-ledger-empty {
+      color: var(--muted);
+      font-size: .72rem;
+    }
+
+    .refund-screenshot-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: .65rem;
+    }
+
     .refund-field {
       display: flex;
       flex-direction: column;
       gap: .3rem;
       min-width: 0;
+    }
+
+    .refund-field[hidden] {
+      display: none !important;
     }
 
     .refund-field label {
@@ -4290,14 +4509,29 @@
           </div>
           <div class="refund-calc-body">
             <div class="refund-calc-fields">
+              <div class="refund-field refund-store-name-field">
+                <label for="cash-calc-store-name">商店名稱</label>
+                <input id="cash-calc-store-name" type="text" maxlength="120" autocomplete="organization"
+                  placeholder="輸入店名，例如 Bic Camera">
+              </div>
               <div class="refund-field">
                 <label for="cash-calc-mode">計算方式</label>
                 <select id="cash-calc-mode">
-                  <option value="purchase">輸入同店同日含稅購物總額</option>
+                  <option value="items">逐項輸入商品</option>
+                  <option value="purchase">直接輸入含稅總額</option>
                   <option value="refund">輸入退款業者提供的退款額</option>
                 </select>
               </div>
-              <div class="refund-field">
+              <div class="refund-field refund-items-field" id="cash-calc-items-field">
+                <label>商品清單（日圓）</label>
+                <div class="refund-item-list" id="cash-calc-items" aria-label="商品明細"></div>
+                <div class="refund-item-actions">
+                  <button class="refund-add-item" id="cash-calc-add-item" type="button">＋ 新增商品</button>
+                  <output class="refund-items-total" id="cash-calc-items-total">合計 ¥0</output>
+                </div>
+                <small>輸入每項商品含稅單價與數量；總額按同店同日合併計算。</small>
+              </div>
+              <div class="refund-field" id="cash-calc-amount-field" hidden>
                 <label id="cash-calc-amount-label" for="cash-calc-amount">同店同日含稅購物總額（日圓）</label>
                 <input id="cash-calc-amount" type="number" min="0" step="1" inputmode="numeric" value="10000">
                 <small id="cash-calc-amount-help">同一免稅店同一天的合計；未稅金額須至少 ¥5,000。</small>
@@ -4340,10 +4574,40 @@
                 <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
                 <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
               </div>
+              <div class="refund-screenshot-actions refund-export-hide">
+                <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出記帳圖片</button>
+              </div>
+              <div class="refund-ledger-status refund-export-hide" id="cash-calc-export-status" aria-live="polite">
+              </div>
             </div>
             <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
               10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
                 rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
+            <section class="refund-ledger-panel refund-export-hide" aria-labelledby="refund-ledger-title">
+              <h3 class="refund-ledger-heading" id="refund-ledger-title">雲端記帳</h3>
+              <p class="refund-ledger-status" id="refund-cloud-status" aria-live="polite">正在檢查 Firebase 設定…</p>
+              <div class="refund-ledger-auth" id="refund-cloud-auth" hidden>
+                <div class="refund-field">
+                  <label for="refund-cloud-email">電子郵件</label>
+                  <input id="refund-cloud-email" type="email" autocomplete="username">
+                </div>
+                <div class="refund-field">
+                  <label for="refund-cloud-password">密碼</label>
+                  <input id="refund-cloud-password" type="password" autocomplete="current-password">
+                </div>
+              </div>
+              <div class="refund-ledger-actions refund-export-hide">
+                <button class="refund-ledger-button" id="refund-cloud-signin" type="button" disabled>登入</button>
+                <button class="refund-ledger-button" id="refund-cloud-signup" type="button" disabled>建立帳號</button>
+                <button class="refund-ledger-button" id="refund-cloud-signout" type="button" hidden>登出</button>
+                <button class="refund-ledger-button primary" id="refund-cloud-save" type="button" disabled>儲存本筆</button>
+                <button class="refund-ledger-button" id="refund-cloud-export" type="button" disabled>匯出 JSON</button>
+                <label class="refund-ledger-button is-disabled" id="refund-cloud-import-label" for="refund-cloud-import"
+                  aria-disabled="true">匯入 JSON</label>
+                <input id="refund-cloud-import" type="file" accept="application/json,.json" hidden disabled>
+              </div>
+              <div class="refund-ledger-records" id="refund-cloud-records"></div>
+            </section>
           </div>
         </section>
       </div>
@@ -4358,7 +4622,15 @@
     <div class="schedule-note" id="schedule-modal-note"></div>
   </dialog>
   <!-- SCRIPTS -->
+  <script src="./assets/vendor/html2canvas.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="./cashJapanCalculator.js"></script>
+  <script src="./refundLedger.js"></script>
+  <script src="./data/firebase-config.js"></script>
+  <script src="./refundCloudStore.js"></script>
+  <script src="./refundLedgerUI.js"></script>
   <script>
     const TRIP = {
       start: new Date("2026-11-20T07:00:00+08:00"),
@@ -5746,19 +6018,36 @@
 
     function renderCashJapanEstimate() {
       const mode = document.getElementById('cash-calc-mode').value;
-      const amount = Number(document.getElementById('cash-calc-amount').value);
+      const itemContainer = document.getElementById('cash-calc-items');
+      const itemRows = Array.from(itemContainer.querySelectorAll('[data-item-row]'));
+      const items = itemRows.map((row) => ({
+        name: row.querySelector('[data-item-name]').value.trim(),
+        price: Number(row.querySelector('[data-item-price]').value) || 0,
+        quantity: Number(row.querySelector('[data-item-quantity]').value) || 0,
+      }));
+      const itemsTotal = window.cashJapanCalculator.sumPurchaseItems(items);
+      const amount = mode === 'items' ? itemsTotal : Number(document.getElementById('cash-calc-amount').value);
       const taxRate = Number(document.getElementById('cash-calc-tax-rate').value);
       const exchangeRate = Number(document.getElementById('cash-calc-fx').value);
       const amountLabel = document.getElementById('cash-calc-amount-label');
       const amountHelp = document.getElementById('cash-calc-amount-help');
       const taxField = document.getElementById('cash-calc-tax-field');
 
-      const purchaseMode = mode === 'purchase';
-      amountLabel.textContent = purchaseMode ? '同店同日含稅購物總額（日圓）' : '退款業者提供的退款額（日圓）';
-      amountHelp.textContent = purchaseMode
+      const itemsMode = mode === 'items';
+      const purchaseMode = itemsMode || mode === 'purchase';
+      document.getElementById('cash-calc-items-field').hidden = !itemsMode;
+      document.getElementById('cash-calc-amount-field').hidden = itemsMode;
+      amountLabel.textContent = mode === 'purchase' ? '同店同日含稅購物總額（日圓）' : '退款業者提供的退款額（日圓）';
+      amountHelp.textContent = mode === 'purchase'
         ? '同一免稅店同一天的合計；未稅金額須至少 ¥5,000。'
         : '輸入退稅業者顯示的退款額，直接計算 Cash Japan 費用與取整。';
       taxField.hidden = !purchaseMode;
+
+      itemRows.forEach((row, index) => {
+        row.querySelector('[data-item-name]').setAttribute('aria-label', `商品 ${index + 1} 名稱`);
+        row.querySelector('[data-item-subtotal]').textContent = `小計 ¥${cashJapanYenFormat.format(items[index].price * items[index].quantity)}`;
+      });
+      document.getElementById('cash-calc-items-total').textContent = `合計 ¥${cashJapanYenFormat.format(itemsTotal)}`;
 
       const message = document.getElementById('cash-calc-message');
       const formulaList = document.getElementById('cash-calc-formula');
@@ -5794,6 +6083,14 @@
 
       if (purchaseMode) {
         const taxPercent = Math.round(taxRate * 100);
+        if (itemsMode) {
+          items.forEach((item, index) => {
+            const itemName = item.name || `商品 ${index + 1}`;
+            formulaSteps.push(`${itemName}：¥${cashJapanYenFormat.format(item.price)} × ${cashJapanYenFormat.format(item.quantity)} = ¥${cashJapanYenFormat.format(item.price * item.quantity)}。`);
+          });
+          const itemExpressions = items.map((item) => `¥${cashJapanYenFormat.format(item.price)} × ${cashJapanYenFormat.format(item.quantity)}`);
+          formulaSteps.push(`同店同日含稅總額 = ${itemExpressions.length ? itemExpressions.join(' + ') : '0'} = ${formatYen(amount)}。`);
+        }
         formulaSteps.push(`未稅消費額 = ${formatYen(amount)} ÷ (1 + ${taxPercent}%) ≈ ${formatYen(result.taxExclusivePurchaseYen)}。`);
         if (result.eligible) {
           const rawTaxRefund = amount * taxRate / (1 + taxRate);
@@ -5867,15 +6164,89 @@
       const amount = document.getElementById('cash-calc-amount');
       const taxRate = document.getElementById('cash-calc-tax-rate');
       const exchangeRate = document.getElementById('cash-calc-fx');
+      const itemContainer = document.getElementById('cash-calc-items');
+
+      function addPurchaseItem(price = '', quantity = '1') {
+        const row = document.createElement('div');
+        row.className = 'refund-item-row';
+        row.dataset.itemRow = '';
+
+        const nameField = document.createElement('div');
+        nameField.className = 'refund-field';
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = '商品名稱';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.maxLength = 120;
+        nameInput.placeholder = '商品名稱';
+        nameInput.setAttribute('aria-label', '商品名稱');
+        nameInput.dataset.itemName = '';
+        nameField.append(nameLabel, nameInput);
+
+        const priceField = document.createElement('div');
+        priceField.className = 'refund-field';
+        const priceLabel = document.createElement('label');
+        priceLabel.textContent = '單價（日圓）';
+        const priceInput = document.createElement('input');
+        priceInput.type = 'number';
+        priceInput.min = '0';
+        priceInput.step = '1';
+        priceInput.inputMode = 'numeric';
+        priceInput.placeholder = '含稅單價';
+        priceInput.setAttribute('aria-label', '商品含稅單價（日圓）');
+        priceInput.dataset.itemPrice = '';
+        priceInput.value = price;
+        priceField.append(priceLabel, priceInput);
+
+        const quantityField = document.createElement('div');
+        quantityField.className = 'refund-field';
+        const quantityLabel = document.createElement('label');
+        quantityLabel.textContent = '數量';
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.min = '1';
+        quantityInput.step = '1';
+        quantityInput.inputMode = 'numeric';
+        quantityInput.setAttribute('aria-label', '商品數量');
+        quantityInput.dataset.itemQuantity = '';
+        quantityInput.value = quantity;
+        quantityField.append(quantityLabel, quantityInput);
+
+        const removeButton = document.createElement('button');
+        removeButton.className = 'refund-item-remove';
+        removeButton.type = 'button';
+        removeButton.setAttribute('aria-label', '移除此商品');
+        removeButton.title = '移除此商品';
+        removeButton.textContent = '×';
+
+        const subtotal = document.createElement('output');
+        subtotal.className = 'refund-item-subtotal';
+        subtotal.dataset.itemSubtotal = '';
+
+        row.append(nameField, priceField, quantityField, removeButton, subtotal);
+        itemContainer.append(row);
+        renderCashJapanEstimate();
+        priceInput.focus();
+      }
+
       mode.addEventListener('change', renderCashJapanEstimate);
       amount.addEventListener('input', renderCashJapanEstimate);
       taxRate.addEventListener('change', renderCashJapanEstimate);
+      itemContainer.addEventListener('input', renderCashJapanEstimate);
+      itemContainer.addEventListener('click', (event) => {
+        const removeButton = event.target.closest('.refund-item-remove');
+        if (!removeButton) return;
+        removeButton.closest('[data-item-row]').remove();
+        renderCashJapanEstimate();
+      });
+      document.getElementById('cash-calc-add-item').addEventListener('click', () => addPurchaseItem());
       exchangeRate.addEventListener('input', () => {
         cashJapanRateEdited = true;
         document.getElementById('cash-calc-fx-status').textContent = '使用手動匯率。';
         renderCashJapanEstimate();
       });
       document.getElementById('cash-calc-fx-refresh').addEventListener('click', () => refreshCashJapanRate(true));
+      addPurchaseItem();
       renderCashJapanEstimate();
       refreshCashJapanRate();
     }
