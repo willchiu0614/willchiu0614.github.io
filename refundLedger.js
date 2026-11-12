@@ -81,6 +81,10 @@
         };
     }
 
+    function serializeRefundBackup(records, exportedAt = new Date()) {
+        return JSON.stringify(createRefundBackup(records, exportedAt), null, 2);
+    }
+
     function parseRefundBackup(source) {
         let backup;
         try {
@@ -100,7 +104,14 @@
         };
     }
 
-    const refundLedger = { BACKUP_FORMAT, BACKUP_VERSION, createRefundRecord, createRefundBackup, parseRefundBackup };
+    const refundLedger = {
+        BACKUP_FORMAT,
+        BACKUP_VERSION,
+        createRefundRecord,
+        createRefundBackup,
+        serializeRefundBackup,
+        parseRefundBackup,
+    };
     if (typeof module !== 'undefined' && module.exports) module.exports = refundLedger;
     root.refundLedger = refundLedger;
 })(globalThis);

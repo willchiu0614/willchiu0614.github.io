@@ -2652,7 +2652,6 @@
       color: #f87171;
     }
 
-    .refund-ledger-auth,
     .refund-ledger-actions {
       display: flex;
       flex-wrap: wrap;
@@ -2662,10 +2661,6 @@
 
     .refund-ledger-panel [hidden] {
       display: none !important;
-    }
-
-    .refund-ledger-auth .refund-field {
-      flex: 1 1 9rem;
     }
 
     .refund-ledger-actions {
@@ -2693,12 +2688,6 @@
     .refund-ledger-button:disabled {
       opacity: .5;
       cursor: not-allowed;
-    }
-
-    .refund-ledger-button.is-disabled {
-      opacity: .5;
-      cursor: not-allowed;
-      pointer-events: none;
     }
 
     .refund-ledger-records {
@@ -2741,6 +2730,36 @@
     .refund-ledger-empty {
       color: var(--muted);
       font-size: .72rem;
+    }
+
+    .refund-json-copy-dialog {
+      width: min(92vw, 680px);
+      max-height: 85vh;
+      margin: auto;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+    }
+
+    .refund-json-copy-dialog::backdrop {
+      background: rgba(0, 0, 0, .72);
+    }
+
+    .refund-json-copy-text {
+      width: 100%;
+      min-height: 45vh;
+      max-height: 60vh;
+      margin-top: .55rem;
+      padding: .65rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font: .72rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+      overflow: auto;
+      resize: vertical;
     }
 
     .refund-screenshot-actions {
@@ -4584,29 +4603,16 @@
               10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
                 rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
             <section class="refund-ledger-panel refund-export-hide" aria-labelledby="refund-ledger-title">
-              <h3 class="refund-ledger-heading" id="refund-ledger-title">雲端記帳</h3>
-              <p class="refund-ledger-status" id="refund-cloud-status" aria-live="polite">正在檢查 Firebase 設定…</p>
-              <div class="refund-ledger-auth" id="refund-cloud-auth" hidden>
-                <div class="refund-field">
-                  <label for="refund-cloud-email">電子郵件</label>
-                  <input id="refund-cloud-email" type="email" autocomplete="username">
-                </div>
-                <div class="refund-field">
-                  <label for="refund-cloud-password">密碼</label>
-                  <input id="refund-cloud-password" type="password" autocomplete="current-password">
-                </div>
-              </div>
+              <h3 class="refund-ledger-heading" id="refund-ledger-title">JSON 記帳</h3>
+              <p class="refund-ledger-status" id="refund-json-status" aria-live="polite"></p>
               <div class="refund-ledger-actions refund-export-hide">
-                <button class="refund-ledger-button" id="refund-cloud-signin" type="button" disabled>登入</button>
-                <button class="refund-ledger-button" id="refund-cloud-signup" type="button" disabled>建立帳號</button>
-                <button class="refund-ledger-button" id="refund-cloud-signout" type="button" hidden>登出</button>
-                <button class="refund-ledger-button primary" id="refund-cloud-save" type="button" disabled>儲存本筆</button>
-                <button class="refund-ledger-button" id="refund-cloud-export" type="button" disabled>匯出 JSON</button>
-                <label class="refund-ledger-button is-disabled" id="refund-cloud-import-label" for="refund-cloud-import"
-                  aria-disabled="true">匯入 JSON</label>
-                <input id="refund-cloud-import" type="file" accept="application/json,.json" hidden disabled>
+                <button class="refund-ledger-button primary" id="refund-json-add-record" type="button">加入本筆</button>
+                <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
+                <button class="refund-ledger-button" id="refund-json-copy" type="button">複製 JSON</button>
+                <label class="refund-ledger-button" for="refund-json-import">匯入 JSON</label>
+                <input id="refund-json-import" type="file" accept="application/json,.json" hidden>
               </div>
-              <div class="refund-ledger-records" id="refund-cloud-records"></div>
+              <div class="refund-ledger-records" id="refund-json-records"></div>
             </section>
           </div>
         </section>
@@ -4621,16 +4627,20 @@
     <div class="schedule-scroll" id="schedule-modal-table"></div>
     <div class="schedule-note" id="schedule-modal-note"></div>
   </dialog>
+  <dialog aria-labelledby="refund-json-copy-title" class="refund-json-copy-dialog" id="refund-json-copy-dialog">
+    <div class="refund-ledger-actions">
+      <h2 class="refund-ledger-heading" id="refund-json-copy-title">JSON 備份內容</h2>
+      <button class="refund-ledger-button" id="refund-json-copy-close" type="button">關閉</button>
+    </div>
+    <p class="refund-ledger-status">若沒有自動複製，請在文字框全選並複製。</p>
+    <textarea class="refund-json-copy-text" id="refund-json-copy-content" aria-label="JSON 備份內容" readonly
+      spellcheck="false"></textarea>
+  </dialog>
   <!-- SCRIPTS -->
   <script src="./assets/vendor/html2canvas.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="./cashJapanCalculator.js"></script>
   <script src="./refundLedger.js"></script>
-  <script src="./data/firebase-config.js"></script>
-  <script src="./refundCloudStore.js"></script>
-  <script src="./refundLedgerUI.js"></script>
+  <script src="./refundJsonLedgerUI.js"></script>
   <script>
     const TRIP = {
       start: new Date("2026-11-20T07:00:00+08:00"),

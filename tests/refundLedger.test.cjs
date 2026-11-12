@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const {
     createRefundRecord,
     createRefundBackup,
+    serializeRefundBackup,
     parseRefundBackup,
 } = require('../refundLedger.js');
 
@@ -76,6 +77,21 @@ test('refund backup round-trips records with a version and export timestamp', ()
     assert.equal(parsed.exportedAt, '2026-11-12T11:00:00.000Z');
     assert.equal(parsed.records[0].storeName, 'Bic Camera Shinjuku');
     assert.equal(parsed.records[0].items[1].name, 'SD card');
+});
+
+test('refund backup serializes multiple records as readable JSON', () => {
+    const text = serializeRefundBackup([
+        recordInput,
+        { ...recordInput, storeName: 'Kyoto Store' },
+    ], '2026-11-12T11:00:00.000Z');
+    const parsed = parseRefundBackup(text);
+
+    assert.match(text, /\n  "format":/);
+    assert.equal(parsed.records.length, 2);
+    assert.deepEqual(parsed.records.map((record) => record.storeName), [
+        'Bic Camera Shinjuku',
+        'Kyoto Store',
+    ]);
 });
 
 test('refund backup rejects unknown versions and malformed records', () => {
