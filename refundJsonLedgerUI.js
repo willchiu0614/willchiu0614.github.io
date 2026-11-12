@@ -87,7 +87,15 @@
             const row = itemContainer.querySelectorAll('[data-item-row]')[index];
             row.querySelector('[data-item-name]').value = item.name;
             row.querySelector('[data-item-price]').value = String(item.priceYen);
-            row.querySelector('[data-item-quantity]').value = String(item.quantity);
+            const quantitySelect = row.querySelector('[data-item-quantity]');
+            const quantity = String(item.quantity);
+            if (!Array.from(quantitySelect.options).some((option) => option.value === quantity)) {
+                const option = document.createElement('option');
+                option.value = quantity;
+                option.textContent = quantity;
+                quantitySelect.append(option);
+            }
+            quantitySelect.value = quantity;
         });
         document.getElementById('cash-calc-mode').dispatchEvent(new Event('change', { bubbles: true }));
         amountInput.dispatchEvent(new Event('input', { bubbles: true }));

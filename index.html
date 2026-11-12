@@ -2622,7 +2622,8 @@
       font-weight: 500;
     }
 
-    .refund-item-row .refund-field input {
+    .refund-item-row .refund-field input,
+    .refund-item-row .refund-field select {
       padding: .45rem .5rem;
     }
 
@@ -2998,9 +2999,19 @@
           font-size: .66rem;
         }
 
-        .refund-item-row .refund-field input {
+        .refund-calc-fields .refund-field input,
+        .refund-calc-fields .refund-field select {
+          font-size: 16px;
+        }
+
+        .refund-item-row .refund-field input,
+        .refund-item-row .refund-field select {
           padding: .42rem .32rem;
-          font-size: .72rem;
+          font-size: 16px;
+        }
+
+        .refund-json-dialog textarea {
+          font-size: 16px;
         }
 
         .refund-item-summary {
@@ -6334,14 +6345,16 @@
         quantityField.className = 'refund-field';
         const quantityLabel = document.createElement('label');
         quantityLabel.textContent = '數量';
-        const quantityInput = document.createElement('input');
-        quantityInput.type = 'number';
-        quantityInput.min = '1';
-        quantityInput.step = '1';
-        quantityInput.inputMode = 'numeric';
+        const quantityInput = document.createElement('select');
         quantityInput.setAttribute('aria-label', '商品數量');
         quantityInput.dataset.itemQuantity = '';
-        quantityInput.value = quantity;
+        for (let count = 1; count <= 99; count += 1) {
+          const option = document.createElement('option');
+          option.value = String(count);
+          option.textContent = String(count);
+          quantityInput.append(option);
+        }
+        quantityInput.value = String(quantity);
         quantityField.append(quantityLabel, quantityInput);
 
         const subtotal = document.createElement('output');
@@ -6371,6 +6384,7 @@
       amount.addEventListener('input', renderCashJapanEstimate);
       taxRate.addEventListener('change', renderCashJapanEstimate);
       itemContainer.addEventListener('input', renderCashJapanEstimate);
+      itemContainer.addEventListener('change', renderCashJapanEstimate);
       itemContainer.addEventListener('click', (event) => {
         const deleteButton = event.target.closest('[data-item-delete]');
         if (!deleteButton) return;
