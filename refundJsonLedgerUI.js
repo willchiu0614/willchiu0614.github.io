@@ -1,6 +1,5 @@
 (function () {
     const status = document.getElementById('refund-json-status');
-    const importStatus = document.getElementById('refund-json-import-status');
     const dialogStatus = document.getElementById('refund-json-dialog-status');
     const jsonDialog = document.getElementById('refund-json-dialog');
     const jsonInput = document.getElementById('refund-json-input');
@@ -18,11 +17,9 @@
     }
 
     function setImportStatus(message, isError = false) {
-        [importStatus, ...(jsonDialog.open ? [dialogStatus] : [])].forEach((element) => {
-            if (!element) return;
-            element.textContent = message;
-            element.classList.toggle('is-error', isError);
-        });
+        const element = jsonDialog.open ? dialogStatus : status;
+        element.textContent = message;
+        element.classList.toggle('is-error', isError);
     }
 
     function readCurrentRecord() {
@@ -137,6 +134,7 @@
             loadRecord(importedRecords[0]);
             jsonInput.value = window.refundLedger.serializeRefundBackup(importedRecords[0]);
             if (jsonDialog.open) jsonDialog.close();
+            setStatus(`已載入「${importedRecords[0].storeName}」，可直接修改後匯出。`);
             return;
         }
 
@@ -148,7 +146,7 @@
         });
         legacyStoreSelect.value = '0';
         selectLegacyRecord(0);
-        setImportStatus(`舊備份含 ${importedRecords.length} 家店，已載入第一家；可從選單選其他店家。`);
+        dialogStatus.textContent = `舊備份含 ${importedRecords.length} 家店；可選擇店家後逐家匯出。`;
     }
 
     function showCopyFallback(text) {
@@ -262,7 +260,6 @@
         }
     });
 
-    importStatus.textContent = '每家店一份 JSON';
     status.textContent = '修改後匯出或複製，離開前請保存。';
     dialogStatus.textContent = '貼上 JSON，或選擇此店的 JSON 檔案。';
 })();

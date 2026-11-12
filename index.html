@@ -2544,6 +2544,11 @@
       min-width: 0;
     }
 
+    .refund-calc-mode-field,
+    .refund-json-import-toolbar {
+      grid-column: 1 / -1;
+    }
+
     .refund-item-list {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
@@ -2573,6 +2578,9 @@
       font-size: .76rem;
       font-weight: 700;
       cursor: pointer;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .refund-item-row {
@@ -2603,6 +2611,9 @@
 
     .refund-item-swipe.is-delete-revealed .refund-item-delete {
       z-index: 2;
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .refund-item-row .refund-field label {
@@ -2745,23 +2756,26 @@
       cursor: not-allowed;
     }
 
+    .refund-store-import-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: .6rem;
+      min-width: 0;
+    }
+
+    .refund-store-import-row .refund-store-name-field,
+    .refund-store-import-row .refund-json-import-toolbar {
+      grid-column: auto;
+    }
+
     .refund-json-import-toolbar {
       display: flex;
-      align-items: center;
-      gap: .65rem;
-      margin-bottom: .7rem;
-      padding-bottom: .65rem;
-      border-bottom: 1px solid var(--border);
+      align-items: end;
+      min-width: 0;
     }
 
-    .refund-json-import-status {
-      margin: 0;
-      color: var(--muted);
-      font-size: .72rem;
-      line-height: 1.4;
-    }
-
-    .refund-json-import-status.is-error,
     .refund-json-export-status.is-error {
       color: #f87171;
     }
@@ -4600,23 +4614,24 @@
             <p class="day-sub">估算扣除 Cash Japan 服務費並按 ¥50 級距取整後的退款。</p>
           </div>
           <div class="refund-calc-body">
-            <div class="refund-json-import-toolbar refund-export-hide">
-              <button class="refund-ledger-button" id="refund-json-open" type="button">匯入 JSON</button>
-              <p class="refund-json-import-status" id="refund-json-import-status" aria-live="polite">每家店使用一份 JSON。</p>
-            </div>
             <div class="refund-calc-fields">
-              <div class="refund-field refund-store-name-field">
-                <label for="cash-calc-store-name">商店名稱</label>
-                <input id="cash-calc-store-name" type="text" maxlength="120" autocomplete="organization"
-                  placeholder="輸入店名，例如 Bic Camera">
-              </div>
-              <div class="refund-field">
+              <div class="refund-field refund-calc-mode-field">
                 <label for="cash-calc-mode">計算方式</label>
                 <select id="cash-calc-mode">
                   <option value="items">逐項輸入商品</option>
                   <option value="purchase">直接輸入含稅總額</option>
                   <option value="refund">輸入退款業者提供的退款額</option>
                 </select>
+              </div>
+              <div class="refund-store-import-row">
+                <div class="refund-field refund-store-name-field">
+                  <label for="cash-calc-store-name">商店名稱</label>
+                  <input id="cash-calc-store-name" type="text" maxlength="120" autocomplete="organization"
+                    placeholder="輸入店名，例如 Bic Camera">
+                </div>
+                <div class="refund-json-import-toolbar refund-export-hide">
+                  <button class="refund-ledger-button" id="refund-json-open" type="button">匯入 JSON</button>
+                </div>
               </div>
               <div class="refund-field refund-items-field" id="cash-calc-items-field">
                 <label>商品清單（日圓）</label>
