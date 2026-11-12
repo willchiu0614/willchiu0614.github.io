@@ -1,5 +1,8 @@
 (function () {
     const status = document.getElementById('refund-json-status');
+    const importStatus = document.getElementById('refund-json-import-status');
+    const dialogStatus = document.getElementById('refund-json-dialog-status');
+    const jsonDialog = document.getElementById('refund-json-dialog');
     const jsonInput = document.getElementById('refund-json-input');
     const fileInput = document.getElementById('refund-json-file');
     const legacyStoreSelect = document.getElementById('refund-json-legacy-store');
@@ -7,8 +10,19 @@
     let activeRecord = null;
 
     function setStatus(message, isError = false) {
-        status.textContent = message;
-        status.classList.toggle('is-error', isError);
+        [status, ...(jsonDialog.open ? [dialogStatus] : [])].forEach((element) => {
+            if (!element) return;
+            element.textContent = message;
+            element.classList.toggle('is-error', isError);
+        });
+    }
+
+    function setImportStatus(message, isError = false) {
+        [importStatus, ...(jsonDialog.open ? [dialogStatus] : [])].forEach((element) => {
+            if (!element) return;
+            element.textContent = message;
+            element.classList.toggle('is-error', isError);
+        });
     }
 
     function readCurrentRecord() {
@@ -81,7 +95,7 @@
         document.getElementById('cash-calc-mode').dispatchEvent(new Event('change', { bubbles: true }));
         amountInput.dispatchEvent(new Event('input', { bubbles: true }));
         itemContainer.dispatchEvent(new Event('input', { bubbles: true }));
-        setStatus(`已載入「${activeRecord.storeName}」，可直接修改後匯出。`);
+        setImportStatus(`已載入「${activeRecord.storeName}」，可直接修改後匯出。`);
         document.getElementById('refund-calc-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -122,6 +136,7 @@
         if (importedRecords.length === 1) {
             loadRecord(importedRecords[0]);
             jsonInput.value = window.refundLedger.serializeRefundBackup(importedRecords[0]);
+            if (jsonDialog.open) jsonDialog.close();
             return;
         }
 
@@ -133,22 +148,33 @@
         });
         legacyStoreSelect.value = '0';
         selectLegacyRecord(0);
-        setStatus(`舊備份含 ${importedRecords.length} 家店，已載入第一家；可從上方選擇其他店家後各自匯出。`);
+        setImportStatus(`舊備份含 ${importedRecords.length} 家店，已載入第一家；可從選單選其他店家。`);
     }
 
     function showCopyFallback(text) {
         jsonInput.value = text;
+        if (!jsonDialog.open) jsonDialog.showModal();
         jsonInput.focus();
         jsonInput.select();
         jsonInput.setSelectionRange(0, text.length);
         setStatus('JSON 已選取，請複製後貼到記事本。');
     }
 
+    document.getElementById('refund-json-open').addEventListener('click', () => {
+        if (!jsonDialog.open) jsonDialog.showModal();
+        jsonInput.focus();
+    });
+
+    document.getElementById('refund-json-dialog-close').addEventListener('click', () => jsonDialog.close());
+    jsonDialog.addEventListener('click', (event) => {
+        if (event.target === jsonDialog) jsonDialog.close();
+    });
+
     document.getElementById('refund-json-load').addEventListener('click', () => {
         try {
             loadJsonText(jsonInput.value);
         } catch (error) {
-            setStatus(error.message || 'JSON 匯入失敗；請確認格式。', true);
+            setImportStatus(error.message || 'JSON 匯入失敗；請確認格式。', true);
         }
     });
 
@@ -161,7 +187,7 @@
             jsonInput.value = text;
             loadJsonText(text);
         } catch (error) {
-            setStatus(error.message || 'JSON 檔案無法讀取。', true);
+            setImportStatus(error.message || 'JSON 檔案無法讀取。', true);
         }
     });
 
@@ -236,5 +262,7 @@
         }
     });
 
-    setStatus('每家店使用一份 JSON；匯入或貼上後可直接修改。離開前請匯出保存。');
+    importStatus.textContent = '每家店一份 JSON';
+    status.textContent = '修改後匯出或複製，離開前請保存。';
+    dialogStatus.textContent = '貼上 JSON，或選擇此店的 JSON 檔案。';
 })();

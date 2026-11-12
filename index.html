@@ -2661,6 +2661,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      height: 38px;
       min-height: 38px;
       padding: .38rem .62rem;
       border: 1px solid var(--border);
@@ -2684,42 +2685,81 @@
       cursor: not-allowed;
     }
 
-    .refund-ledger-records {
-      .refund-json-editor {
-        margin-bottom: .85rem;
-        padding: .75rem;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        background: rgba(255, 255, 255, .02);
-      }
+    .refund-json-import-toolbar {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      margin-bottom: .7rem;
+      padding-bottom: .65rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-      .refund-json-editor textarea {
-        width: 100%;
-        min-height: 7rem;
-        margin-top: .25rem;
-        padding: .55rem;
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        background: var(--bg);
-        color: var(--text);
-        font: .72rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
-        overflow: auto;
-        resize: vertical;
-      }
+    .refund-json-import-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.4;
+    }
 
-      .refund-json-editor .refund-ledger-actions {
-        align-items: center;
-      }
+    .refund-json-import-status.is-error,
+    .refund-json-export-status.is-error {
+      color: #f87171;
+    }
 
-      .refund-json-editor [hidden] {
-        display: none !important;
-      }
+    .refund-json-dialog {
+      width: min(94vw, 660px);
+      max-height: 90vh;
+      margin: auto;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      overflow: auto;
+    }
 
-      .refund-invoice-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: .65rem;
-      }
+    .refund-json-dialog::backdrop {
+      background: rgba(0, 0, 0, .72);
+    }
+
+    .refund-json-dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .65rem;
+    }
+
+    .refund-json-dialog textarea {
+      width: 100%;
+      min-height: 13rem;
+      max-height: 50vh;
+      padding: .6rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg);
+      color: var(--text);
+      font: .72rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+      resize: vertical;
+    }
+
+    .refund-json-export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .45rem;
+      margin-top: .75rem;
+      padding-top: .65rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-json-export-status {
+      flex: 1 1 100%;
+      margin: 0;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.4;
+    }
 
       .refund-field {
         display: flex;
@@ -2872,6 +2912,26 @@
         .refund-calc-fields {
           grid-template-columns: minmax(0, 1fr);
           gap: .6rem;
+        }
+
+        .refund-item-row {
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) 3rem 2.2rem;
+          gap: .3rem;
+          padding: .4rem;
+        }
+
+        .refund-item-row .refund-field label {
+          font-size: .66rem;
+        }
+
+        .refund-item-row .refund-field input {
+          padding: .42rem .32rem;
+          font-size: .72rem;
+        }
+
+        .refund-item-remove {
+          width: 2.2rem;
+          height: 2.2rem;
         }
 
         .refund-result-breakdown {
@@ -4480,22 +4540,10 @@
             <p class="day-sub">估算扣除 Cash Japan 服務費並按 ¥50 級距取整後的退款。</p>
           </div>
           <div class="refund-calc-body">
-            <section class="refund-json-editor refund-export-hide" aria-labelledby="refund-json-title">
-              <h3 class="refund-ledger-heading" id="refund-json-title">單店 JSON</h3>
-              <p class="refund-ledger-status" id="refund-json-status" aria-live="polite"></p>
-              <label class="refund-field" for="refund-json-input">貼上 JSON，或選擇該店的 JSON 檔</label>
-              <textarea id="refund-json-input" spellcheck="false" placeholder="貼上此店的退稅 JSON，然後按「載入 JSON」"></textarea>
-              <div class="refund-ledger-actions">
-                <button class="refund-ledger-button primary" id="refund-json-load" type="button">載入 JSON</button>
-                <label class="refund-ledger-button" for="refund-json-file">選擇 JSON 檔</label>
-                <input id="refund-json-file" type="file" accept="application/json,.json" hidden>
-                <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
-                <button class="refund-ledger-button" id="refund-json-copy" type="button">複製 JSON</button>
-              </div>
-              <label class="refund-field" for="refund-json-legacy-store" id="refund-json-legacy-label"
-                hidden>舊備份中的店家</label>
-              <select id="refund-json-legacy-store" aria-labelledby="refund-json-legacy-label" hidden></select>
-            </section>
+            <div class="refund-json-import-toolbar refund-export-hide">
+              <button class="refund-ledger-button" id="refund-json-open" type="button">匯入 JSON</button>
+              <p class="refund-json-import-status" id="refund-json-import-status" aria-live="polite">每家店使用一份 JSON。</p>
+            </div>
             <div class="refund-calc-fields">
               <div class="refund-field refund-store-name-field">
                 <label for="cash-calc-store-name">商店名稱</label>
@@ -4562,15 +4610,17 @@
                 <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
                 <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
               </div>
-              <div class="refund-invoice-actions refund-export-hide">
-                <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出帳單圖片</button>
-              </div>
-              <div class="refund-ledger-status refund-export-hide" id="cash-calc-export-status" aria-live="polite">
-              </div>
             </div>
             <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
               10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
                 rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
+            <div class="refund-json-export-actions refund-export-hide">
+              <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出帳單圖片</button>
+              <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
+              <button class="refund-ledger-button" id="refund-json-copy" type="button">複製 JSON</button>
+              <p class="refund-json-export-status" id="cash-calc-export-status" aria-live="polite"></p>
+              <p class="refund-json-export-status" id="refund-json-status" aria-live="polite">離開前請匯出保存。</p>
+            </div>
           </div>
         </section>
       </div>
@@ -4583,6 +4633,22 @@
     </div>
     <div class="schedule-scroll" id="schedule-modal-table"></div>
     <div class="schedule-note" id="schedule-modal-note"></div>
+  </dialog>
+  <dialog aria-labelledby="refund-json-dialog-title" class="refund-json-dialog" id="refund-json-dialog">
+    <div class="refund-json-dialog-header">
+      <h2 class="refund-ledger-heading" id="refund-json-dialog-title">匯入單店 JSON</h2>
+      <button class="refund-ledger-button" id="refund-json-dialog-close" type="button">關閉</button>
+    </div>
+    <p class="refund-ledger-status" id="refund-json-dialog-status" aria-live="polite">貼上該店 JSON，或選擇 JSON 檔案。</p>
+    <label class="refund-field" for="refund-json-input">JSON 內容</label>
+    <textarea id="refund-json-input" spellcheck="false" placeholder="貼上此店的退稅 JSON"></textarea>
+    <div class="refund-ledger-actions">
+      <button class="refund-ledger-button primary" id="refund-json-load" type="button">載入 JSON</button>
+      <label class="refund-ledger-button" for="refund-json-file">選擇 JSON 檔</label>
+      <input id="refund-json-file" type="file" accept="application/json,.json" hidden>
+    </div>
+    <label class="refund-field" for="refund-json-legacy-store" id="refund-json-legacy-label" hidden>舊備份中的店家</label>
+    <select id="refund-json-legacy-store" aria-labelledby="refund-json-legacy-label" hidden></select>
   </dialog>
   <!-- SCRIPTS -->
   <script src="./cashJapanCalculator.js"></script>
