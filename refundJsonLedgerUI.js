@@ -1,10 +1,10 @@
 (function () {
     const status = document.getElementById('refund-json-status');
-    const recordsElement = document.getElementById('refund-json-records');
-    const importInput = document.getElementById('refund-json-import');
-    const copyDialog = document.getElementById('refund-json-copy-dialog');
-    const copyTextarea = document.getElementById('refund-json-copy-content');
-    let records = [];
+    const jsonInput = document.getElementById('refund-json-input');
+    const fileInput = document.getElementById('refund-json-file');
+    const legacyStoreSelect = document.getElementById('refund-json-legacy-store');
+    let importedRecords = [];
+    let activeRecord = null;
 
     function setStatus(message, isError = false) {
         status.textContent = message;
@@ -43,73 +43,35 @@
 
         const calculation = window.cashJapanCalculator.calculateCashJapanRefund({ mode, amount, taxRate, exchangeRate });
         const now = new Date().toISOString();
+        const sameStore = activeRecord && activeRecord.storeName === storeName;
         return window.refundLedger.createRefundRecord({
+            id: sameStore ? activeRecord.id : '',
             storeName,
             items,
             calculationMode: mode,
             taxRate,
             exchangeRate,
-            createdAt: now,
+            createdAt: sameStore ? activeRecord.createdAt : now,
             updatedAt: now,
             calculation,
         });
     }
 
-    function renderRecords() {
-        recordsElement.replaceChildren();
-        if (!records.length) {
-            const empty = document.createElement('div');
-            empty.className = 'refund-ledger-empty';
-            empty.textContent = '尚無記帳；新增本筆後即可匯出或複製整份 JSON。';
-            recordsElement.append(empty);
-            return;
-        }
-
-        records.forEach((record, index) => {
-            const row = document.createElement('div');
-            row.className = 'refund-ledger-record';
-            const main = document.createElement('div');
-            main.className = 'refund-ledger-record-main';
-            const title = document.createElement('strong');
-            title.textContent = record.storeName;
-            const detail = document.createElement('small');
-            detail.textContent = `${record.items.map((item) => item.name).join('、')} · ¥${Number(record.payoutYen).toLocaleString('ja-JP')}`;
-            main.append(title, detail);
-
-            const actions = document.createElement('div');
-            actions.className = 'refund-ledger-record-actions';
-            const loadButton = document.createElement('button');
-            loadButton.className = 'refund-ledger-button';
-            loadButton.type = 'button';
-            loadButton.textContent = '載入';
-            loadButton.addEventListener('click', () => loadRecord(record));
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'refund-ledger-button';
-            deleteButton.type = 'button';
-            deleteButton.textContent = '刪除';
-            deleteButton.addEventListener('click', () => {
-                records.splice(index, 1);
-                renderRecords();
-                setStatus(`已從本頁清單移除「${record.storeName}」；需匯出 JSON 才會保存變更。`);
-            });
-            actions.append(loadButton, deleteButton);
-            row.append(main, actions);
-            recordsElement.append(row);
-        });
-    }
-
     function loadRecord(record) {
-        document.getElementById('cash-calc-store-name').value = record.storeName;
-        document.getElementById('cash-calc-mode').value = record.calculationMode || 'items';
-        document.getElementById('cash-calc-tax-rate').value = String(record.taxRate);
-        document.getElementById('cash-calc-fx').value = String(record.exchangeRate);
+        activeRecord = window.refundLedger.createRefundRecord(record);
+        document.getElementById('cash-calc-store-name').value = activeRecord.storeName;
+        document.getElementById('cash-calc-mode').value = activeRecord.calculationMode;
+        document.getElementById('cash-calc-tax-rate').value = String(activeRecord.taxRate);
+        document.getElementById('cash-calc-fx').value = String(activeRecord.exchangeRate);
         const amountInput = document.getElementById('cash-calc-amount');
-        amountInput.value = String(record.calculationMode === 'refund' ? record.refundBeforeFeeYen : record.purchaseTotalYen);
+        amountInput.value = String(activeRecord.calculationMode === 'refund'
+            ? activeRecord.refundBeforeFeeYen
+            : activeRecord.purchaseTotalYen);
 
         const itemContainer = document.getElementById('cash-calc-items');
-        const itemRows = Array.from(itemContainer.querySelectorAll('[data-item-row]'));
-        while (itemRows.length > 1) itemRows.pop().remove();
-        record.items.forEach((item, index) => {
+        const rows = Array.from(itemContainer.querySelectorAll('[data-item-row]'));
+        while (rows.length > 1) rows.pop().remove();
+        activeRecord.items.forEach((item, index) => {
             if (index > 0) document.getElementById('cash-calc-add-item').click();
             const row = itemContainer.querySelectorAll('[data-item-row]')[index];
             row.querySelector('[data-item-name]').value = item.name;
@@ -119,65 +81,97 @@
         document.getElementById('cash-calc-mode').dispatchEvent(new Event('change', { bubbles: true }));
         amountInput.dispatchEvent(new Event('input', { bubbles: true }));
         itemContainer.dispatchEvent(new Event('input', { bubbles: true }));
-        setStatus(`已載入「${record.storeName}」。修改後按「加入本筆」新增一筆記錄。`);
+        setStatus(`已載入「${activeRecord.storeName}」，可直接修改後匯出。`);
         document.getElementById('refund-calc-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function getExportText() {
-        const exportRecords = records.length ? records : [readCurrentRecord()];
-        return window.refundLedger.serializeRefundBackup(exportRecords);
+    function serializeCurrentRecord() {
+        const record = readCurrentRecord();
+        const text = window.refundLedger.serializeRefundBackup(record);
+        activeRecord = record;
+        jsonInput.value = text;
+        return { record, text };
     }
 
-    function downloadJson(text) {
+    function downloadJson(text, storeName) {
         const blob = new Blob([text], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
+        const safeStoreName = storeName.replace(/[\\/:*?"<>|]/g, '_').slice(0, 60) || 'refund';
         link.href = url;
-        link.download = `refund-ledger-${new Date().toISOString().slice(0, 10)}.json`;
+        link.download = `${safeStoreName}-refund.json`;
         document.body.append(link);
         link.click();
         link.remove();
         window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
-    function showCopyFallback(text) {
-        copyTextarea.value = text;
-        copyDialog.showModal();
-        copyTextarea.focus();
-        copyTextarea.select();
-        copyTextarea.setSelectionRange(0, text.length);
-        let copied = false;
-        try {
-            copied = document.execCommand('copy');
-        } catch (_error) {
-            copied = false;
-        }
-        if (copied) {
-            copyDialog.close();
-            setStatus('JSON 已複製，可貼到記事本。');
-        } else {
-            setStatus('請在文字框全選並複製 JSON，再貼到記事本。');
-        }
+    function selectLegacyRecord(index) {
+        const record = importedRecords[Number(index)];
+        if (!record) return;
+        loadRecord(record);
+        jsonInput.value = window.refundLedger.serializeRefundBackup(record);
     }
 
-    document.getElementById('refund-json-add-record').addEventListener('click', () => {
+    function loadJsonText(text) {
+        const backup = window.refundLedger.parseRefundBackup(text);
+        importedRecords = backup.records;
+        legacyStoreSelect.replaceChildren();
+        legacyStoreSelect.hidden = importedRecords.length < 2;
+
+        if (importedRecords.length === 1) {
+            loadRecord(importedRecords[0]);
+            jsonInput.value = window.refundLedger.serializeRefundBackup(importedRecords[0]);
+            return;
+        }
+
+        importedRecords.forEach((record, index) => {
+            const option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = record.storeName;
+            legacyStoreSelect.append(option);
+        });
+        legacyStoreSelect.value = '0';
+        selectLegacyRecord(0);
+        setStatus(`舊備份含 ${importedRecords.length} 家店，已載入第一家；可從上方選擇其他店家後各自匯出。`);
+    }
+
+    function showCopyFallback(text) {
+        jsonInput.value = text;
+        jsonInput.focus();
+        jsonInput.select();
+        jsonInput.setSelectionRange(0, text.length);
+        setStatus('JSON 已選取，請複製後貼到記事本。');
+    }
+
+    document.getElementById('refund-json-load').addEventListener('click', () => {
         try {
-            const record = readCurrentRecord();
-            records.push(record);
-            renderRecords();
-            setStatus(`已加入「${record.storeName}」。匯出 JSON 才會保存這份清單。`);
+            loadJsonText(jsonInput.value);
         } catch (error) {
-            setStatus(error.message || '無法新增記錄。', true);
+            setStatus(error.message || 'JSON 匯入失敗；請確認格式。', true);
         }
     });
 
+    fileInput.addEventListener('change', async () => {
+        const file = fileInput.files[0];
+        fileInput.value = '';
+        if (!file) return;
+        try {
+            const text = await file.text();
+            jsonInput.value = text;
+            loadJsonText(text);
+        } catch (error) {
+            setStatus(error.message || 'JSON 檔案無法讀取。', true);
+        }
+    });
+
+    legacyStoreSelect.addEventListener('change', () => selectLegacyRecord(legacyStoreSelect.value));
+
     document.getElementById('refund-json-export').addEventListener('click', () => {
         try {
-            const text = getExportText();
-            downloadJson(text);
-            setStatus(records.length
-                ? `已匯出 ${records.length} 筆 JSON 備份。`
-                : '已匯出目前試算的 JSON；新增至清單後可匯出多筆記錄。');
+            const { record, text } = serializeCurrentRecord();
+            downloadJson(text, record.storeName);
+            setStatus(`已匯出「${record.storeName}」的單店 JSON。`);
         } catch (error) {
             setStatus(error.message || 'JSON 匯出失敗。', true);
         }
@@ -185,11 +179,11 @@
 
     document.getElementById('refund-json-copy').addEventListener('click', async () => {
         try {
-            const text = getExportText();
+            const { record, text } = serializeCurrentRecord();
             if (navigator.clipboard?.writeText) {
                 try {
                     await navigator.clipboard.writeText(text);
-                    setStatus('JSON 已複製，可貼到記事本。');
+                    setStatus(`已複製「${record.storeName}」的 JSON，可貼到記事本。`);
                     return;
                 } catch (_error) {
                     showCopyFallback(text);
@@ -202,52 +196,22 @@
         }
     });
 
-    importInput.addEventListener('change', async () => {
-        const file = importInput.files[0];
-        importInput.value = '';
-        if (!file) return;
-        try {
-            const backup = window.refundLedger.parseRefundBackup(await file.text());
-            records = backup.records;
-            renderRecords();
-            setStatus(`已匯入 ${records.length} 筆，並取代目前頁面的記帳清單。`);
-        } catch (error) {
-            setStatus(error.message || 'JSON 匯入失敗；請確認備份格式。', true);
-        }
-    });
-
-    document.getElementById('refund-json-copy-close').addEventListener('click', () => copyDialog.close());
-
     document.getElementById('cash-calc-export-image').addEventListener('click', async () => {
         const exportStatus = document.getElementById('cash-calc-export-status');
         const button = document.getElementById('cash-calc-export-image');
         button.disabled = true;
-        exportStatus.textContent = '正在產生記帳圖片…';
+        exportStatus.textContent = '正在排版帳單…';
         try {
-            if (typeof window.html2canvas !== 'function') throw new Error('截圖工具尚未載入。');
-            const panel = document.getElementById('refund-calc-panel');
-            const bounds = panel.getBoundingClientRect();
-            const canvas = await window.html2canvas(panel, {
-                backgroundColor: '#111820',
-                scale: Math.min(window.devicePixelRatio || 1, 2),
-                useCORS: true,
-                ignoreElements: (element) => element.classList?.contains('refund-export-hide'),
-                width: Math.ceil(bounds.width),
-                height: Math.ceil(bounds.height),
-                windowWidth: document.documentElement.clientWidth,
-                windowHeight: Math.max(document.documentElement.scrollHeight, Math.ceil(bounds.height)),
-                onclone: (clonedDocument) => {
-                    const activeDay = clonedDocument.getElementById('static-day-6');
-                    if (activeDay) activeDay.style.display = 'block';
-                },
-            });
+            const record = readCurrentRecord();
+            const canvas = window.refundInvoice.renderRefundInvoiceCanvas(record);
             const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-            if (!blob) throw new Error('圖片產生失敗。');
-            const file = new File([blob], `refund-${new Date().toISOString().slice(0, 10)}.png`, { type: 'image/png' });
+            if (!blob) throw new Error('帳單圖片產生失敗。');
+            const safeStoreName = record.storeName.replace(/[\\/:*?"<>|]/g, '_').slice(0, 60) || 'refund';
+            const file = new File([blob], `${safeStoreName}-refund.png`, { type: 'image/png' });
             if (navigator.canShare?.({ files: [file] })) {
                 try {
-                    await navigator.share({ files: [file], title: 'Cash Japan 退稅試算' });
-                    exportStatus.textContent = '已開啟分享面板，選擇「儲存影像」即可存入照片。';
+                    await navigator.share({ files: [file], title: `${record.storeName} 退稅估算帳單` });
+                    exportStatus.textContent = '帳單已開啟分享面板，可選「儲存影像」。';
                     return;
                 } catch (error) {
                     if (error.name === 'AbortError') {
@@ -264,14 +228,13 @@
             link.click();
             link.remove();
             window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-            exportStatus.textContent = 'PNG 已下載；iPhone 可在分享面板選擇儲存影像。';
+            exportStatus.textContent = '帳單 PNG 已下載。';
         } catch (error) {
-            exportStatus.textContent = error.message || '圖片匯出失敗。';
+            exportStatus.textContent = error.message || '帳單圖片匯出失敗。';
         } finally {
             button.disabled = false;
         }
     });
 
-    renderRecords();
-    setStatus('記帳只暫存在目前頁面；關閉前請匯出 JSON 備份。');
+    setStatus('每家店使用一份 JSON；匯入或貼上後可直接修改。離開前請匯出保存。');
 })();

@@ -2629,12 +2629,6 @@
       font-weight: 700;
     }
 
-    .refund-ledger-panel {
-      margin-top: .9rem;
-      padding-top: .75rem;
-      border-top: 1px solid var(--border);
-    }
-
     .refund-ledger-heading {
       margin: 0 0 .45rem;
       color: #fb923c;
@@ -2659,15 +2653,14 @@
       align-items: end;
     }
 
-    .refund-ledger-panel [hidden] {
-      display: none !important;
-    }
-
     .refund-ledger-actions {
       margin-top: .55rem;
     }
 
     .refund-ledger-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-height: 38px;
       padding: .38rem .62rem;
       border: 1px solid var(--border);
@@ -2676,6 +2669,7 @@
       color: var(--text);
       font: inherit;
       font-size: .74rem;
+      line-height: 1.2;
       cursor: pointer;
     }
 
@@ -2691,245 +2685,204 @@
     }
 
     .refund-ledger-records {
-      display: grid;
-      gap: .35rem;
-      margin-top: .55rem;
-    }
-
-    .refund-ledger-record {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: .35rem;
-      padding: .45rem .55rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: .74rem;
-    }
-
-    .refund-ledger-record-main {
-      display: grid;
-      gap: .12rem;
-      min-width: 0;
-    }
-
-    .refund-ledger-record-main strong {
-      overflow-wrap: anywhere;
-    }
-
-    .refund-ledger-record-main small {
-      color: var(--muted);
-    }
-
-    .refund-ledger-record-actions {
-      display: flex;
-      gap: .3rem;
-    }
-
-    .refund-ledger-empty {
-      color: var(--muted);
-      font-size: .72rem;
-    }
-
-    .refund-json-copy-dialog {
-      width: min(92vw, 680px);
-      max-height: 85vh;
-      margin: auto;
-      padding: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-    }
-
-    .refund-json-copy-dialog::backdrop {
-      background: rgba(0, 0, 0, .72);
-    }
-
-    .refund-json-copy-text {
-      width: 100%;
-      min-height: 45vh;
-      max-height: 60vh;
-      margin-top: .55rem;
-      padding: .65rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg);
-      color: var(--text);
-      font: .72rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
-      overflow: auto;
-      resize: vertical;
-    }
-
-    .refund-screenshot-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: .65rem;
-    }
-
-    .refund-field {
-      display: flex;
-      flex-direction: column;
-      gap: .3rem;
-      min-width: 0;
-    }
-
-    .refund-field[hidden] {
-      display: none !important;
-    }
-
-    .refund-field label {
-      font-size: .78rem;
-      font-weight: 700;
-    }
-
-    .refund-field input,
-    .refund-field select {
-      width: 100%;
-      min-width: 0;
-      padding: .55rem .65rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--card2);
-      color: var(--text);
-      font: inherit;
-    }
-
-    .refund-field input:focus-visible,
-    .refund-field select:focus-visible,
-    .refund-rate-row button:focus-visible {
-      outline: 2px solid #fb923c;
-      outline-offset: 2px;
-    }
-
-    .refund-field small,
-    .refund-calc-note,
-    .refund-rate-status {
-      color: var(--muted);
-      font-size: .72rem;
-      line-height: 1.45;
-    }
-
-    .refund-rate-row {
-      display: flex;
-      gap: .4rem;
-    }
-
-    .refund-rate-row button {
-      flex: 0 0 auto;
-      padding: .45rem .6rem;
-      border: 1px solid rgba(249, 115, 22, .45);
-      border-radius: 6px;
-      background: transparent;
-      color: #fb923c;
-      font: inherit;
-      font-size: .75rem;
-      cursor: pointer;
-    }
-
-    .refund-rate-status {
-      margin-top: .35rem;
-    }
-
-    .refund-calc-result {
-      margin-top: .9rem;
-      padding-top: .8rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .refund-result-main {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: .25rem .7rem;
-      color: #fb923c;
-    }
-
-    .refund-result-main strong {
-      font-size: 1.25rem;
-    }
-
-    .refund-result-breakdown {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: .4rem .8rem;
-      margin: .65rem 0 0;
-      font-size: .76rem;
-    }
-
-    .refund-result-breakdown div {
-      min-width: 0;
-    }
-
-    .refund-result-breakdown dt {
-      color: var(--muted);
-    }
-
-    .refund-result-breakdown dd {
-      margin: .12rem 0 0;
-      font-weight: 700;
-    }
-
-    .refund-calc-message {
-      margin-top: .55rem;
-      color: var(--muted);
-      font-size: .76rem;
-      line-height: 1.5;
-    }
-
-    .refund-formula {
-      margin-top: .7rem;
-      padding-top: .65rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .refund-formula-title {
-      color: #fb923c;
-      font-size: .75rem;
-      font-weight: 700;
-    }
-
-    .refund-formula-steps {
-      display: grid;
-      gap: .22rem;
-      margin: .35rem 0 0;
-      padding-left: 1.15rem;
-      color: var(--muted);
-      font-size: .72rem;
-      line-height: 1.5;
-    }
-
-    .refund-formula-steps li {
-      padding-left: .1rem;
-      overflow-wrap: anywhere;
-    }
-
-    .refund-calc-note {
-      margin-top: .75rem;
-    }
-
-    @media (max-width: 520px) {
-
-      .refund-panel-body,
-      .refund-calc-body {
-        padding: .7rem;
+      .refund-json-editor {
+        margin-bottom: .85rem;
+        padding: .75rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, .02);
       }
 
-      .refund-calc-fields {
-        grid-template-columns: minmax(0, 1fr);
-        gap: .6rem;
+      .refund-json-editor textarea {
+        width: 100%;
+        min-height: 7rem;
+        margin-top: .25rem;
+        padding: .55rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--bg);
+        color: var(--text);
+        font: .72rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+        overflow: auto;
+        resize: vertical;
+      }
+
+      .refund-json-editor .refund-ledger-actions {
+        align-items: center;
+      }
+
+      .refund-json-editor [hidden] {
+        display: none !important;
+      }
+
+      .refund-invoice-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: .65rem;
+      }
+
+      .refund-field {
+        display: flex;
+        flex-direction: column;
+        gap: .3rem;
+        min-width: 0;
+      }
+
+      .refund-field[hidden] {
+        display: none !important;
+      }
+
+      .refund-field label {
+        font-size: .78rem;
+        font-weight: 700;
+      }
+
+      .refund-field input,
+      .refund-field select {
+        width: 100%;
+        min-width: 0;
+        padding: .55rem .65rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--card2);
+        color: var(--text);
+        font: inherit;
+      }
+
+      .refund-field input:focus-visible,
+      .refund-field select:focus-visible,
+      .refund-rate-row button:focus-visible {
+        outline: 2px solid #fb923c;
+        outline-offset: 2px;
+      }
+
+      .refund-field small,
+      .refund-calc-note,
+      .refund-rate-status {
+        color: var(--muted);
+        font-size: .72rem;
+        line-height: 1.45;
+      }
+
+      .refund-rate-row {
+        display: flex;
+        gap: .4rem;
+      }
+
+      .refund-rate-row button {
+        flex: 0 0 auto;
+        padding: .45rem .6rem;
+        border: 1px solid rgba(249, 115, 22, .45);
+        border-radius: 6px;
+        background: transparent;
+        color: #fb923c;
+        font: inherit;
+        font-size: .75rem;
+        cursor: pointer;
+      }
+
+      .refund-rate-status {
+        margin-top: .35rem;
+      }
+
+      .refund-calc-result {
+        margin-top: .9rem;
+        padding-top: .8rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .refund-result-main {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: .25rem .7rem;
+        color: #fb923c;
+      }
+
+      .refund-result-main strong {
+        font-size: 1.25rem;
       }
 
       .refund-result-breakdown {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: .4rem .8rem;
+        margin: .65rem 0 0;
+        font-size: .76rem;
       }
-    }
 
-    .tabs a.tab {
-      color: inherit;
-      text-decoration: none
-    }
+      .refund-result-breakdown div {
+        min-width: 0;
+      }
+
+      .refund-result-breakdown dt {
+        color: var(--muted);
+      }
+
+      .refund-result-breakdown dd {
+        margin: .12rem 0 0;
+        font-weight: 700;
+      }
+
+      .refund-calc-message {
+        margin-top: .55rem;
+        color: var(--muted);
+        font-size: .76rem;
+        line-height: 1.5;
+      }
+
+      .refund-formula {
+        margin-top: .7rem;
+        padding-top: .65rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .refund-formula-title {
+        color: #fb923c;
+        font-size: .75rem;
+        font-weight: 700;
+      }
+
+      .refund-formula-steps {
+        display: grid;
+        gap: .22rem;
+        margin: .35rem 0 0;
+        padding-left: 1.15rem;
+        color: var(--muted);
+        font-size: .72rem;
+        line-height: 1.5;
+      }
+
+      .refund-formula-steps li {
+        padding-left: .1rem;
+        overflow-wrap: anywhere;
+      }
+
+      .refund-calc-note {
+        margin-top: .75rem;
+      }
+
+      @media (max-width: 520px) {
+
+        .refund-panel-body,
+        .refund-calc-body {
+          padding: .7rem;
+        }
+
+        .refund-calc-fields {
+          grid-template-columns: minmax(0, 1fr);
+          gap: .6rem;
+        }
+
+        .refund-result-breakdown {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .tabs a.tab {
+        color: inherit;
+        text-decoration: none
+      }
   </style>
 </head>
 
@@ -4527,6 +4480,22 @@
             <p class="day-sub">估算扣除 Cash Japan 服務費並按 ¥50 級距取整後的退款。</p>
           </div>
           <div class="refund-calc-body">
+            <section class="refund-json-editor refund-export-hide" aria-labelledby="refund-json-title">
+              <h3 class="refund-ledger-heading" id="refund-json-title">單店 JSON</h3>
+              <p class="refund-ledger-status" id="refund-json-status" aria-live="polite"></p>
+              <label class="refund-field" for="refund-json-input">貼上 JSON，或選擇該店的 JSON 檔</label>
+              <textarea id="refund-json-input" spellcheck="false" placeholder="貼上此店的退稅 JSON，然後按「載入 JSON」"></textarea>
+              <div class="refund-ledger-actions">
+                <button class="refund-ledger-button primary" id="refund-json-load" type="button">載入 JSON</button>
+                <label class="refund-ledger-button" for="refund-json-file">選擇 JSON 檔</label>
+                <input id="refund-json-file" type="file" accept="application/json,.json" hidden>
+                <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
+                <button class="refund-ledger-button" id="refund-json-copy" type="button">複製 JSON</button>
+              </div>
+              <label class="refund-field" for="refund-json-legacy-store" id="refund-json-legacy-label"
+                hidden>舊備份中的店家</label>
+              <select id="refund-json-legacy-store" aria-labelledby="refund-json-legacy-label" hidden></select>
+            </section>
             <div class="refund-calc-fields">
               <div class="refund-field refund-store-name-field">
                 <label for="cash-calc-store-name">商店名稱</label>
@@ -4593,8 +4562,8 @@
                 <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
                 <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
               </div>
-              <div class="refund-screenshot-actions refund-export-hide">
-                <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出記帳圖片</button>
+              <div class="refund-invoice-actions refund-export-hide">
+                <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出帳單圖片</button>
               </div>
               <div class="refund-ledger-status refund-export-hide" id="cash-calc-export-status" aria-live="polite">
               </div>
@@ -4602,18 +4571,6 @@
             <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
               10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
                 rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
-            <section class="refund-ledger-panel refund-export-hide" aria-labelledby="refund-ledger-title">
-              <h3 class="refund-ledger-heading" id="refund-ledger-title">JSON 記帳</h3>
-              <p class="refund-ledger-status" id="refund-json-status" aria-live="polite"></p>
-              <div class="refund-ledger-actions refund-export-hide">
-                <button class="refund-ledger-button primary" id="refund-json-add-record" type="button">加入本筆</button>
-                <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
-                <button class="refund-ledger-button" id="refund-json-copy" type="button">複製 JSON</button>
-                <label class="refund-ledger-button" for="refund-json-import">匯入 JSON</label>
-                <input id="refund-json-import" type="file" accept="application/json,.json" hidden>
-              </div>
-              <div class="refund-ledger-records" id="refund-json-records"></div>
-            </section>
           </div>
         </section>
       </div>
@@ -4627,19 +4584,10 @@
     <div class="schedule-scroll" id="schedule-modal-table"></div>
     <div class="schedule-note" id="schedule-modal-note"></div>
   </dialog>
-  <dialog aria-labelledby="refund-json-copy-title" class="refund-json-copy-dialog" id="refund-json-copy-dialog">
-    <div class="refund-ledger-actions">
-      <h2 class="refund-ledger-heading" id="refund-json-copy-title">JSON 備份內容</h2>
-      <button class="refund-ledger-button" id="refund-json-copy-close" type="button">關閉</button>
-    </div>
-    <p class="refund-ledger-status">若沒有自動複製，請在文字框全選並複製。</p>
-    <textarea class="refund-json-copy-text" id="refund-json-copy-content" aria-label="JSON 備份內容" readonly
-      spellcheck="false"></textarea>
-  </dialog>
   <!-- SCRIPTS -->
-  <script src="./assets/vendor/html2canvas.min.js"></script>
   <script src="./cashJapanCalculator.js"></script>
   <script src="./refundLedger.js"></script>
+  <script src="./refundInvoice.js"></script>
   <script src="./refundJsonLedgerUI.js"></script>
   <script>
     const TRIP = {

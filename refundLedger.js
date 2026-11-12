@@ -1,6 +1,6 @@
 (function (root) {
     const BACKUP_FORMAT = 'kansai-tax-refund-ledger';
-    const BACKUP_VERSION = 1;
+    const BACKUP_VERSION = 2;
 
     function toIsoString(value) {
         if (value && typeof value.toDate === 'function') value = value.toDate();
@@ -71,18 +71,58 @@
         };
     }
 
-    function createRefundBackup(records, exportedAt = new Date()) {
-        if (!Array.isArray(records)) throw new TypeError('Backup records must be an array.');
+    function createRefundBackup(record, exportedAt = new Date()) {
+        if (!record || Array.isArray(record)) throw new TypeError('A backup must contain one store record.');
         return {
             format: BACKUP_FORMAT,
             version: BACKUP_VERSION,
             exportedAt: toIsoString(exportedAt),
-            records: records.map((record) => createRefundRecord(record)),
+            records: [createRefundRecord(record)],
         };
     }
 
-    function serializeRefundBackup(records, exportedAt = new Date()) {
-        return JSON.stringify(createRefundBackup(records, exportedAt), null, 2);
+    function serializeRefundBackup(record, exportedAt = new Date()) {
+        return JSON.stringify(createRefundBackup(record, exportedAt), null, 2);
+    }
+
+    function createRefundInvoiceModel(input, issuedAt = new Date()) {
+        const record = createRefundRecord(input);
+        const refundEligible = record.calculationMode !== 'refund'
+            && record.taxExclusivePurchaseYen >= 5000
+            && record.refundBeforeFeeYen > 0;
+        const taxPercent = Math.round(record.taxRate * 100);
+        const formatYen = (value, fractionDigits = 0) => Number(value).toLocaleString('ja-JP', {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits,
+        });
+        return {
+            ...record,
+            issuedAt: toIsoString(issuedAt),
+            refundEligible,
+            items: record.items.map((item) => {
+                const estimatedRefundYen = refundEligible
+                    ? Math.round((item.subtotalYen * record.taxRate / (1 + record.taxRate)) * 100) / 100
+                    : null;
+                const postRefundUnitPriceYen = estimatedRefundYen === null
+                    ? null
+                    : Math.round((item.priceYen - estimatedRefundYen / item.quantity) * 100) / 100;
+                const refundFormula = record.calculationMode === 'refund'
+                    ? '業者已提供退款額，不按商品拆分。'
+                    : refundEligible
+                        ? `¥${formatYen(item.priceYen)} × ${formatYen(item.quantity)} × ${taxPercent}% ÷ ${100 + taxPercent}% = ¥${formatYen(estimatedRefundYen, 2)}`
+                        : `未達退稅門檻：未稅總額 ¥${formatYen(record.taxExclusivePurchaseYen)} < ¥5,000`;
+                return {
+                    ...item,
+                    unitPriceYen: item.priceYen,
+                    estimatedRefundYen,
+                    postRefundUnitPriceYen,
+                    postRefundUnitPriceTwd: postRefundUnitPriceYen === null
+                        ? null
+                        : Math.round(postRefundUnitPriceYen * record.exchangeRate * 100) / 100,
+                    refundFormula,
+                };
+            }),
+        };
     }
 
     function parseRefundBackup(source) {
@@ -92,13 +132,16 @@
         } catch (_error) {
             throw new TypeError('Backup is not valid JSON.');
         }
-        if (!backup || backup.format !== BACKUP_FORMAT || backup.version !== BACKUP_VERSION) {
+        if (!backup || backup.format !== BACKUP_FORMAT || ![1, BACKUP_VERSION].includes(backup.version)) {
             throw new TypeError('Unsupported refund backup format or version.');
         }
         if (!Array.isArray(backup.records)) throw new TypeError('Backup records must be an array.');
+        if (backup.records.length === 0 || backup.version === BACKUP_VERSION && backup.records.length !== 1) {
+            throw new TypeError('Each JSON backup must contain exactly one store record.');
+        }
         return {
             format: BACKUP_FORMAT,
-            version: BACKUP_VERSION,
+            version: backup.version,
             exportedAt: toIsoString(backup.exportedAt),
             records: backup.records.map((record) => createRefundRecord(record)),
         };
@@ -110,6 +153,7 @@
         createRefundRecord,
         createRefundBackup,
         serializeRefundBackup,
+        createRefundInvoiceModel,
         parseRefundBackup,
     };
     if (typeof module !== 'undefined' && module.exports) module.exports = refundLedger;
