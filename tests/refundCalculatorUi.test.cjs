@@ -14,9 +14,13 @@ test('tax rate and exchange rate controls share a collapsed disclosure', () => {
     assert.doesNotMatch(disclosure[0], /<details\b[^>]*\bopen(?:\s|=|>)/);
 });
 
-test('item subtotal and after-refund unit render TWD estimates', () => {
-    assert.ok(/row\.querySelector\('\[data-item-subtotal-twd\]'\)/.test(html), 'subtotal TWD output should be queried');
-    assert.ok(/row\.querySelector\('\[data-item-after-unit-twd\]'\)/.test(html), 'after-refund TWD output should be queried');
-    assert.ok(/subtotalTwd\.textContent\s*=/.test(html), 'subtotal TWD output should be rendered');
-    assert.ok(/afterUnitTwd\.textContent\s*=/.test(html), 'after-refund TWD output should be rendered');
+test('item summary renders before-tax and after-tax totals and unit price in JPY and TWD', () => {
+    assert.ok(/退稅前總價/.test(html), 'before-refund total label should be shown');
+    assert.ok(/退稅後總價/.test(html), 'after-refund total label should be shown');
+    assert.ok(/退稅後單價/.test(html), 'after-refund unit label should be shown');
+    assert.ok(/row\.querySelector\('\[data-item-subtotal\]'\)\.textContent\s*=/.test(html), 'before-refund total should render both currencies');
+    assert.ok(/row\.querySelector\('\[data-item-after-total\]'\)/.test(html), 'after-refund total output should exist');
+    assert.ok(/row\.querySelector\('\[data-item-after-unit\]'\)/.test(html), 'after-refund unit output should exist');
+    assert.ok(/estimate\.afterRefundTotalYen \* exchangeRate/.test(html), 'after-refund total should convert to TWD');
+    assert.ok(/estimate\.afterRefundUnitTwd/.test(html), 'after-refund unit should render its TWD estimate');
 });

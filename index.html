@@ -2648,51 +2648,38 @@
     .refund-item-summary {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-      gap: .25rem .55rem;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr);
+      gap: .2rem;
+      align-items: stretch;
       min-width: 0;
       color: var(--muted);
       font-size: .68rem;
       line-height: 1.35;
     }
 
+    .refund-item-price-line {
+      display: flex;
+      justify-content: space-between;
+      gap: .45rem;
+      min-width: 0;
+    }
+
+    .refund-item-price-label {
+      flex: 0 0 auto;
+    }
+
     .refund-item-subtotal,
-    .refund-item-after-refund {
+    .refund-item-after-total,
+    .refund-item-after-unit {
       min-width: 0;
       overflow-wrap: anywhere;
       text-align: right;
     }
 
-    .refund-item-subtotal-group {
-      min-width: 0;
-      text-align: right;
-    }
-
-    .refund-item-twd {
-      display: block;
-      color: var(--muted);
-      font-size: .62rem;
-      font-weight: 400;
-    }
-
-    .refund-item-after-refund {
+    .refund-item-after-total,
+    .refund-item-after-unit {
       color: #fb923c;
       font-weight: 600;
-    }
-
-    .refund-item-after-unit {
-      display: block;
-      color: var(--muted);
-      font-size: .64rem;
-      font-weight: 400;
-    }
-
-    .refund-item-after-unit-twd {
-      display: block;
-      color: var(--muted);
-      font-size: .62rem;
-      font-weight: 400;
     }
 
     .refund-item-swipe:focus-visible,
@@ -3054,11 +3041,6 @@
 
         .refund-json-dialog textarea {
           font-size: 16px;
-        }
-
-        .refund-item-summary {
-          grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-          gap: .2rem .3rem;
         }
 
         .refund-result-breakdown {
@@ -6202,14 +6184,13 @@
 
       itemRows.forEach((row, index) => {
         row.querySelector('[data-item-name]').setAttribute('aria-label', `商品 ${index + 1} 名稱`);
-        row.querySelector('[data-item-subtotal]').textContent = `小計 ¥${cashJapanYenFormat.format(items[index].price * items[index].quantity)}`;
-        const subtotalTwd = row.querySelector('[data-item-subtotal-twd]');
-        subtotalTwd.textContent = items[index].price > 0 && Number.isFinite(exchangeRate) && exchangeRate > 0
-          ? `約 NT$${cashJapanTwdFormat.format(Math.round(items[index].price * items[index].quantity * exchangeRate))}`
-          : '';
-        row.querySelector('[data-item-after-total]').textContent = '—';
-        row.querySelector('[data-item-after-unit]').textContent = '';
-        row.querySelector('[data-item-after-unit-twd]').textContent = '';
+        const subtotalYen = items[index].price * items[index].quantity;
+        const subtotalTwd = Number.isFinite(exchangeRate) && exchangeRate > 0
+          ? `約 NT$${cashJapanTwdFormat.format(Math.round(subtotalYen * exchangeRate))}`
+          : 'NT$—';
+        row.querySelector('[data-item-subtotal]').textContent = `¥${cashJapanYenFormat.format(subtotalYen)} / ${subtotalTwd}`;
+        row.querySelector('[data-item-after-total]').textContent = '未達退稅門檻';
+        row.querySelector('[data-item-after-unit]').textContent = '未達退稅門檻';
       });
       document.getElementById('cash-calc-items-total').textContent = `合計 ¥${cashJapanYenFormat.format(itemsTotal)}`;
 
@@ -6236,16 +6217,12 @@
         const estimate = itemEstimates[index];
         const afterTotal = row.querySelector('[data-item-after-total]');
         const afterUnit = row.querySelector('[data-item-after-unit]');
-        const afterUnitTwd = row.querySelector('[data-item-after-unit-twd]');
         afterTotal.textContent = estimate.afterRefundTotalYen === null
           ? '未達退稅門檻'
-          : `退稅後總價 ¥${cashJapanYenFormat.format(estimate.afterRefundTotalYen)}`;
+          : `¥${cashJapanYenFormat.format(estimate.afterRefundTotalYen)} / 約 NT$${cashJapanTwdFormat.format(Math.round(estimate.afterRefundTotalYen * exchangeRate))}`;
         afterUnit.textContent = estimate.afterRefundUnitYen === null
-          ? ''
-          : `退稅後單價 ¥${cashJapanYenFormat.format(estimate.afterRefundUnitYen)}`;
-        afterUnitTwd.textContent = estimate.afterRefundUnitTwd === null
-          ? ''
-          : `約 NT$${cashJapanTwdFormat.format(estimate.afterRefundUnitTwd)}`;
+          ? '未達退稅門檻'
+          : `¥${cashJapanYenFormat.format(estimate.afterRefundUnitYen)} / 約 NT$${cashJapanTwdFormat.format(estimate.afterRefundUnitTwd)}`;
       });
       document.getElementById('cash-calc-result-jpy').textContent = `¥${cashJapanYenFormat.format(result.payoutYen)}`;
       document.getElementById('cash-calc-result-twd').textContent = `約 NT$${cashJapanTwdFormat.format(result.payoutTwd)}`;
@@ -6417,28 +6394,35 @@
         subtotal.className = 'refund-item-subtotal';
         subtotal.dataset.itemSubtotal = '';
 
-        const subtotalTwd = document.createElement('small');
-        subtotalTwd.className = 'refund-item-twd';
-        subtotalTwd.dataset.itemSubtotalTwd = '';
-
-        const subtotalGroup = document.createElement('div');
-        subtotalGroup.className = 'refund-item-subtotal-group';
-        subtotalGroup.append(subtotal, subtotalTwd);
-
         const summary = document.createElement('div');
         summary.className = 'refund-item-summary';
+        const subtotalLine = document.createElement('div');
+        subtotalLine.className = 'refund-item-price-line';
+        const subtotalLabel = document.createElement('span');
+        subtotalLabel.className = 'refund-item-price-label';
+        subtotalLabel.textContent = '退稅前總價';
+        subtotalLine.append(subtotalLabel, subtotal);
+
         const afterRefund = document.createElement('div');
-        afterRefund.className = 'refund-item-after-refund';
+        afterRefund.className = 'refund-item-price-line';
+        const afterTotalLabel = document.createElement('span');
+        afterTotalLabel.className = 'refund-item-price-label';
+        afterTotalLabel.textContent = '退稅後總價';
         const afterTotal = document.createElement('output');
+        afterTotal.className = 'refund-item-after-total';
         afterTotal.dataset.itemAfterTotal = '';
-        const afterUnit = document.createElement('small');
+        afterRefund.append(afterTotalLabel, afterTotal);
+
+        const afterUnitLine = document.createElement('div');
+        afterUnitLine.className = 'refund-item-price-line';
+        const afterUnitLabel = document.createElement('span');
+        afterUnitLabel.className = 'refund-item-price-label';
+        afterUnitLabel.textContent = '退稅後單價';
+        const afterUnit = document.createElement('output');
         afterUnit.className = 'refund-item-after-unit';
         afterUnit.dataset.itemAfterUnit = '';
-        const afterUnitTwd = document.createElement('small');
-        afterUnitTwd.className = 'refund-item-after-unit-twd';
-        afterUnitTwd.dataset.itemAfterUnitTwd = '';
-        afterRefund.append(afterTotal, afterUnit, afterUnitTwd);
-        summary.append(subtotalGroup, afterRefund);
+        afterUnitLine.append(afterUnitLabel, afterUnit);
+        summary.append(subtotalLine, afterRefund, afterUnitLine);
 
         row.append(nameField, priceField, quantityField, summary);
         swipeContainer.append(deleteButton, row);
