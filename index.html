@@ -2602,17 +2602,50 @@
       min-width: 0;
     }
 
-    .refund-rate-settings > summary {
-      cursor: pointer;
-      font-weight: 600;
-    }
-
     .refund-rate-settings-fields {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: .75rem;
       align-items: end;
       margin-top: .65rem;
+    }
+
+    .refund-result-details {
+      margin-top: .6rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-rate-settings > summary,
+    .refund-result-details > summary {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      color: var(--muted);
+      font-size: .72rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .refund-rate-settings > summary::-webkit-details-marker,
+    .refund-result-details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .refund-rate-settings > summary::after,
+    .refund-result-details > summary::after {
+      flex: 0 0 auto;
+      content: '+';
+      color: #fb923c;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    .refund-rate-settings[open] > summary::after,
+    .refund-result-details[open] > summary::after {
+      content: '−';
     }
 
     .refund-items-field {
@@ -2706,6 +2739,48 @@
     .refund-item-row .refund-field input,
     .refund-item-row .refund-field select {
       padding: .45rem .5rem;
+    }
+
+    .refund-item-estimate {
+      grid-column: 1 / -1;
+      min-width: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .refund-item-estimate-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      min-height: 34px;
+      color: var(--muted);
+      font-size: .68rem;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .refund-item-estimate-toggle::-webkit-details-marker {
+      display: none;
+    }
+
+    .refund-item-estimate-toggle::after {
+      flex: 0 0 auto;
+      content: '+';
+      color: #fb923c;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .refund-item-estimate[open] > .refund-item-estimate-toggle::after {
+      content: '−';
+    }
+
+    .refund-item-estimate-preview {
+      min-width: 0;
+      margin-left: auto;
+      overflow-wrap: anywhere;
+      color: var(--text);
+      text-align: right;
     }
 
     .refund-item-summary {
@@ -4708,8 +4783,6 @@
           aria-labelledby="refund-calc-tab" tabindex="0" hidden>
           <div class="day-header">
             <div class="day-tag" style="background:rgba(249,115,22,.15);color:#fb923c">Cash Japan</div>
-            <h2 class="day-title">現金退稅試算</h2>
-            <p class="day-sub">估算扣除 Cash Japan 服務費並按 ¥50 級距取整後的退款。</p>
           </div>
           <div class="refund-calc-body">
             <div class="refund-calc-fields">
@@ -4724,8 +4797,7 @@
               <div class="refund-store-import-row">
                 <div class="refund-field refund-store-name-field">
                   <label for="cash-calc-store-name">商店名稱</label>
-                  <input id="cash-calc-store-name" type="text" maxlength="120" autocomplete="organization"
-                    placeholder="輸入店名，例如 Bic Camera">
+                  <input id="cash-calc-store-name" type="text" maxlength="120" autocomplete="organization">
                 </div>
                 <div class="refund-json-import-toolbar refund-export-hide">
                   <button class="refund-ledger-button" id="refund-json-open" type="button">匯入 JSON</button>
@@ -4738,7 +4810,7 @@
                   <button class="refund-add-item" id="cash-calc-add-item" type="button">＋ 新增商品</button>
                   <output class="refund-items-total" id="cash-calc-items-total">合計 ¥0</output>
                 </div>
-                <small>輸入每項商品含稅單價與數量；總額按同店同日合併計算。</small>
+                <small>品名可留白；點「查看退稅估算」可展開價格明細。</small>
               </div>
               <div class="refund-field" id="cash-calc-amount-field" hidden>
                 <label id="cash-calc-amount-label" for="cash-calc-amount">同店同日含稅購物總額（日圓）</label>
@@ -4769,29 +4841,35 @@
             <div class="refund-calc-result" aria-live="polite">
               <div class="refund-result-main"><span>預估實退</span><strong id="cash-calc-result-jpy">¥—</strong><strong
                   id="cash-calc-result-twd">NT$—</strong></div>
-              <dl class="refund-result-breakdown">
-                <div>
-                  <dt>估算退款額</dt>
-                  <dd id="cash-calc-refund">—</dd>
-                </div>
-                <div>
-                  <dt>名目服務費（10%）</dt>
-                  <dd id="cash-calc-fee">—</dd>
-                </div>
-                <div>
-                  <dt>¥50 取整調整</dt>
-                  <dd id="cash-calc-rounding">—</dd>
-                </div>
-              </dl>
               <div class="refund-calc-message" id="cash-calc-message"></div>
-              <div class="refund-formula">
-                <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
-                <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
-              </div>
+              <details class="refund-result-details">
+                <summary>退款明細與計算公式</summary>
+                <dl class="refund-result-breakdown">
+                  <div>
+                    <dt>估算退款額</dt>
+                    <dd id="cash-calc-refund">—</dd>
+                  </div>
+                  <div>
+                    <dt>名目服務費（10%）</dt>
+                    <dd id="cash-calc-fee">—</dd>
+                  </div>
+                  <div>
+                    <dt>¥50 取整調整</dt>
+                    <dd id="cash-calc-rounding">—</dd>
+                  </div>
+                </dl>
+                <div class="refund-formula">
+                  <div class="refund-formula-title">完整試算公式（依目前輸入）</div>
+                  <ol class="refund-formula-steps" id="cash-calc-formula"></ol>
+                </div>
+              </details>
             </div>
-            <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
-              10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
-                rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
+            <details class="refund-result-details refund-calc-note-details">
+              <summary>計算說明</summary>
+              <p class="refund-calc-note">購物總額模式按含稅價格推算稅額，並檢查同店同日未稅合計 ¥5,000 門檻；退款額模式直接使用業者提供的金額。Cash Japan 標準服務費為退款額
+                10%，單筆最低／最高費及實際退款額仍依交易而異。匯率由 <a href="https://www.exchangerate-api.com/" target="_blank"
+                  rel="noopener noreferrer">ExchangeRate-API</a> 更新，亦可手動修改；台幣為估算值，非刷卡或銀行入帳報價。</p>
+            </details>
             <div class="refund-json-export-actions refund-export-hide">
               <button class="refund-ledger-button primary" id="cash-calc-export-image" type="button">匯出帳單圖片</button>
               <button class="refund-ledger-button" id="refund-json-export" type="button">匯出 JSON</button>
@@ -6259,6 +6337,7 @@
           ? `約 NT$${cashJapanTwdFormat.format(Math.round(subtotalYen * exchangeRate))}`
           : 'NT$—';
         row.querySelector('[data-item-subtotal]').textContent = `¥${cashJapanYenFormat.format(subtotalYen)} / ${subtotalTwd}`;
+        row.querySelector('[data-item-estimate-preview]').textContent = `小計 ¥${cashJapanYenFormat.format(subtotalYen)} / ${subtotalTwd}`;
         row.querySelector('[data-item-after-total]').textContent = '未達退稅門檻';
         row.querySelector('[data-item-after-unit]').textContent = '未達退稅門檻';
       });
@@ -6293,6 +6372,9 @@
         afterUnit.textContent = estimate.afterRefundUnitYen === null
           ? '未達退稅門檻'
           : `¥${cashJapanYenFormat.format(estimate.afterRefundUnitYen)} / 約 NT$${cashJapanTwdFormat.format(estimate.afterRefundUnitTwd)}`;
+        row.querySelector('[data-item-estimate-preview]').textContent = estimate.afterRefundUnitYen === null
+          ? `小計 ¥${cashJapanYenFormat.format(items[index].price * items[index].quantity)} / 約 NT$${cashJapanTwdFormat.format(Math.round(items[index].price * items[index].quantity * exchangeRate))}`
+          : `退稅後單價 ¥${cashJapanYenFormat.format(estimate.afterRefundUnitYen)} / 約 NT$${cashJapanTwdFormat.format(estimate.afterRefundUnitTwd)}`;
       });
       document.getElementById('cash-calc-result-jpy').textContent = `¥${cashJapanYenFormat.format(result.payoutYen)}`;
       document.getElementById('cash-calc-result-twd').textContent = `約 NT$${cashJapanTwdFormat.format(result.payoutTwd)}`;
@@ -6424,7 +6506,6 @@
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
         nameInput.maxLength = 120;
-        nameInput.placeholder = '商品名稱';
         nameInput.setAttribute('aria-label', '商品名稱');
         nameInput.dataset.itemName = '';
         nameField.append(nameLabel, nameInput);
@@ -6438,7 +6519,6 @@
         priceInput.min = '0';
         priceInput.step = '1';
         priceInput.inputMode = 'numeric';
-        priceInput.placeholder = '含稅單價';
         priceInput.setAttribute('aria-label', '商品含稅單價（日圓）');
         priceInput.dataset.itemPrice = '';
         priceInput.value = price;
@@ -6463,6 +6543,16 @@
         const subtotal = document.createElement('output');
         subtotal.className = 'refund-item-subtotal';
         subtotal.dataset.itemSubtotal = '';
+
+        const estimateDetails = document.createElement('details');
+        estimateDetails.className = 'refund-item-estimate';
+        const estimateToggle = document.createElement('summary');
+        estimateToggle.className = 'refund-item-estimate-toggle';
+        estimateToggle.textContent = '查看退稅估算';
+        const estimatePreview = document.createElement('output');
+        estimatePreview.className = 'refund-item-estimate-preview';
+        estimatePreview.dataset.itemEstimatePreview = '';
+        estimateToggle.append(estimatePreview);
 
         const summary = document.createElement('div');
         summary.className = 'refund-item-summary';
@@ -6493,8 +6583,9 @@
         afterUnit.dataset.itemAfterUnit = '';
         afterUnitLine.append(afterUnitLabel, afterUnit);
         summary.append(subtotalLine, afterRefund, afterUnitLine);
+        estimateDetails.append(estimateToggle, summary);
 
-        row.append(nameField, priceField, quantityField, summary);
+        row.append(nameField, priceField, quantityField, estimateDetails);
         swipeContainer.append(deleteButton, row);
         itemContainer.append(swipeContainer);
         renderCashJapanEstimate();

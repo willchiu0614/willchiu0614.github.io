@@ -3,7 +3,7 @@
     const SCALE = 2;
     const COLORS = {
         paper: '#fffefa',
-        background: '#eeece5',
+        background: '#ffffff',
         ink: '#26343a',
         muted: '#64737a',
         rule: '#d8d8d0',
@@ -77,8 +77,6 @@
         context.fillRect(0, 0, WIDTH, height);
 
         roundRect(context, 24, 24, WIDTH - 48, height - 48, 18, COLORS.paper);
-        context.fillStyle = COLORS.orange;
-        context.fillRect(24, 24, 12, height - 48);
 
         context.fillStyle = COLORS.orange;
         context.font = '700 17px "Noto Sans TC", "PingFang TC", sans-serif';

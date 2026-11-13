@@ -25,6 +25,55 @@ test('item summary renders before-tax and after-tax totals and unit price in JPY
     assert.ok(/estimate\.afterRefundUnitTwd/.test(html), 'after-refund unit should render its TWD estimate');
 });
 
+test('per-item refund estimates stay collapsed until requested', () => {
+    assert.ok(/estimateDetails\.className = 'refund-item-estimate'/.test(html));
+    assert.ok(/estimateToggle\.textContent = '查看退稅估算'/.test(html));
+    assert.ok(/estimateDetails\.append\(estimateToggle, summary\)/.test(html));
+    assert.ok(/summary\.append\(subtotalLine, afterRefund, afterUnitLine\)/.test(html));
+    assert.ok(/row\.querySelector\('\[data-item-estimate-preview\]'\)\.textContent\s*=/.test(html));
+    assert.doesNotMatch(html, /estimateDetails\.open\s*=\s*true/);
+});
+
+test('refund fee breakdown and formula are inside a collapsed details section', () => {
+    const details = html.match(/<details class="refund-result-details">([\s\S]*?)<\/details>/);
+
+    assert.ok(details, 'refund details should be collapsible');
+    assert.ok(/refund-result-breakdown/.test(details[1]));
+    assert.ok(/refund-formula/.test(details[1]));
+    assert.equal((html.match(/id="cash-calc-refund"/g) || []).length, 1);
+    assert.equal((html.match(/id="cash-calc-fee"/g) || []).length, 1);
+    assert.ok(/cash-calc-message/.test(html.slice(0, html.indexOf(details[0]))), 'eligibility message should stay visible');
+    assert.doesNotMatch(details[0], /<details\b[^>]*\bopen(?:\s|=|>)/);
+});
+
+test('refund disclosure has an explicit expand and collapse icon', () => {
+    assert.ok(/\.refund-result-details > summary::after/.test(html));
+    assert.ok(/\.refund-result-details\[open\] > summary::after/.test(html));
+});
+
+test('rate settings and refund details share the same disclosure styling and icon', () => {
+    assert.ok(/\.refund-rate-settings > summary,\s*\.refund-result-details > summary\s*\{/.test(html));
+    assert.ok(/\.refund-rate-settings > summary::-webkit-details-marker,\s*\.refund-result-details > summary::-webkit-details-marker/.test(html));
+    assert.ok(/\.refund-rate-settings > summary::after,\s*\.refund-result-details > summary::after/.test(html));
+    assert.ok(/\.refund-rate-settings\[open\] > summary::after,\s*\.refund-result-details\[open\] > summary::after/.test(html));
+});
+
+test('calculator explanation stays in a collapsed disclosure with its source link', () => {
+    const note = html.match(/<details class="refund-result-details refund-calc-note-details">([\s\S]*?)<\/details>/);
+
+    assert.ok(note, 'calculator explanation should be collapsible');
+    assert.ok(note[1].includes('購物總額模式按含稅價格推算稅額'));
+    assert.ok(note[1].includes('單筆最低／最高費及實際退款額仍依交易而異'));
+    assert.ok(/href="https:\/\/www\.exchangerate-api\.com\/"/.test(note[1]));
+    assert.doesNotMatch(note[0], /<details\b[^>]*\bopen(?:\s|=|>)/);
+});
+
+test('calculator entry fields have no placeholder hints or introductory heading', () => {
+    assert.ok(!/現金退稅試算/.test(html));
+    assert.ok(!/<input\s+id="cash-calc-store-name"[^>]*placeholder=/s.test(html));
+    assert.ok(!/nameInput\.placeholder\s*=|priceInput\.placeholder\s*=/.test(html));
+});
+
 test('stores with coupons open locally saved coupon images in a dialog', () => {
     const expectedCoupons = new Map([
         ['Bic Camera', 'bic-camera'],
