@@ -2518,6 +2518,69 @@
       overflow-wrap: anywhere;
     }
 
+    .refund-store-coupon-link {
+      appearance: none;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      text-decoration-color: rgba(251, 146, 60, .65);
+      text-underline-offset: 2px;
+      text-decoration-line: underline;
+    }
+
+    .refund-store-coupon-link::after {
+      content: ' ↗';
+      color: #fb923c;
+      font-size: .82em;
+    }
+
+    .refund-store-coupon-link:hover,
+    .refund-store-coupon-link:focus-visible {
+      color: #fb923c;
+    }
+
+    .refund-coupon-dialog {
+      width: min(94vw, 560px);
+      max-width: 560px;
+      max-height: 94vh;
+      margin: auto;
+      padding: .75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      overflow: auto;
+    }
+
+    .refund-coupon-dialog::backdrop {
+      background: rgba(0, 0, 0, .78);
+    }
+
+    .refund-coupon-dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .5rem;
+    }
+
+    .refund-coupon-dialog-title {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .refund-coupon-dialog-image {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: calc(94vh - 4.5rem);
+      margin: 0 auto;
+      object-fit: contain;
+    }
+
     .refund-platform-summary:focus-visible {
       outline: 2px solid #fb923c;
       outline-offset: -2px;
@@ -4407,18 +4470,18 @@
                       <dd class="refund-store-groups">
                         <div class="refund-store-group"><strong>電器／3C</strong>
                           <ul>
-                            <li>Bic Camera</li>
-                            <li>山田電機 LABI</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="Bic Camera" data-coupon-image="./assets/coupons/bic-camera.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">Bic Camera</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="山田電機 LABI" data-coupon-image="./assets/coupons/yamada-denki.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">山田電機 LABI</button></li>
                           </ul>
                         </div>
                         <div class="refund-store-group"><strong>藥妝／美妝</strong>
                           <ul>
-                            <li>鶴羽藥妝</li>
-                            <li>松本清</li>
-                            <li>Cocokara Fine</li>
-                            <li>札幌藥妝</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="鶴羽藥妝" data-coupon-image="./assets/coupons/tsuruha-drug.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">鶴羽藥妝</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="松本清" data-coupon-image="./assets/coupons/matsumoto-kiyoshi.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">松本清</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="Cocokara Fine" data-coupon-image="./assets/coupons/cocokara-fine.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">Cocokara Fine</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="札幌藥妝" data-coupon-image="./assets/coupons/sapporo-drug.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">札幌藥妝</button></li>
                             <li>大國藥妝</li>
-                            <li>SUNDRUG</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="SUNDRUG" data-coupon-image="./assets/coupons/sundrug.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">SUNDRUG</button></li>
                           </ul>
                         </div>
                         <div class="refund-store-group"><strong>服飾／運動</strong>
@@ -4430,7 +4493,7 @@
                         </div>
                         <div class="refund-store-group"><strong>生活雜貨／綜合量販</strong>
                           <ul>
-                            <li>唐吉訶德</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="唐吉訶德" data-coupon-image="./assets/coupons/don-quijote.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">唐吉訶德</button></li>
                             <li>多慶屋</li>
                           </ul>
                         </div>
@@ -4468,8 +4531,8 @@
                         <div class="refund-store-group"><strong>藥妝／美妝</strong>
                           <ul>
                             <li>FANCL</li>
-                            <li>KoKuMiN</li>
-                            <li>COSMOS*</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="KoKuMiN" data-coupon-image="./assets/coupons/kokumin.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">KoKuMiN</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="COSMOS*" data-coupon-image="./assets/coupons/cosmos.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">COSMOS*</button></li>
                           </ul>
                         </div>
                         <div class="refund-store-group"><strong>服飾／運動</strong>
@@ -4516,19 +4579,19 @@
                         <div class="refund-store-group"><strong>電器／3C</strong>
                           <ul>
                             <li>Yodobashi Camera</li>
-                            <li>LAOX（合作門市）</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="LAOX（合作門市）" data-coupon-image="./assets/coupons/laox.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">LAOX（合作門市）</button></li>
                           </ul>
                         </div>
                         <div class="refund-store-group"><strong>藥妝／美妝</strong>
                           <ul>
-                            <li>Sugi 藥局</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="Sugi 藥局" data-coupon-image="./assets/coupons/sugi-pharmacy.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">Sugi 藥局</button></li>
                           </ul>
                         </div>
                         <div class="refund-store-group"><strong>百貨／精品</strong>
                           <ul>
-                            <li>大丸京都店</li>
-                            <li>大丸梅田店</li>
-                            <li>大丸心齋橋店</li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="大丸京都店" data-coupon-image="./assets/coupons/daimaru.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">大丸京都店</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="大丸梅田店" data-coupon-image="./assets/coupons/daimaru.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">大丸梅田店</button></li>
+                            <li><button class="refund-store-coupon-link" type="button" data-coupon-store="大丸心齋橋店" data-coupon-image="./assets/coupons/daimaru.png" aria-haspopup="dialog" aria-controls="refund-coupon-dialog">大丸心齋橋店</button></li>
                             <li>阪急梅田本店</li>
                             <li>阪神梅田本店</li>
                           </ul>
@@ -4764,6 +4827,13 @@
     </div>
     <label class="refund-field" for="refund-json-legacy-store" id="refund-json-legacy-label" hidden>舊備份中的店家</label>
     <select id="refund-json-legacy-store" aria-labelledby="refund-json-legacy-label" hidden></select>
+  </dialog>
+  <dialog aria-labelledby="refund-coupon-dialog-title" class="refund-coupon-dialog" id="refund-coupon-dialog">
+    <div class="refund-coupon-dialog-header">
+      <h2 class="refund-coupon-dialog-title" id="refund-coupon-dialog-title"></h2>
+      <button class="refund-ledger-button" id="refund-coupon-dialog-close" type="button">關閉</button>
+    </div>
+    <img class="refund-coupon-dialog-image" id="refund-coupon-dialog-image" alt="">
   </dialog>
   <!-- SCRIPTS -->
   <script src="./cashJapanCalculator.js"></script>
@@ -6516,12 +6586,31 @@
       });
     }
 
+    function initCouponImageDialog() {
+      const dialog = document.getElementById('refund-coupon-dialog');
+      const title = document.getElementById('refund-coupon-dialog-title');
+      const image = document.getElementById('refund-coupon-dialog-image');
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-coupon-image]');
+        if (!button) return;
+        title.textContent = `${button.dataset.couponStore} 折扣圖`;
+        image.src = button.dataset.couponImage;
+        image.alt = `${button.dataset.couponStore} 折扣圖`;
+        dialog.showModal();
+      });
+      document.getElementById('refund-coupon-dialog-close').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    }
+
 
     // Render immediately: this script is at the end of <body>, so DOM is ready.
     // Do not depend on remote map libraries or delayed DOMContentLoaded events.
     try {
       initCashJapanCalculator();
       initRefundContentTabs();
+      initCouponImageDialog();
       switchDay(location.hash === '#static-day-6' ? 6 : 1);
     } catch (error) {
       console.error("Itinerary initialization failed:", error);
